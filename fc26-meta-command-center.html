@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC 26 · Meta Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-0:#080b0f;--bg-1:#0d1117;--bg-2:#141a23;--bg-3:#1c2534;--bg-4:#243040;
+  --border:rgba(255,255,255,.07);--border-accent:rgba(0,255,136,.25);
+  --green:#00ff88;--green-dim:#00cc6a;--green-muted:rgba(0,255,136,.12);
+  --gold:#ffd700;--red:#ff4444;--orange:#ff8c00;--blue:#4da6ff;--purple:#a855f7;
+  --text-primary:#e8edf3;--text-secondary:#7a8a9e;--text-muted:#485566;
+  --sidebar-w:220px;--topbar-h:56px;--radius:8px;--radius-lg:12px;
+  --mono:'JetBrains Mono',monospace;--display:'Rajdhani',sans-serif;--body:'Inter',sans-serif;
+  --transition:.18s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="light"]{
+  --bg-0:#f0f2f5;--bg-1:#fff;--bg-2:#f7f9fc;--bg-3:#edf0f4;--bg-4:#e2e7ee;
+  --border:rgba(0,0,0,.08);--border-accent:rgba(0,180,90,.3);
+  --green:#008844;--green-dim:#006633;--green-muted:rgba(0,136,68,.1);
+  --text-primary:#0d1117;--text-secondary:#4a5568;--text-muted:#9aa5b4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg-0);color:var(--text-primary);display:flex;min-height:100vh;overflow-x:hidden;line-height:1.5}
+#skip{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
+#skip:focus{position:fixed;left:12px;top:12px;z-index:2000;width:auto;height:auto;padding:8px 12px;background:var(--bg-1);border:1px solid var(--green);border-radius:6px}
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:var(--bg-1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 20px;z-index:1000;backdrop-filter:blur(12px)}
+.logo{font-family:var(--display);font-size:20px;font-weight:700;letter-spacing:2px;color:var(--green);white-space:nowrap;flex-shrink:0}
+.logo span{color:var(--text-muted);font-weight:400;font-size:13px;letter-spacing:0;margin-left:6px}
+#global-search{flex:1;max-width:420px;background:var(--bg-2);border:1px solid var(--border);border-radius:6px;padding:0 12px 0 36px;height:34px;color:var(--text-primary);font-size:13px;font-family:var(--body);transition:border-color var(--transition)}
+#global-search:focus{outline:2px solid var(--green-dim);outline-offset:1px;border-color:var(--green-dim)}
+.search-wrap{position:relative;flex:1;max-width:420px}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:14px;pointer-events:none}
+.topbar-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.theme-toggle{background:var(--bg-3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--text-secondary);font-size:13px;transition:all var(--transition)}
+.theme-toggle:hover,.theme-toggle:focus-visible{border-color:var(--green-dim);color:var(--green)}
+.menu-toggle{display:none;background:none;border:1px solid transparent;border-radius:6px;color:var(--text-primary);font-size:20px;cursor:pointer;padding:4px 8px}
+.menu-toggle:focus-visible{outline:2px solid var(--green-dim)}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--green);background:var(--green-muted);border:1px solid var(--border-accent);border-radius:4px;padding:3px 8px}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+#sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--bg-1);border-right:1px solid var(--border);overflow-y:auto;z-index:900;padding:12px 0;transition:transform var(--transition)}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--bg-4);border-radius:2px}
+.nav-section-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-family:var(--mono);padding:12px 16px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;border-left:2px solid transparent;transition:all var(--transition);font-size:13px;color:var(--text-secondary);user-select:none}
+.nav-item:hover{background:var(--bg-2);color:var(--text-primary)}
+.nav-item:focus-visible{outline:none;background:var(--bg-2);border-left-color:var(--green-dim)}
+.nav-item.active{background:var(--green-muted);border-left-color:var(--green);color:var(--green)}
+.nav-icon{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+#main{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);flex:1;min-width:0;padding:24px}
+.page{display:none}.page.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.page-header{margin-bottom:24px}
+.page-title{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:1px}
+.page-subtitle{font-size:13px;color:var(--text-muted);margin-top:2px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:border-color var(--transition)}
+.card:hover{border-color:var(--border-accent)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+.card-title{font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-secondary)}
+.section-block{margin-bottom:28px}
+.section-title{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-family:var(--mono);font-weight:500;border-radius:4px;padding:2px 7px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+.badge-official{background:rgba(77,166,255,.15);color:var(--blue);border:1px solid rgba(77,166,255,.3)}
+.badge-analytical{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
+.badge-community{background:rgba(255,140,0,.15);color:var(--orange);border:1px solid rgba(255,140,0,.3)}
+.badge-unconfirmed{background:rgba(255,68,68,.1);color:var(--red);border:1px solid rgba(255,68,68,.2)}
+.badge-meta-s{background:rgba(0,255,136,.2);color:var(--green);border:1px solid rgba(0,255,136,.35)}
+.badge-meta-a{background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3)}
+.badge-meta-b{background:rgba(255,140,0,.12);color:var(--orange);border:1px solid rgba(255,140,0,.25)}
+.badge-meta-c{background:rgba(255,255,255,.06);color:var(--text-secondary);border:1px solid var(--border)}
+.badge-patch{background:rgba(255,68,68,.12);color:#ff6666;border:1px solid rgba(255,68,68,.25)}
+.badge-stable{background:rgba(0,255,136,.1);color:var(--green-dim);border:1px solid rgba(0,255,136,.2)}
+.badge-role{background:rgba(77,166,255,.12);color:#80c4ff;border:1px solid rgba(77,166,255,.25)}
+.info-box{background:var(--bg-3);border-left:3px solid var(--green);border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;font-size:12.5px;color:var(--text-secondary);margin-bottom:12px}
+.info-box.warn{border-left-color:var(--orange)}.info-box.danger{border-left-color:var(--red)}
+.info-box strong{color:var(--text-primary)}
+.score-wrap{display:flex;align-items:center;gap:8px}
+.score-bar{flex:1;height:4px;background:var(--bg-4);border-radius:2px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px;transition:width .4s ease}
+.score-fill.s{background:var(--green)}.score-fill.a{background:var(--gold)}.score-fill.b{background:var(--orange)}.score-fill.c{background:var(--text-muted)}
+.score-label{font-family:var(--mono);font-size:11px;color:var(--text-secondary);min-width:28px;text-align:right}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:var(--bg-3);color:var(--text-secondary);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--green)}th.sort-asc::after{content:' ↑';color:var(--green)}th.sort-desc::after{content:' ↓';color:var(--green)}
+td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
+.td-name{font-weight:500;color:var(--text-primary)}.td-val{font-family:var(--mono);color:var(--green);font-size:13px;font-weight:500}.td-muted{color:var(--text-muted);font-size:11.5px}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center}
+.filter-select,.filter-input{background:var(--bg-2);border:1px solid var(--border);border-radius:6px;padding:7px 12px;font-size:12px;color:var(--text-primary);font-family:var(--body);cursor:pointer;transition:border-color var(--transition)}
+.filter-select:focus,.filter-input:focus{outline:none;border-color:var(--green-dim)}
+.filter-btn{background:var(--bg-2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all var(--transition);font-family:var(--body)}
+.filter-btn:hover,.filter-btn:focus-visible,.filter-btn.active{background:var(--green-muted);border-color:var(--green-dim);color:var(--green)}
+.player-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;flex-direction:column;gap:10px;transition:all var(--transition);cursor:pointer;position:relative;overflow:hidden}
+.player-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);opacity:0;transition:opacity var(--transition)}
+.player-card:hover{border-color:var(--border-accent);transform:translateY(-1px)}
+.player-card:hover::before{opacity:1}
+.player-card:focus-visible{outline:2px solid var(--green-dim);outline-offset:2px}
+.player-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.player-card-name{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.5px}
+.player-card-pos{background:var(--bg-4);border-radius:4px;padding:2px 7px;font-family:var(--mono);font-size:11px;color:var(--text-secondary);flex-shrink:0}
+.player-card-meta{font-size:11.5px;color:var(--text-muted)}
+.player-card-playstyles{display:flex;flex-wrap:wrap;gap:4px}
+.ps-chip{font-size:10px;font-family:var(--mono);padding:2px 6px;border-radius:3px;background:var(--bg-4);color:var(--text-secondary);border:1px solid var(--border)}
+.ps-chip.plus{background:rgba(0,255,136,.1);color:var(--green);border-color:var(--border-accent)}
+.formation-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;transition:all var(--transition)}
+.formation-card:hover{border-color:var(--border-accent)}
+.formation-name{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:2px;color:var(--green);margin-bottom:4px}
+.formation-style{font-size:12px;color:var(--text-muted);margin-bottom:10px}
+.technique-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:all var(--transition)}
+.technique-card:hover{border-color:var(--border-accent)}
+.input-chip{background:var(--bg-0);border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-family:var(--mono);font-size:11px;color:var(--blue);display:inline-block}
+.patch-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;border-left:3px solid var(--blue);margin-bottom:12px}
+.patch-version{font-family:var(--mono);font-size:13px;color:var(--blue);font-weight:500}
+.patch-date{font-size:11px;color:var(--text-muted)}
+.patch-changes{list-style:none;margin-top:10px}
+.patch-changes li{font-size:12.5px;color:var(--text-secondary);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px}
+.patch-changes li:last-child{border-bottom:none}
+.impact-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.impact-dot.nerf{background:var(--red)}.impact-dot.buff{background:var(--green)}.impact-dot.neutral{background:var(--orange)}
+.dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.dash-kpi{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.dash-kpi-val{font-family:var(--display);font-size:26px;font-weight:700;color:var(--green)}
+.dash-kpi-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;font-family:var(--mono)}
+.meta-snapshot{background:linear-gradient(135deg,var(--bg-2) 0%,rgba(0,255,136,.04) 100%);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:20px;margin-bottom:24px}
+.meta-snapshot-title{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:1px;color:var(--green);margin-bottom:12px}
+.quick-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.quick-link{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;cursor:pointer;transition:all var(--transition)}
+.quick-link:hover,.quick-link:focus-visible{border-color:var(--green-dim);background:var(--green-muted)}
+.quick-link-icon{font-size:24px;margin-bottom:6px}
+.quick-link-label{font-size:12px;color:var(--text-secondary);font-family:var(--mono)}
+#drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;backdrop-filter:blur(2px)}
+#drawer-overlay.active{display:block}
+#drawer{position:fixed;top:0;right:-480px;bottom:0;width:480px;max-width:100%;background:var(--bg-1);border-left:1px solid var(--border);z-index:1200;overflow-y:auto;padding:24px;transition:right .3s cubic-bezier(.4,0,.2,1)}
+#drawer.open{right:0}
+#drawer-close{position:absolute;top:16px;right:16px;background:var(--bg-3);border:1px solid var(--border);border-radius:6px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-secondary)}
+#drawer-close:hover,#drawer-close:focus-visible{color:var(--red);border-color:var(--red)}
+#drawer-content{margin-top:16px}
+.kbd{font-family:var(--mono);font-size:10px;border:1px solid var(--border);padding:1px 5px;border-radius:3px;background:var(--bg-3)}
+@media (max-width:900px){
+  #sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}.menu-toggle{display:block}.dash-kpis{grid-template-columns:repeat(2,1fr)}#drawer{width:100%}
+}
+@media (max-width:540px){#main{padding:16px}.dash-kpis{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}.logo span{display:none}}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--bg-4);border-radius:3px}
+</style>
+</head>
+<body>
+<a id="skip" href="#main">Aller au contenu</a>
+<div id="topbar">
+  <button type="button" class="menu-toggle" aria-label="Ouvrir le menu" onclick="toggleSidebar()">☰</button>
+  <div class="logo">FC26<span>META CENTER</span></div>
+  <div class="search-wrap">
+    <span class="search-icon" aria-hidden="true">⌕</span>
+    <input id="global-search" type="search" aria-label="Recherche globale" placeholder="Joueur, formation, technique…" autocomplete="off" oninput="globalSearchDebounced(this.value)">
+  </div>
+  <div class="topbar-actions">
+    <div class="live-badge" id="live-patch-badge" title="Bundle données"><div class="live-dot" aria-hidden="true"></div><span id="live-patch-text">…</span></div>
+    <button type="button" class="theme-toggle" onclick="toggleTheme()">◑ Thème</button>
+  </div>
+</div>
+
+<nav id="sidebar" aria-label="Navigation principale">
+  <div class="nav-section-label">Navigation</div>
+  <div class="nav-item active" tabindex="0" role="button" data-page="dashboard" onclick="showPage('dashboard')" onkeydown="navKey(event,'dashboard')"><span class="nav-icon">⬡</span> Dashboard</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="meta" onclick="showPage('meta')" onkeydown="navKey(event,'meta')"><span class="nav-icon">◈</span> Meta Hub</div>
+  <div class="nav-section-label">Équipe</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="players" onclick="showPage('players')" onkeydown="navKey(event,'players')"><span class="nav-icon">◉</span> Joueurs méta</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="formations" onclick="showPage('formations')" onkeydown="navKey(event,'formations')"><span class="nav-icon">⊞</span> Formations</div>
+  <div class="nav-section-label">Gameplay</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="techniques" onclick="showPage('techniques')" onkeydown="navKey(event,'techniques')"><span class="nav-icon">⚡</span> Techniques</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="settings" onclick="showPage('settings')" onkeydown="navKey(event,'settings')"><span class="nav-icon">⚙</span> Réglages</div>
+  <div class="nav-section-label">Gestion club</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="sbc" onclick="showPage('sbc')" onkeydown="navKey(event,'sbc')"><span class="nav-icon">⬡</span> SBC Intelligence</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="patches" onclick="showPage('patches')" onkeydown="navKey(event,'patches')"><span class="nav-icon">📋</span> Patch notes</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="webapp" onclick="showPage('webapp')" onkeydown="navKey(event,'webapp')"><span class="nav-icon">📱</span> Web App</div>
+  <div class="nav-section-label">Veille</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="behaviors" onclick="showPage('behaviors')" onkeydown="navKey(event,'behaviors')"><span class="nav-icon">👁</span> Comportements</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="chemistry" onclick="showPage('chemistry')" onkeydown="navKey(event,'chemistry')"><span class="nav-icon">⌬</span> Chimie &amp; styles</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="updatehub" onclick="showPage('updatehub')" onkeydown="navKey(event,'updatehub')"><span class="nav-icon">↻</span> Mise à jour</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="method" onclick="showPage('method')" onkeydown="navKey(event,'method')"><span class="nav-icon">◇</span> Méthodologie</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="sources" onclick="showPage('sources')" onkeydown="navKey(event,'sources')"><span class="nav-icon">✓</span> Sources</div>
+</nav>
+
+<main id="main" tabindex="-1">
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle" id="dash-subtitle">EA SPORTS FC 26 · Chargement bundle…</p>
+  </div>
+  <div class="info-box warn"><strong>Fichier de données :</strong> éditer <code style="font-family:var(--mono)">fc26-meta-data.js</code> (même dossier que ce HTML) après chaque patch EA, puis recharger la page. Les évaluations « méta » joueurs / formations restent <span class="badge badge-community">Communauté</span> / <span class="badge badge-analytical">Analytique</span> sauf badge contraire.</div>
+  <div class="meta-snapshot" id="dash-snapshot">
+    <div class="meta-snapshot-title">Lecture méta — instantané (<span class="badge badge-analytical">config DATA</span>)</div>
+    <p id="dash-headline" class="td-muted" style="font-size:13px;margin-bottom:12px"></p>
+    <div class="grid-2" id="dash-pillars" style="gap:10px"></div>
+    <div class="info-box" style="margin-top:14px;margin-bottom:0"><strong class="badge badge-official" style="margin-right:6px">Officiel</strong> v1.5.0 / v1.5.3 : voir page <a href="#" onclick="showPage('patches');return false" style="color:var(--blue)">Patch notes</a> (textes alignés EA).</div>
+  </div>
+  <div class="dash-kpis" id="dash-kpis">
+    <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-patch">—</div><div class="dash-kpi-label">Patch ref</div><div class="td-muted" style="margin-top:4px">CONFIG</div></div>
+    <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-players">—</div><div class="dash-kpi-label">Fiches joueurs</div><div class="td-muted" style="margin-top:4px">DATA.js</div></div>
+    <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-form">—</div><div class="dash-kpi-label">Formations</div><div class="td-muted" style="margin-top:4px">DATA.js</div></div>
+    <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-tech">—</div><div class="dash-kpi-label">Techniques</div><div class="td-muted" style="margin-top:4px">DATA.js</div></div>
+  </div>
+  <div class="section-block">
+    <h2 class="section-title">Accès rapide</h2>
+    <div class="quick-links">
+      <div class="quick-link" tabindex="0" role="link" onclick="showPage('players')" onkeydown="if(event.key==='Enter')showPage('players')"><div class="quick-link-icon">◉</div><div class="quick-link-label">JOUEURS</div></div>
+      <div class="quick-link" tabindex="0" onclick="showPage('formations')" onkeydown="if(event.key==='Enter')showPage('formations')"><div class="quick-link-icon">⊞</div><div class="quick-link-label">FORMATIONS</div></div>
+      <div class="quick-link" tabindex="0" onclick="showPage('techniques')" onkeydown="if(event.key==='Enter')showPage('techniques')"><div class="quick-link-icon">⚡</div><div class="quick-link-label">TECHNIQUES</div></div>
+      <div class="quick-link" tabindex="0" onclick="showPage('sbc')" onkeydown="if(event.key==='Enter')showPage('sbc')"><div class="quick-link-icon">⬡</div><div class="quick-link-label">SBC</div></div>
+      <div class="quick-link" tabindex="0" onclick="showPage('method')" onkeydown="if(event.key==='Enter')showPage('method')"><div class="quick-link-icon">◇</div><div class="quick-link-label">SCORES</div></div>
+      <div class="quick-link" tabindex="0" onclick="showPage('updatehub')" onkeydown="if(event.key==='Enter')showPage('updatehub')"><div class="quick-link-icon">↻</div><div class="quick-link-label">MAJ PATCH</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-meta">
+  <div class="page-header"><h1 class="page-title">Meta Hub</h1><p class="page-subtitle">Lecture stratégique · Badges de confiance obligatoires</p></div>
+  <div class="info-box warn">⚠ EA ne fournit pas de « tier list » officielle Ultimate Team. Toute force méta chiffrée ici est <span class="badge badge-analytical">Analytique</span> ou <span class="badge badge-community">Communauté</span>.</div>
+  <div class="section-block">
+    <h2 class="section-title">Table méta (synthèse)</h2>
+    <div class="table-wrap" id="meta-table-wrap"></div>
+  </div>
+  <div class="section-block">
+    <h2 class="section-title">Mécaniques (mix officiel + lecture)</h2>
+    <div class="grid-2">
+      <div class="card"><div class="card-header"><div class="card-title">Confirmé EA (gameplay)</div><span class="badge badge-official">Officiel</span></div>
+      <ul style="list-style:none;font-size:13px;color:var(--text-secondary);display:flex;flex-direction:column;gap:8px">
+        <li>→ Préréglages <strong>Competitive</strong> vs <strong>Authentic</strong> (online vs offline réaliste). Deep Dive 22/07/2025.</li>
+        <li>→ <strong>Dynamic Dribbling</strong>, touches réajustées ; <strong>Explosive Sprint</strong> ; retour à <strong>3 Acceleration Types</strong> (formules H/F séparées).</li>
+        <li>→ <strong>RL Goalkeeper Positioning</strong> (NG) : ML pour positionnement ; pas actif pendant la réalisation de l’arrêt.</li>
+        <li>→ v1.5.0 : passes au sol plus rapides/précises (surtout hauts attributs passe) ; courbure through ball contextuelle sans PlayStyle Incisive si attributs élevés.</li>
+      </ul></div>
+      <div class="card"><div class="card-header"><div class="card-title">Lecture compétitive</div><span class="badge badge-analytical">Analytique</span></div>
+      <ul style="list-style:none;font-size:13px;color:var(--text-secondary);display:flex;flex-direction:column;gap:8px">
+        <li>→ Après v1.5.0 : pondération plus forte des <strong>stats de base</strong> sur passes/tirs — moins dépendant des PlayStyles surpapier.</li>
+        <li>→ v1.5.3 : impact match limité sauf cas extrême de passes au gardien ; prioriser veille sur <strong>bugs/correctifs UT</strong>.</li>
+        <li>→ Toujours croiser avec patch notes suivantes (EA SPORTS FC Tracker / news ea.com).</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-players">
+  <div class="page-header"><h1 class="page-title">Joueurs méta</h1><p class="page-subtitle">Échantillon démo extensible · pas de stats EA intégrées</p></div>
+  <div class="info-box danger"><strong>Prix &amp; meta score :</strong> valeurs <span class="badge badge-unconfirmed">Démo / non confirmé</span> — ne pas utiliser pour achat. Vérifier FUTBIN / marché in-game.</div>
+  <div class="filter-bar">
+    <input class="filter-input" style="min-width:160px;cursor:text" id="f-q" type="search" placeholder="Recherche nom / club…" aria-label="Recherche texte" oninput="setPlayerFilter('q',this.value)">
+    <select class="filter-select" id="f-pos" aria-label="Filtre poste" onchange="setPlayerFilter('pos',this.value)"><option value="">Tous postes</option><option value="ST">ST</option><option value="CAM">CAM</option><option value="CM">CM</option><option value="CDM">CDM</option><option value="W">LW/RW</option><option value="FB">LB/RB</option><option value="CB">CB</option><option value="GK">GK</option></select>
+    <select class="filter-select" id="f-league" aria-label="Ligue" onchange="setPlayerFilter('league',this.value)"><option value="">Toutes ligues</option><option value="PL">Premier League</option><option value="LALIGA">LaLiga</option><option value="SerieA">Serie A</option><option value="Bundesliga">Bundesliga</option><option value="Ligue1">Ligue 1</option><option value="Brasileirao">Brésil</option></select>
+    <select class="filter-select" id="f-tier" aria-label="Filtre tier" onchange="setPlayerFilter('tier',this.value)"><option value="">Tous tiers</option><option value="S">S</option><option value="A">A</option><option value="B">B</option></select>
+    <select class="filter-select" id="f-acc" aria-label="Filtre accélération" onchange="setPlayerFilter('acc',this.value)"><option value="">Accélération</option><option value="Explosive">Explosive</option><option value="Controlled">Controlled</option><option value="Lengthy">Lengthy</option></select>
+    <select class="filter-select" id="f-patch" aria-label="Sensibilité patch" onchange="setPlayerFilter('patchSens',this.value)"><option value="">Sensibilité patch</option><option value="faible">Faible</option><option value="moyen">Moyen</option><option value="élevé">Élevé</option></select>
+    <button type="button" class="filter-btn" onclick="resetPlayerFilters()">Reset</button>
+  </div>
+  <div class="card section-block" style="padding:14px">
+    <div class="card-header"><div class="card-title">Comparateur (2 joueurs)</div><span class="badge badge-analytical">UI</span></div>
+    <div class="filter-bar" style="margin:0">
+      <select class="filter-select" id="cmp-a" aria-label="Joueur A"></select>
+      <select class="filter-select" id="cmp-b" aria-label="Joueur B"></select>
+      <button type="button" class="filter-btn active" onclick="renderCompare()">Comparer</button>
+    </div>
+    <div id="compare-out" class="table-wrap" style="margin-top:10px"></div>
+  </div>
+  <div class="grid-auto" id="players-grid"></div>
+</div>
+
+<div class="page" id="page-formations">
+  <div class="page-header"><h1 class="page-title">Formations</h1><p class="page-subtitle">Estimations popularité / score = <span class="badge badge-analytical">Analytique</span> démo</p></div>
+  <div class="filter-bar">
+    <button type="button" class="filter-btn active" data-ff="all" onclick="filterFormations('all',this)">Toutes</button>
+    <button type="button" class="filter-btn" onclick="filterFormations('S',this)">S</button>
+    <button type="button" class="filter-btn" onclick="filterFormations('A',this)">A</button>
+    <button type="button" class="filter-btn" onclick="filterFormations('counter',this)">Contre</button>
+    <button type="button" class="filter-btn" onclick="filterFormations('press',this)">Press</button>
+    <button type="button" class="filter-btn" onclick="filterFormations('possession',this)">Possession</button>
+  </div>
+  <div id="formations-container"></div>
+</div>
+
+<div class="page" id="page-techniques">
+  <div class="page-header"><h1 class="page-title">Techniques</h1><p class="page-subtitle">Inputs <span class="kbd">PlayStation</span> — adapter Xbox</p></div>
+  <div class="info-box"><strong>Officiel :</strong> schémas de touches BAG / crosses dans Pitch Notes Deep Dive. Les timings « optimaux » compétitifs = <span class="badge badge-community">Communauté</span> sauf citation EA.</div>
+  <div class="filter-bar">
+    <button type="button" class="filter-btn active" onclick="filterTech('all',this)">Toutes</button>
+    <button type="button" class="filter-btn" onclick="filterTech('passe',this)">Passe</button>
+    <button type="button" class="filter-btn" onclick="filterTech('tir',this)">Tir</button>
+    <button type="button" class="filter-btn" onclick="filterTech('dribble',this)">Dribble</button>
+    <button type="button" class="filter-btn" onclick="filterTech('defense',this)">Défense</button>
+  </div>
+  <div id="techniques-container"></div>
+</div>
+
+<div class="page" id="page-settings">
+  <div class="page-header"><h1 class="page-title">Réglages</h1><p class="page-subtitle">Profils recommandés = <span class="badge badge-analytical">Analytique</span> — vérifier menus in-game</p></div>
+  <div class="filter-bar">
+    <button type="button" class="filter-btn active" onclick="showSettingProfile('balanced',this)">Équilibré</button>
+    <button type="button" class="filter-btn" onclick="showSettingProfile('aggressive',this)">Agressif</button>
+    <button type="button" class="filter-btn" onclick="showSettingProfile('technical',this)">Technique</button>
+    <button type="button" class="filter-btn" onclick="showSettingProfile('control',this)">Contrôle</button>
+    <button type="button" class="filter-btn" onclick="showSettingProfile('pressing',this)">Pressing</button>
+    <button type="button" class="filter-btn" onclick="showSettingProfile('defensive',this)">Défensif</button>
+  </div>
+  <div id="settings-container"></div>
+</div>
+
+<div class="page" id="page-sbc">
+  <div class="page-header"><h1 class="page-title">SBC Intelligence</h1><p class="page-subtitle">Méthodologie visible · lignes = démo</p></div>
+  <div class="info-box"><strong>SBC Score (démo) :</strong> <code style="font-family:var(--mono);font-size:11px">(reward/cost)*0.45 + utilMeta*0.2 + utilClub*0.15 + liquidité*0.1 + deadline*0.1</code> avec utilités normalisées 0–1. <span class="badge badge-unconfirmed">Non EA</span></div>
+  <div id="sbc-container"></div>
+</div>
+
+<div class="page" id="page-patches">
+  <div class="page-header"><h1 class="page-title">Patch notes</h1><p class="page-subtitle">Extraits alignés sources EA ci-dessous</p></div>
+  <div id="patches-container"></div>
+</div>
+
+<div class="page" id="page-webapp">
+  <div class="page-header"><h1 class="page-title">Web App / Companion</h1><p class="page-subtitle">Officiel EA + bonnes pratiques</p></div>
+  <div class="grid-2">
+    <div class="card"><div class="card-header"><div class="card-title">Officiel</div><span class="badge badge-official">EA</span></div>
+    <p style="font-size:13px;color:var(--text-secondary)">Page Web App : <a href="https://www.ea.com/games/ea-sports-fc/ultimate-team/web-app" style="color:var(--blue)">ea.com/games/ea-sports-fc/ultimate-team/web-app</a>. Pitch Notes Launch (12/09/2025) : Web App 17/09, refresh Companion 18/09.</p></div>
+    <div class="card"><div class="card-header"><div class="card-title">Analytique</div><span class="badge badge-analytical">Analytique</span></div>
+    <p style="font-size:13px;color:var(--text-secondary)">Routine : vérifier SBC expiration, objectifs, liste de transferts ; pics d’activité marché variables selon fuseau — <span class="badge badge-community">Communauté</span>.</p></div>
+  </div>
+</div>
+
+<div class="page" id="page-behaviors">
+  <div class="page-header"><h1 class="page-title">Comportements</h1><p class="page-subtitle">Veille · sources indiquées par ligne</p></div>
+  <div id="behaviors-container"></div>
+</div>
+
+<div class="page" id="page-method">
+  <div class="page-header"><h1 class="page-title">Méthodologie &amp; scores</h1><p class="page-subtitle">Transparence · limites</p></div>
+  <div class="card section-block"><div class="card-header"><div class="card-title">Meta score joueur (app)</div><span class="badge badge-analytical">Formule démo</span></div>
+  <p class="td-muted" style="font-size:13px;margin-bottom:10px">Pondération indicative : pace utile 20 %, finition 15 %, passe 15 %, défense 10 %, physique 10 %, polyvalence poste 10 %, playstyles 10 %, stabilité patch 5 %, valeur/cost 5 %. <strong>Données EA item non présentes → score non fiable.</strong></p>
+  <pre style="font-family:var(--mono);font-size:11px;background:var(--bg-0);padding:12px;border-radius:8px;overflow:auto">metaScore = clamp( sum(weight_i * norm(metric_i)), 0, 99)</pre></div>
+  <div class="card section-block"><div class="card-header"><div class="card-title">Meta score formation</div><span class="badge badge-analytical">Formule démo</span></div>
+  <p class="td-muted" style="font-size:13px">Équilibre déf/att, création, densité axe, couverture, exécution, adaptabilité, résistance patch (heuristique analyste), synergie profils — normalisé sur 100 dans l’UI.</p></div>
+  <div class="card section-block"><div class="card-header"><div class="card-title">Meta score technique</div><span class="badge badge-analytical">Formule démo</span></div>
+  <p class="td-muted" style="font-size:13px">efficacité estimée − coût difficulté − risque interception + bonus contexte (ex. ligne haute) ; patch sensitivity flag manuel.</p></div>
+  <div class="card section-block"><div class="card-header"><div class="card-title">SBC score</div><span class="badge badge-unconfirmed">Calcul local</span></div>
+  <p class="td-muted" style="font-size:13px">Aucune API EA pour EV pack — tout chiffre marché = externe. Afficher méthodologie et date marché.</p></div>
+</div>
+
+<div class="page" id="page-chemistry">
+  <div class="page-header"><h1 class="page-title">Chimie &amp; styles</h1><p class="page-subtitle">Séparer faits EA vs picks communautaires</p></div>
+  <div class="card section-block" id="chem-official-card"></div>
+  <div class="section-block">
+    <h2 class="section-title">Picks fréquents (non officiels)</h2>
+    <div class="table-wrap" id="chem-picks-wrap"></div>
+  </div>
+</div>
+
+<div class="page" id="page-updatehub">
+  <div class="page-header"><h1 class="page-title">Mise à jour après patch</h1><p class="page-subtitle">Workflow mainteneur</p></div>
+  <div class="info-box"><strong>1.</strong> Lire la source EA (news ou forums). <strong>2.</strong> Dupliquer le template dans <code>fc26-meta-data.js</code> → <code>PATCHES</code>. <strong>3.</strong> Mettre à jour <code>CONFIG.lastOfficialPatchId</code> + compteurs. <strong>4.</strong> Ajuster <code>META_SNAPSHOT</code>, <code>BEHAVIORS</code>, <code>patchSens</code> joueurs concernés. <strong>5.</strong> Exporter backup JSON ci-dessous.</div>
+  <div class="card section-block">
+    <div class="card-header"><div class="card-title">Check-list express</div><span class="badge badge-analytical">Process</span></div>
+    <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.7">
+      <li>Copier les lignes « gameplay / UT » officielles mot pour mot si possible.</li>
+      <li>Ne pas changer les badges : tout ce qui n’est pas EA reste communautaire/analytique.</li>
+      <li>Re-trier SBC après maj prix FUTBIN (champs <code>cost</code> / <code>reward</code>).</li>
+      <li>Vérifier que le fichier data est bien dans le même dossier que le HTML.</li>
+    </ul>
+  </div>
+  <div class="filter-bar">
+    <button type="button" class="filter-btn active" onclick="exportDataJson()">Exporter JSON (backup)</button>
+    <button type="button" class="filter-btn" onclick="location.reload()">Recharger l’app</button>
+  </div>
+  <p class="td-muted" style="font-size:12px;margin-top:10px" id="export-status"></p>
+</div>
+
+<div class="page" id="page-sources">
+  <div class="page-header"><h1 class="page-title">Sources</h1><p class="page-subtitle">Hiérarchie</p></div>
+  <div class="grid-2">
+    <div class="card"><div class="card-header"><div class="card-title">EA (priorité)</div><span class="badge badge-official">Officiel</span></div>
+    <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px">
+      <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive" style="color:var(--blue)">Gameplay Deep Dive</a></li>
+      <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-title-update-1-5-0" style="color:var(--blue)">Title Update v1.5.0</a></li>
+      <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-launch-update" style="color:var(--blue)">Launch Update UT</a></li>
+      <li><a href="https://forums.ea.com/blog/ea-sports-fc-game-info-hub-en/ea-sports-fc%E2%84%A2-26--title-update-v1-5-3/13312649" style="color:var(--blue)">Title Update v1.5.3 (Forums EA)</a></li>
+    </ul></div>
+    <div class="card"><div class="card-header"><div class="card-title">Secondaires</div><span class="badge badge-analytical">Analytique</span></div>
+    <p style="font-size:13px;color:var(--text-secondary)">FUTBIN, FUTWIZ, contenus pros — toujours étiqueter communautaire / analytique et croiser avec EA.</p></div>
+  </div>
+</div>
+</main>
+
+<div id="drawer-overlay" onclick="closeDrawer()" role="presentation"></div>
+<div id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+  <button type="button" id="drawer-close" onclick="closeDrawer()" aria-label="Fermer">✕</button>
+  <div id="drawer-content"></div>
+</div>
+
+<script src="fc26-meta-data.js"></script>
+<script>
+let CONFIG, PLAYERS, FORMATIONS, TECHNIQUES, SBC_DATA, PATCHES, BEHAVIORS, META_TABLE, META_SNAPSHOT, CHEM_OFFICIAL, CHEM_PICKS, SETTINGS;
+let playerFilters = { q:'', pos:'', league:'', tier:'', acc:'', patchSens:'' };
+let sbcSort = { col: null, dir: 1 };
+
+function loadData(){
+  const D = window.FC26_META_DATA;
+  if(!D){ alert('Fichier fc26-meta-data.js introuvable : placez-le dans le même dossier que ce HTML.'); return false; }
+  CONFIG = D.CONFIG;
+  PLAYERS = D.PLAYERS;
+  FORMATIONS = D.FORMATIONS;
+  TECHNIQUES = D.TECHNIQUES;
+  SBC_DATA = D.SBC_DATA;
+  PATCHES = D.PATCHES;
+  BEHAVIORS = D.BEHAVIORS;
+  META_TABLE = D.META_TABLE || [];
+  META_SNAPSHOT = D.META_SNAPSHOT || { headline:'', pillars:[] };
+  CHEM_OFFICIAL = D.CHEM_OFFICIAL || { headline:'', bullets:[], sourceUrl:'' };
+  CHEM_PICKS = D.CHEM_PICKS || [];
+  SETTINGS = D.SETTINGS || {};
+  return true;
+}
+
+function getBadge(src){
+  const map={ official:'badge-official', analytical:'badge-analytical', community:'badge-community', unconfirmed:'badge-unconfirmed' };
+  const label={ official:'Officiel', analytical:'Analytique', community:'Communauté', unconfirmed:'Non confirmé' };
+  return `<span class="badge ${map[src]||'badge-unconfirmed'}">${label[src]||src}</span>`;
+}
+function getTierBadge(t){ const m={ S:'badge-meta-s',A:'badge-meta-a',B:'badge-meta-b',C:'badge-meta-c' }; return `<span class="badge ${m[t]||'badge-meta-c'}">${t}-Tier</span>`; }
+function getBar(v,max=100){ const pct=Math.round(v/max*100); const cls=pct>=85?'s':pct>=70?'a':pct>=50?'b':'c'; return `<div class="score-wrap" aria-label="Score ${v}"><div class="score-bar"><div class="score-fill ${cls}" style="width:${pct}%"></div></div><div class="score-label">${v}</div></div>`; }
+
+function playerMatchesFilters(p){
+  const q=(playerFilters.q||'').trim().toLowerCase();
+  if(q){
+    const blob=[p.name,p.club,p.league,p.nation,p.metaRole,(p.altPos||[]).join(' ')].join(' ').toLowerCase();
+    if(!blob.includes(q)) return false;
+  }
+  if(playerFilters.league && p.league!==playerFilters.league) return false;
+  if(playerFilters.tier && p.tier!==playerFilters.tier) return false;
+  if(playerFilters.acc && p.acc!==playerFilters.acc) return false;
+  if(playerFilters.patchSens && (p.patchSens||'')!==playerFilters.patchSens) return false;
+  if(playerFilters.pos){
+    if(playerFilters.pos==='W'){ if(p.pos!=='LW'&&p.pos!=='RW') return false; }
+    else if(playerFilters.pos==='FB'){ if(p.pos!=='LB'&&p.pos!=='RB') return false; }
+    else if(p.bestPos!==playerFilters.pos&&p.pos!==playerFilters.pos&&!(p.altPos||[]).includes(playerFilters.pos)) return false;
+  }
+  return true;
+}
+
+function srcBadgePlayer(p){
+  if(p.source==='official') return getBadge('official');
+  if(p.source==='analytical'||p.confidence==='analytical') return getBadge('analytical');
+  return getBadge('community');
+}
+
+function renderPlayers(arr){
+  const g=document.getElementById('players-grid');
+  if(!arr.length){ g.innerHTML='<p class="td-muted" style="padding:20px">Aucun résultat.</p>'; return; }
+  g.innerHTML=arr.map(p=>`
+    <article class="player-card" tabindex="0" role="button" aria-label="Détail ${p.name}" onclick="openPlayerDrawer('${p.id}')" onkeydown="if(event.key==='Enter')openPlayerDrawer('${p.id}')">
+      <div class="player-card-header"><div><div class="player-card-name">${p.name}</div><div class="player-card-meta">${p.club} · ${p.league}</div></div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><div class="player-card-pos">${p.bestPos}</div>${getTierBadge(p.tier)}</div></div>
+      ${getBar(p.metaScore)}
+      <div class="player-card-meta">${p.metaRole||''}</div>
+      <div class="player-card-meta">Accél : ${p.acc} · Patch : <span class="badge ${(p.patchSens||'')==='élevé'?'badge-patch':'badge-stable'}">${p.patchSens||'—'}</span></div>
+      <div class="player-card-meta">Alt : ${(p.altPos||[]).join(', ')||'—'}</div>
+      <div class="player-card-playstyles">${(p.playstyles||[]).map(ps=>`<span class="ps-chip ${ps.endsWith('+')?'plus':''}">${ps}</span>`).join('')}</div>
+      <div class="player-card-meta">${p.strengths||''}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--gold)">${p.cost||'—'}</span>${srcBadgePlayer(p)}
+      </div>
+    </article>`).join('');
+}
+
+function openPlayerDrawer(id){
+  const p=PLAYERS.find(x=>x.id===id); if(!p) return;
+  const alts=(p.altPos||[]).map(a=>`<span class="badge badge-analytical">${a}</span>`).join(' ')||'<span class="td-muted">—</span>';
+  document.getElementById('drawer-content').innerHTML=`
+    <h2 id="drawer-title" style="font-family:var(--display);font-size:22px">${p.name}</h2>
+    <p class="td-muted">${p.club} · ${p.nation} · ${p.league}</p>
+    <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap">${getTierBadge(p.tier)}${srcBadgePlayer(p)}
+    <span class="badge ${(p.patchSens||'')==='élevé'?'badge-patch':'badge-stable'}">Patch ${p.patchSens||'n/a'}</span></div>
+    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Rôle méta</div>
+    <p style="font-size:13px;color:var(--text-secondary)">${p.metaRole||'—'}</p></div>
+    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Meilleur poste / alternatifs</div>
+    <p><span class="badge badge-role">${p.bestPos}</span> ${alts}</p></div>
+    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Styles chimie (indicatif)</div>
+    <p style="font-size:13px;color:var(--text-secondary)"><strong>Sans +3 :</strong> ${p.chemNone||'—'}<br><strong>Avec +3 :</strong> ${p.chemChem||'—'}</p>
+    <p class="td-muted" style="font-size:11px">Modèle 3/6/9 et trade-offs pace : voir page Chimie (officiel EA, Launch Update).</p></div>
+    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Tactique</div><p style="font-size:13px;color:var(--text-secondary)">${p.tacticalFit||'—'}</p></div>
+    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Atouts / limites</div>
+    <p style="font-size:13px;color:var(--text-secondary)"><strong>+</strong> ${p.strengths||'—'}<br><strong>−</strong> ${p.limits||'—'}</p></div>`;
+  document.getElementById('drawer-overlay').classList.add('active');
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-close').focus();
+}
+
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('active');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+function renderFormations(arr){
+  document.getElementById('formations-container').innerHTML=arr.map(f=>`
+    <section class="formation-card"><div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-start">
+      <div><div class="formation-name">${f.name}</div><div class="formation-style">${f.style}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${getTierBadge(f.tier)}<span class="badge badge-stable">${f.stability}</span>${getBadge('community')}</div></div>
+      <div style="min-width:200px;flex:1">${getBar(f.score)}<div class="td-muted" style="margin-top:4px">Popularité (analytique) : ${f.popularity}/100</div></div>
+    </div>
+    <div class="grid-2" style="margin-top:12px;gap:8px">
+      <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:11px;font-family:var(--mono);color:var(--text-secondary)">
+        Agressivité <strong style="color:var(--green)">${f.aggression??'—'}</strong>/10 · Contrôle <strong style="color:var(--blue)">${f.control??'—'}</strong>/10<br>
+        Largeur <strong>${f.width??'—'}</strong> · Prof. <strong>${f.depth??'—'}</strong>
+      </div>
+      <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:11px;color:var(--text-muted)">Tags : ${(f.tags||[]).join(', ')}</div>
+    </div>
+    <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)"><span class="td-muted">Profils idéaux</span> ${f.idealRoles||'—'}</p>
+    <p style="margin-top:8px;font-size:13px;color:var(--text-secondary)"><strong>+</strong> ${f.strengths}</p>
+    <p style="font-size:13px;color:var(--text-secondary)"><strong>−</strong> ${f.weaknesses}</p>
+    <p style="font-size:12px;color:var(--text-muted)"><strong>Contre</strong> : ${f.counters} · <strong>Contexte</strong> : ${f.context}</p>
+    </section>`).join('');
+}
+
+function catTechBadge(cat){
+  const cmap={ tir:'badge-meta-s', passe:'badge-meta-a', defense:'badge-role', dribble:'badge-meta-b' };
+  return cmap[cat]||'badge-meta-c';
+}
+
+function renderTechniques(arr){
+  document.getElementById('techniques-container').innerHTML=`<div class="grid-auto">${arr.map(t=>`
+    <article class="technique-card card">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:8px">
+        <h3 style="font-family:var(--display);font-size:16px;margin:0">${t.name}</h3>${getTierBadge(t.tier)}</div>
+      <div class="input-chip" aria-label="Input">${t.input}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
+        <span class="badge ${catTechBadge(t.category)}">${t.category.toUpperCase()}</span>
+        ${getBadge(t.source==='official'?'official':'community')}
+        <span class="badge badge-analytical">${t.diff||''}</span>
+      </div>
+      ${getBar(t.eff)}
+      <p style="margin-top:10px;font-size:12px;color:var(--text-secondary)">
+        <span class="td-muted">Quand</span> ${t.when||'—'} · <span class="td-muted">Pourquoi</span> ${t.why||'—'}<br>
+        <span class="td-muted">Contre</span> ${t.against||'—'} · <span class="td-muted">Zone</span> ${t.zone||'—'}<br>
+        <span class="td-muted">Timing</span> ${t.timing}<br><span class="td-muted">Contexte</span> ${t.context}<br>
+        <span class="td-muted">Erreur</span> <span style="color:var(--red)">${t.error}</span><br>
+        <span class="td-muted">Chaîne</span> ${t.chain}<br><span class="td-muted">Patch</span> ${t.patch||'—'}<br>
+        <span class="td-muted">Profil</span> ${t.profile||'—'}
+      </p>
+      ${t.simple?`<p style="font-size:11px;color:var(--text-muted)"><strong>Variante simple :</strong> ${t.simple}</p>`:''}
+      ${t.advanced?`<p style="font-size:11px;color:var(--text-muted)"><strong>Variante avancée :</strong> ${t.advanced}</p>`:''}
+      ${t.counterRead?`<p style="font-size:11px;color:var(--orange)"><strong>Contre-lecture :</strong> ${t.counterRead}</p>`:''}
+      <p style="font-size:11px;margin-top:6px"><span class="td-muted">Risque</span> ${t.risk} · <span class="td-muted">Reward</span> ${t.reward}</p>
+    </article>`).join('')}</div>`;
+}
+
+function computeSbcScore(s){
+  const utilMeta=s.utilMeta, utilClub=s.utilClub, liq=s.liq, deadline=s.deadline;
+  const ratio=Math.min(s.reward/Math.max(s.cost,1),3)/3;
+  return +(ratio*.45 + utilMeta*.2 + utilClub*.15 + liq*.1 + deadline*.1).toFixed(2);
+}
+
+function renderSBC(arr){
+  const rows=arr.map(s=>{
+    const sc=computeSbcScore(s);
+    return `<tr data-cost="${s.cost}" data-reward="${s.reward}" data-score="${sc}"><td class="td-name">${s.name}</td><td>${s.cat}</td><td class="td-val">${(s.cost/1000).toFixed(0)}K</td><td class="td-val">${(s.reward/1000).toFixed(0)}K</td><td class="td-val">${sc.toFixed(2)}</td><td>${s.reco}</td></tr>`;
+  }).join('');
+  document.getElementById('sbc-container').innerHTML=`<div class="table-wrap"><table id="sbc-table"><thead><tr>
+    <th scope="col" data-col="0">SBC</th><th scope="col" data-col="1">Cat</th>
+    <th scope="col" data-col="2">Coût</th><th scope="col" data-col="3">Reward</th><th scope="col" data-col="4">Score</th><th scope="col" data-col="5">Reco</th>
+  </tr></thead><tbody>${rows}</tbody></table></div>`;
+  document.querySelectorAll('#sbc-table th[data-col]').forEach(th=>{
+    th.addEventListener('click',()=>sortSbcTable(+th.dataset.col));
+  });
+}
+
+function sortSbcTable(col){
+  const tbody=document.querySelector('#sbc-table tbody'); if(!tbody) return;
+  const rows=[...tbody.querySelectorAll('tr')];
+  const dir=sbcSort.col===col? -sbcSort.dir : 1;
+  sbcSort={ col, dir };
+  const numKey=['','','cost','reward','score'][col];
+  rows.sort((a,b)=>{
+    if(col<=1||col>=5||!numKey){
+      const ca=a.children[col].textContent, cb=b.children[col].textContent;
+      return dir*ca.localeCompare(cb,'fr',{sensitivity:'base'});
+    }
+    const av=parseFloat(a.dataset[numKey])||0, bv=parseFloat(b.dataset[numKey])||0;
+    return dir*(av-bv);
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+  document.querySelectorAll('#sbc-table th').forEach(th=>th.classList.remove('sort-asc','sort-desc'));
+  const th=document.querySelector(`#sbc-table th[data-col="${col}"]`);
+  if(th) th.classList.add(dir===1?'sort-asc':'sort-desc');
+}
+
+function renderMetaTable(){
+  const el=document.getElementById('meta-table-wrap'); if(!el||!META_TABLE.length) return;
+  el.innerHTML=`<table><thead><tr><th>Élément</th><th>Force</th><th>Stabilité</th><th>Risque nerf</th><th>Source</th></tr></thead><tbody>
+    ${META_TABLE.map(r=>`<tr><td class="td-name">${r.el}</td><td>${getTierBadge(r.force)}</td><td>${r.stab}</td><td>${r.nerf}</td><td>${getBadge(r.src==='official'?'official':'community')}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+function renderChemistryPage(){
+  const oc=document.getElementById('chem-official-card');
+  if(oc) oc.innerHTML=`<div class="card-header"><div class="card-title">EA — Chimie / styles (Launch)</div>${getBadge('official')}</div>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">${CHEM_OFFICIAL.headline}</p>
+    <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px">${(CHEM_OFFICIAL.bullets||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+    <p style="margin-top:10px"><a href="${CHEM_OFFICIAL.sourceUrl}" target="_blank" rel="noopener" style="color:var(--blue)">Source : Launch Update EA</a></p>`;
+  const pw=document.getElementById('chem-picks-wrap');
+  if(pw) pw.innerHTML=`<table><thead><tr><th>Rôle</th><th>Sans +3 (indicatif)</th><th>Avec +3</th><th>Confiance</th></tr></thead><tbody>
+    ${(CHEM_PICKS||[]).map(r=>`<tr><td class="td-name">${r.role}</td><td>${r.noChem}</td><td>${r.withChem}</td><td>${getBadge(r.conf==='community'?'community':'analytical')}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+function initDashboard(){
+  const sub=document.getElementById('dash-subtitle');
+  if(sub) sub.textContent=`Bundle ${CONFIG.bundleVersion} · révision ${CONFIG.dataRevision} · patch ref ${CONFIG.lastOfficialPatchId}`;
+  const live=document.getElementById('live-patch-text');
+  if(live) live.textContent=CONFIG.lastOfficialPatchId;
+  const h=document.getElementById('dash-headline');
+  if(h) h.textContent=META_SNAPSHOT.headline||'';
+  const pl=document.getElementById('dash-pillars');
+  if(pl) pl.innerHTML=(META_SNAPSHOT.pillars||[]).map(p=>`
+    <div style="padding:10px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)">
+      <div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">${p.k} ${getBadge(p.src||'community')}</div>
+      <div style="font-size:12px;color:var(--text-secondary)">${p.v}</div>
+    </div>`).join('');
+  const kp=document.getElementById('kpi-patch'); if(kp) kp.textContent=CONFIG.lastOfficialPatchId;
+  const kpp=document.getElementById('kpi-players'); if(kpp) kpp.textContent=String(PLAYERS.length);
+  const kf=document.getElementById('kpi-form'); if(kf) kf.textContent=String(FORMATIONS.length);
+  const kt=document.getElementById('kpi-tech'); if(kt) kt.textContent=String(TECHNIQUES.length);
+}
+
+function exportDataJson(){
+  const el=document.getElementById('export-status');
+  try{
+    const blob=new Blob([JSON.stringify(window.FC26_META_DATA,null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='fc26-meta-backup.json'; a.click(); URL.revokeObjectURL(a.href);
+    if(el) el.textContent='Export fc26-meta-backup.json déclenché (navigateur).';
+  }catch(e){ if(el) el.textContent='Erreur export : '+e; }
+}
+
+function renderPatches(){
+  const list=PATCHES.filter(p=>!String(p.version||'').includes('TEMPLATE'));
+  document.getElementById('patches-container').innerHTML=list.map(p=>`
+    <article class="patch-card">
+      <header style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <div><div class="patch-version">${p.version}</div><div class="patch-date">${p.date} · ${p.channel}</div></div>
+        <div style="display:flex;gap:6px;align-items:center">${getBadge(p.sourceType)}
+        <a class="badge badge-official" href="${p.sourceUrl}" target="_blank" rel="noopener">Source EA</a></div>
+      </header>
+      <p class="info-box" style="margin-bottom:10px"><strong>Résumé :</strong> ${p.summary}</p>
+      <ul class="patch-changes">${p.changes.map(c=>`<li><span class="impact-dot ${c.type}" aria-hidden="true"></span>${c.text}</li>`).join('')}</ul>
+      <div class="grid-2" style="margin-top:12px;gap:8px">
+        <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:12px"><div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">Impact méta (lecture)</div>${p.metaImpact}</div>
+        <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:12px"><div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">Bascule</div>${p.bascule}</div>
+      </div>
+    </article>`).join('');
+}
+
+function renderBehaviors(){
+  document.getElementById('behaviors-container').innerHTML=`<div class="table-wrap"><table><thead><tr>
+    <th>Comportement</th><th>Zone</th><th>Fréquence</th><th>Statut</th><th>Risque</th><th>Source</th><th>Note</th>
+  </tr></thead><tbody>${BEHAVIORS.map(b=>`<tr>
+    <td class="td-name">${b.name}</td><td class="td-muted">${b.zone}</td><td>${b.freq}</td><td>${b.status}</td><td>${b.risk}</td><td>${getBadge(b.source==='official'?'official':'community')}</td><td class="td-muted" style="max-width:220px">${b.note}</td>
+  </tr>`).join('')}</tbody></table></div>`;
+}
+
+function renderSettings(profile){
+  const s=SETTINGS[profile]; const c=document.getElementById('settings-container');
+  c.innerHTML=`<div class="info-box"><strong>${s.label}</strong> — ${s.desc} ${getBadge('analytical')}</div>
+    ${s.groups.map(g=>`<section class="section-block"><h3 class="section-title" style="font-size:15px">${g.title}</h3>
+      <div class="table-wrap"><table><thead><tr><th>Paramètre</th><th>Valeur</th><th>Note</th></tr></thead><tbody>
+      ${g.items.map(i=>`<tr><td class="td-name">${i.label}</td><td class="td-val" style="font-size:12px">${i.val}</td><td class="td-muted">${i.note}</td></tr>`).join('')}
+      </tbody></table></div></section>`).join('')}`;
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const page=document.getElementById('page-'+id);
+  if(page) page.classList.add('active');
+  const nav=document.querySelector(`.nav-item[data-page="${id}"]`);
+  if(nav) nav.classList.add('active');
+  if(id==='dashboard') initDashboard();
+  if(id==='meta') renderMetaTable();
+  if(id==='players'){ populateCompareSelects(); applyPlayerFilters(); }
+  if(id==='formations'){ document.querySelectorAll('#page-formations .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderFormations(FORMATIONS); }
+  if(id==='techniques'){ document.querySelectorAll('#page-techniques .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderTechniques(TECHNIQUES); }
+  if(id==='settings'){ document.querySelectorAll('#page-settings .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderSettings('balanced'); }
+  if(id==='sbc') renderSBC(SBC_DATA);
+  if(id==='patches') renderPatches();
+  if(id==='behaviors') renderBehaviors();
+  if(id==='chemistry') renderChemistryPage();
+  if(window.innerWidth<=900) document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('main').focus({preventScroll:true});
+}
+function navKey(e,id){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showPage(id);} }
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function toggleTheme(){ const h=document.documentElement; h.dataset.theme=h.dataset.theme==='dark'?'light':'dark'; }
+
+function setPlayerFilter(k,v){ playerFilters[k]=v; applyPlayerFilters(); }
+function applyPlayerFilters(){ renderPlayers(PLAYERS.filter(playerMatchesFilters)); }
+function resetPlayerFilters(){
+  playerFilters={q:'',pos:'',league:'',tier:'',acc:'',patchSens:''};
+  ['f-q','f-pos','f-league','f-tier','f-acc','f-patch'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  applyPlayerFilters();
+}
+
+function filterFormations(f,btn){
+  document.querySelectorAll('#page-formations .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  let arr=FORMATIONS;
+  if(f!=='all'){ if(f==='S'||f==='A') arr=FORMATIONS.filter(x=>x.tier===f); else arr=FORMATIONS.filter(x=>x.tags.includes(f)); }
+  renderFormations(arr);
+}
+function filterTech(cat,btn){
+  document.querySelectorAll('#page-techniques .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTechniques(cat==='all'?TECHNIQUES:TECHNIQUES.filter(t=>t.category===cat));
+}
+function showSettingProfile(profile,btn){
+  document.querySelectorAll('#page-settings .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSettings(profile);
+}
+
+let _gsTimer;
+function globalSearchDebounced(q){
+  clearTimeout(_gsTimer);
+  _gsTimer=setTimeout(()=>globalSearch(q),200);
+}
+function globalSearch(q){
+  const t=(q||'').trim().toLowerCase();
+  if(t.length<2) return;
+  const pHits=PLAYERS.filter(p=>p.name.toLowerCase().includes(t)||p.club.toLowerCase().includes(t));
+  const fHits=FORMATIONS.filter(f=>f.name.toLowerCase().includes(t)||f.style.toLowerCase().includes(t));
+  const techHits=TECHNIQUES.filter(x=>x.name.toLowerCase().includes(t)||x.input.toLowerCase().includes(t));
+  if(pHits.length){
+    showPage('players');
+    playerFilters={q:'',pos:'',league:'',tier:'',acc:'',patchSens:''};
+    ['f-pos','f-league','f-tier','f-acc','f-patch'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    const fq=document.getElementById('f-q'); if(fq) fq.value='';
+    renderPlayers(pHits);
+    return;
+  }
+  if(fHits.length){ showPage('formations'); document.querySelectorAll('#page-formations .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderFormations(fHits); return; }
+  if(techHits.length){ showPage('techniques'); document.querySelectorAll('#page-techniques .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderTechniques(techHits); return; }
+  alert('Aucun résultat (joueurs/formations/techniques) pour : '+q);
+}
+
+function populateCompareSelects(){
+  const opts='<option value="">—</option>'+PLAYERS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  const a=document.getElementById('cmp-a'); const b=document.getElementById('cmp-b');
+  if(a&&b){ a.innerHTML=opts; b.innerHTML=opts; }
+}
+function renderCompare(){
+  const ida=document.getElementById('cmp-a').value; const idb=document.getElementById('cmp-b').value;
+  const pa=PLAYERS.find(x=>x.id===ida); const pb=PLAYERS.find(x=>x.id===idb);
+  const out=document.getElementById('compare-out');
+  if(!pa||!pb||ida===idb){ out.innerHTML='<p class="td-muted">Choisissez deux joueurs distincts.</p>'; return; }
+  const keys=[['Meta score','metaScore'],['Tier','tier'],['Accélération','acc'],['Patch sens.','patchSens'],['Rôle','metaRole'],['Meilleur poste','bestPos'],['Alternatifs','altPos'],['Chimie sans +3','chemNone'],['Chimie +3','chemChem']];
+  out.innerHTML=`<table><thead><tr><th>Champ</th><th>${pa.name}</th><th>${pb.name}</th></tr></thead><tbody>
+    ${keys.map(([l,k])=>`<tr><td class="td-name">${l}</td><td>${Array.isArray(pa[k])?pa[k].join(', '):pa[k]}</td><td>${Array.isArray(pb[k])?pb[k].join(', '):pb[k]}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeDrawer();
+});
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(!loadData()) return;
+  initDashboard();
+  renderMetaTable();
+  renderPlayers(PLAYERS);
+});
+</script>
+</body>
+</html>
