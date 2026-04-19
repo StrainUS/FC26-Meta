@@ -2,1830 +2,272 @@
 <html lang="fr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FC 26 · Meta Command Center Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#080b0f">
+<title>FC 26 · Méta FC 26</title>
+<meta name="description" content="Méta FC 26 — tactique, catalogue, composeur.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg-0:#080b0f;--bg-1:#0d1117;--bg-2:#141a23;--bg-3:#1c2534;--bg-4:#243040;
-  --border:rgba(255,255,255,.07);--border-accent:rgba(0,255,136,.25);
-  --green:#00ff88;--green-dim:#00cc6a;--green-muted:rgba(0,255,136,.12);
-  --gold:#ffd700;--red:#ff4444;--orange:#ff8c00;--blue:#4da6ff;--purple:#a855f7;
-  --text-primary:#e8edf3;--text-secondary:#7a8a9e;--text-muted:#485566;
-  --sidebar-w:220px;--topbar-h:56px;--radius:8px;--radius-lg:12px;
-  --mono:'JetBrains Mono',monospace;--display:'Rajdhani',sans-serif;--body:'Barlow','Inter',system-ui,sans-serif;
-  --transition:.18s cubic-bezier(.4,0,.2,1);
-}
-[data-theme="light"]{
-  --bg-0:#f0f2f5;--bg-1:#fff;--bg-2:#f7f9fc;--bg-3:#edf0f4;--bg-4:#e2e7ee;
-  --border:rgba(0,0,0,.08);--border-accent:rgba(0,180,90,.3);
-  --green:#008844;--green-dim:#006633;--green-muted:rgba(0,136,68,.1);
-  --text-primary:#0d1117;--text-secondary:#4a5568;--text-muted:#9aa5b4;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--body);background:var(--bg-0);color:var(--text-primary);display:flex;min-height:100vh;overflow-x:hidden;line-height:1.5}
-#skip{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden}
-#skip:focus{position:fixed;left:12px;top:12px;z-index:2000;width:auto;height:auto;padding:8px 12px;background:var(--bg-1);border:1px solid var(--green);border-radius:6px}
-#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:var(--bg-1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 20px;z-index:1000;backdrop-filter:blur(12px)}
-.logo{font-family:var(--display);font-size:20px;font-weight:700;letter-spacing:2px;color:var(--green);white-space:nowrap;flex-shrink:0}
-.logo em{font-style:normal;color:var(--text-muted);font-weight:400;font-size:11px;font-family:var(--body);letter-spacing:0;margin-left:8px;vertical-align:middle}
-.logo span{color:var(--text-muted);font-weight:400;font-size:13px;letter-spacing:0;margin-left:6px}
-#global-search{flex:1;max-width:420px;background:var(--bg-2);border:1px solid var(--border);border-radius:6px;padding:0 12px 0 36px;height:34px;color:var(--text-primary);font-size:13px;font-family:var(--body);transition:border-color var(--transition)}
-#global-search:focus{outline:2px solid var(--green-dim);outline-offset:1px;border-color:var(--green-dim)}
-.search-wrap{position:relative;flex:1;max-width:420px}
-.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:14px;pointer-events:none}
-.topbar-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
-.theme-toggle{background:var(--bg-3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--text-secondary);font-size:13px;transition:all var(--transition)}
-.theme-toggle:hover,.theme-toggle:focus-visible{border-color:var(--green-dim);color:var(--green)}
-.menu-toggle{display:none;background:none;border:1px solid transparent;border-radius:6px;color:var(--text-primary);font-size:20px;cursor:pointer;padding:4px 8px}
-.menu-toggle:focus-visible{outline:2px solid var(--green-dim)}
-.live-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--green);background:var(--green-muted);border:1px solid var(--border-accent);border-radius:4px;padding:3px 8px}
-.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-#sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--bg-1);border-right:1px solid var(--border);overflow-y:auto;z-index:900;padding:12px 0;transition:transform var(--transition)}
-#sidebar::-webkit-scrollbar{width:3px}
-#sidebar::-webkit-scrollbar-thumb{background:var(--bg-4);border-radius:2px}
-.nav-section-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-family:var(--mono);padding:12px 16px 4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;border-left:2px solid transparent;transition:all var(--transition);font-size:13px;color:var(--text-secondary);user-select:none}
-.nav-item:hover{background:var(--bg-2);color:var(--text-primary)}
-.nav-item:focus-visible{outline:none;background:var(--bg-2);border-left-color:var(--green-dim)}
-.nav-item.active{background:var(--green-muted);border-left-color:var(--green);color:var(--green)}
-.nav-icon{width:18px;text-align:center;font-size:15px;flex-shrink:0}
-#main{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);flex:1;min-width:0;padding:24px}
-.page{display:none}.page.active{display:block;animation:fadeIn .2s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.page-header{margin-bottom:24px}
-.page-title{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:1px}
-.page-subtitle{font-size:13px;color:var(--text-muted);margin-top:2px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.grid-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:border-color var(--transition)}
-.card:hover{border-color:var(--border-accent)}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px;flex-wrap:wrap}
-.card-title{font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-secondary)}
-.section-block{margin-bottom:28px}
-.section-title{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
-.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-family:var(--mono);font-weight:500;border-radius:4px;padding:2px 7px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
-.badge-official{background:rgba(77,166,255,.15);color:var(--blue);border:1px solid rgba(77,166,255,.3)}
-.badge-analytical{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
-.badge-community{background:rgba(255,140,0,.15);color:var(--orange);border:1px solid rgba(255,140,0,.3)}
-.badge-unconfirmed{background:rgba(255,68,68,.1);color:var(--red);border:1px solid rgba(255,68,68,.2)}
-.badge-meta-s{background:rgba(0,255,136,.2);color:var(--green);border:1px solid rgba(0,255,136,.35)}
-.badge-meta-a{background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3)}
-.badge-meta-b{background:rgba(255,140,0,.12);color:var(--orange);border:1px solid rgba(255,140,0,.25)}
-.badge-meta-c{background:rgba(255,255,255,.06);color:var(--text-secondary);border:1px solid var(--border)}
-.badge-patch{background:rgba(255,68,68,.12);color:#ff6666;border:1px solid rgba(255,68,68,.25)}
-.badge-stable{background:rgba(0,255,136,.1);color:var(--green-dim);border:1px solid rgba(0,255,136,.2)}
-.badge-role{background:rgba(77,166,255,.12);color:#80c4ff;border:1px solid rgba(77,166,255,.25)}
-.info-box{background:var(--bg-3);border-left:3px solid var(--green);border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;font-size:12.5px;color:var(--text-secondary);margin-bottom:12px}
-.info-box.warn{border-left-color:var(--orange)}.info-box.danger{border-left-color:var(--red)}
-.info-box strong{color:var(--text-primary)}
-.score-wrap{display:flex;align-items:center;gap:8px}
-.score-bar{flex:1;height:4px;background:var(--bg-4);border-radius:2px;overflow:hidden}
-.score-fill{height:100%;border-radius:2px;transition:width .4s ease}
-.score-fill.s{background:var(--green)}.score-fill.a{background:var(--gold)}.score-fill.b{background:var(--orange)}.score-fill.c{background:var(--text-muted)}
-.score-label{font-family:var(--mono);font-size:11px;color:var(--text-secondary);min-width:28px;text-align:right}
-.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12.5px}
-th{background:var(--bg-3);color:var(--text-secondary);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
-th:hover{color:var(--green)}th.sort-asc::after{content:' ↑';color:var(--green)}th.sort-desc::after{content:' ↓';color:var(--green)}
-td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
-tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
-.td-name{font-weight:500;color:var(--text-primary)}.td-val{font-family:var(--mono);color:var(--green);font-size:13px;font-weight:500}.td-muted{color:var(--text-muted);font-size:11.5px}
-.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center}
-.filter-select,.filter-input{background:var(--bg-2);border:1px solid var(--border);border-radius:6px;padding:7px 12px;font-size:12px;color:var(--text-primary);font-family:var(--body);cursor:pointer;transition:border-color var(--transition)}
-.filter-select:focus,.filter-input:focus{outline:none;border-color:var(--green-dim)}
-.filter-btn{background:var(--bg-2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all var(--transition);font-family:var(--body)}
-.filter-btn:hover,.filter-btn:focus-visible,.filter-btn.active{background:var(--green-muted);border-color:var(--green-dim);color:var(--green)}
-.player-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;flex-direction:column;gap:10px;transition:all var(--transition);cursor:pointer;position:relative;overflow:hidden}
-.player-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);opacity:0;transition:opacity var(--transition)}
-.player-card:hover{border-color:var(--border-accent);transform:translateY(-1px)}
-.player-card:hover::before{opacity:1}
-.player-card:focus-visible{outline:2px solid var(--green-dim);outline-offset:2px}
-.player-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-.player-card-name{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.5px}
-.player-card-pos{background:var(--bg-4);border-radius:4px;padding:2px 7px;font-family:var(--mono);font-size:11px;color:var(--text-secondary);flex-shrink:0}
-.player-card-meta{font-size:11.5px;color:var(--text-muted)}
-.player-card-playstyles{display:flex;flex-wrap:wrap;gap:4px}
-.ps-chip{font-size:10px;font-family:var(--mono);padding:2px 6px;border-radius:3px;background:var(--bg-4);color:var(--text-secondary);border:1px solid var(--border)}
-.ps-chip.plus{background:rgba(0,255,136,.1);color:var(--green);border-color:var(--border-accent)}
-.formation-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;transition:all var(--transition)}
-.formation-card--clickable{cursor:pointer}
-.formation-card--clickable:hover{border-color:var(--border-accent);box-shadow:0 0 0 1px var(--border-accent)}
-.formation-card--clickable:focus-visible{outline:2px solid var(--green-dim);outline-offset:2px}
-.formation-card:hover{border-color:var(--border-accent)}
-.formation-hint{font-size:10px;color:var(--text-muted);margin-top:12px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
-.formations-pro-grid{display:grid;grid-template-columns:1fr minmax(240px,300px);gap:20px;align-items:start}
-@media(max-width:1024px){.formations-pro-grid{grid-template-columns:1fr}}
-.formations-pro-aside{position:sticky;top:calc(var(--topbar-h) + 16px)}
-.formations-pro-aside .card-title{font-size:11px}
-.formation-row-card{
-  display:flex;align-items:center;gap:16px;padding:16px 18px;border-radius:var(--radius-lg);cursor:pointer;transition:all var(--transition);
-  border:1px solid var(--border);background:var(--bg-2);margin-bottom:10px;
-}
-.formation-row-card:hover,.formation-row-card:focus-visible{border-color:var(--border-accent);background:var(--bg-3);box-shadow:0 0 0 1px rgba(0,255,136,.12)}
-.formation-row-card:focus-visible{outline:2px solid var(--green-dim);outline-offset:2px}
-.formation-row-card.is-active{border-color:var(--green-dim);background:var(--green-muted)}
-.formation-row-main{flex:1;min-width:0}
-.formation-row-name{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:2px;color:var(--green);line-height:1.1}
-.formation-row-meta{font-size:12px;color:var(--text-muted);margin-top:4px}
-.formation-row-score{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--gold);min-width:44px;text-align:right}
-.fd-pro{border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-top:4px;background:var(--bg-2)}
-.fd-pro-header{
-  background:linear-gradient(135deg,var(--bg-3) 0%,rgba(0,255,136,.07) 100%);
-  padding:20px 22px;border-bottom:1px solid var(--border);
-}
-.fd-pro-title{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:2px;color:var(--green);line-height:1.1}
-.fd-pro-sub{font-size:12px;color:var(--text-muted);margin-top:6px}
-.fd-pro-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
-@media(max-width:480px){.fd-pro-stats{grid-template-columns:repeat(2,1fr)}}
-.fd-pro-stat{background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center}
-.fd-pro-stat .v{font-family:var(--display);font-size:17px;font-weight:700;color:var(--green)}
-.fd-pro-stat .l{font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:var(--text-muted);font-family:var(--mono);margin-top:4px}
-.fd-pro-body{display:grid;grid-template-columns:240px 1fr;gap:0;min-height:0}
-@media(max-width:540px){.fd-pro-body{grid-template-columns:1fr}}
-.fd-pro-pitch{padding:18px;background:var(--bg-3);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:10px}
-@media(max-width:540px){.fd-pro-pitch{border-right:none;border-bottom:1px solid var(--border)}}
-.fd-pro-detail{padding:18px 20px 22px;overflow-y:auto;max-height:min(62vh,520px)}
-.mini-pitch{width:100%;max-width:220px;border-radius:10px;border:1px solid var(--border);display:block}
-.mini-pitch-dot{filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
-.inst-chip{font-size:10px;font-family:var(--mono);padding:3px 7px;border-radius:4px;background:var(--bg-4);color:var(--text-secondary);border:1px solid var(--border);margin:2px 4px 2px 0;display:inline-block}
-.inst-chip.accent{background:rgba(0,255,136,.1);color:var(--green);border-color:var(--border-accent)}
-.philo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-@media(max-width:480px){.philo-grid{grid-template-columns:1fr}}
-.philo-card{background:var(--bg-3);border-radius:8px;padding:12px 14px;border-left:3px solid var(--green)}
-.philo-card.neg{border-left-color:var(--red)}
-.philo-card h4{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-family:var(--mono);color:var(--text-muted);margin-bottom:8px}
-.philo-card ul{margin:0;padding-left:16px;font-size:12px;color:var(--text-secondary);line-height:1.55}
-.fd-pro-steps{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:6px}
-.fd-pro-steps li{font-size:12px;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
-.fd-pro-steps li:last-child{border-bottom:none}
-.fd-step-num{font-family:var(--mono);font-size:10px;color:var(--green);background:var(--green-muted);border-radius:3px;padding:2px 6px;flex-shrink:0}
-.slot-table .inst-wrap{margin-top:6px;line-height:1.5}
-.slot-table{font-size:12px}
-.slot-table th,.slot-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
-.slot-table th{background:var(--bg-3);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
-.slot-table tr:last-child td{border-bottom:none}
-.formation-name{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:2px;color:var(--green);margin-bottom:4px}
-.formation-style{font-size:12px;color:var(--text-muted);margin-bottom:10px}
-.technique-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:all var(--transition)}
-.technique-card:hover{border-color:var(--border-accent)}
-.input-chip{background:var(--bg-0);border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-family:var(--mono);font-size:11px;color:var(--blue);display:inline-block}
-.patch-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;border-left:3px solid var(--blue);margin-bottom:12px}
-.patch-version{font-family:var(--mono);font-size:13px;color:var(--blue);font-weight:500}
-.patch-date{font-size:11px;color:var(--text-muted)}
-.patch-changes{list-style:none;margin-top:10px}
-.patch-changes li{font-size:12.5px;color:var(--text-secondary);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px}
-.patch-changes li:last-child{border-bottom:none}
-.impact-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.impact-dot.nerf{background:var(--red)}.impact-dot.buff{background:var(--green)}.impact-dot.neutral{background:var(--orange)}
-.dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-.dash-kpi{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
-.dash-kpi-val{font-family:var(--display);font-size:26px;font-weight:700;color:var(--green)}
-.dash-kpi-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;font-family:var(--mono)}
-.meta-snapshot{background:linear-gradient(135deg,var(--bg-2) 0%,rgba(0,255,136,.04) 100%);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:20px;margin-bottom:24px}
-.meta-snapshot-title{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:1px;color:var(--green);margin-bottom:12px}
-.quick-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.quick-link{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;cursor:pointer;transition:all var(--transition)}
-.quick-link:hover,.quick-link:focus-visible{border-color:var(--green-dim);background:var(--green-muted)}
-.quick-link-icon{font-size:24px;margin-bottom:6px}
-.quick-link-label{font-size:12px;color:var(--text-secondary);font-family:var(--mono)}
-#drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;backdrop-filter:blur(2px)}
-#drawer-overlay.active{display:block}
-#drawer{position:fixed;top:0;right:-580px;bottom:0;width:min(580px,100vw);max-width:100%;background:var(--bg-1);border-left:1px solid var(--border);z-index:1200;overflow-y:auto;padding:0;transition:right .3s cubic-bezier(.4,0,.2,1)}
-#drawer.open{right:0}
-#drawer-close{position:absolute;top:18px;right:18px;background:var(--bg-3);border:1px solid var(--border);border-radius:6px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-secondary);z-index:2}
-#drawer-close:hover,#drawer-close:focus-visible{color:var(--red);border-color:var(--red)}
-#drawer-content{padding:56px 24px 32px;margin-top:0}
-.kbd{font-family:var(--mono);font-size:10px;border:1px solid var(--border);padding:1px 5px;border-radius:3px;background:var(--bg-3)}
-@media (max-width:900px){
-  #sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}
-  #main{margin-left:0}.menu-toggle{display:block}.dash-kpis{grid-template-columns:repeat(2,1fr)}#drawer{width:100%}
-}
-@media (max-width:540px){#main{padding:16px}.dash-kpis{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}.logo span{display:none}}
-::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--bg-4);border-radius:3px}
-.squad-layout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(300px,380px);gap:20px;align-items:start}
-@media (max-width:900px){.squad-layout{grid-template-columns:1fr}}
-.squad-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
-.squad-pitch-col{min-width:0}
-.squad-pitch-wrap{
-  perspective:900px;margin:0 auto 16px;max-width:520px;
-}
-.squad-pitch{
-  position:relative;width:100%;aspect-ratio:58/88;border-radius:14px;overflow:hidden;
-  transform:rotateX(12deg);transform-style:preserve-3d;box-shadow:0 24px 48px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.06);
-  border:1px solid var(--border);
-}
-.squad-pitch-grass{
-  position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 120% 85% at 50% 45%,rgba(0,90,45,.25) 0%,transparent 55%),
-    linear-gradient(180deg,#0d3d22 0%,#0a5c32 18%,#0d4d28 50%,#0a5c32 82%,#0d3d22 100%);
-}
-.squad-pitch-lines{
-  position:absolute;inset:0;pointer-events:none;opacity:.85;
-  background:
-    linear-gradient(90deg,transparent 0%,transparent calc(50% - 1px),rgba(255,255,255,.35) calc(50% - 1px),rgba(255,255,255,.35) calc(50% + 1px),transparent calc(50% + 1px)),
-    radial-gradient(circle at 50% 50%,transparent 31%,rgba(255,255,255,.28) 31.5%,rgba(255,255,255,.28) 32.5%,transparent 33%),
-    linear-gradient(180deg,transparent 14%,rgba(255,255,255,.2) 14%,rgba(255,255,255,.2) 14.3%,transparent 14.3%),
-    linear-gradient(180deg,transparent 86%,rgba(255,255,255,.2) 86%,rgba(255,255,255,.2) 86.3%,transparent 86.3%);
-}
-.squad-pitch-slots{position:absolute;inset:0}
-.pitch-slot{
-  position:absolute;left:var(--pl);top:var(--pt);transform:translate(-50%,-50%);
-  width:52px;height:68px;border-radius:10px 10px 8px 8px;
-  background:linear-gradient(180deg,#2a3444 0%,#1a2230 100%);
-  border:1px solid rgba(255,255,255,.12);box-shadow:0 4px 12px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);
-  cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4px 3px 2px;
-  transition:border-color var(--transition),box-shadow var(--transition),transform var(--transition);
-  z-index:2;
-}
-.pitch-slot:hover{border-color:var(--green-dim);transform:translate(-50%,-50%) scale(1.03)}
-.pitch-slot.active{border-color:var(--green);box-shadow:0 0 0 2px var(--border-accent),0 6px 16px rgba(0,255,136,.15)}
-.pitch-slot-face{width:34px;height:34px;border-radius:6px;object-fit:cover;background:var(--bg-4);flex-shrink:0}
-.pitch-slot-plus{font-size:22px;font-weight:700;color:var(--green);line-height:1;margin-top:2px}
-.pitch-slot-ovr{font-family:var(--display);font-size:15px;font-weight:700;color:var(--green);line-height:1;margin-top:2px}
-.pitch-slot-name{font-size:8px;font-weight:600;color:var(--text-primary);text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px;line-height:1.15}
-.pitch-slot-pos{
-  position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);
-  font-family:var(--mono);font-size:9px;font-weight:600;color:#fff;text-shadow:0 1px 3px #000;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.55);white-space:nowrap;pointer-events:none;
-}
-.pitch-slot-clear{
-  position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:1px solid var(--border);
-  background:var(--bg-1);color:var(--text-secondary);font-size:12px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;z-index:3;
-}
-.pitch-slot-clear:hover{color:var(--red);border-color:var(--red)}
-.squad-bench-wrap{margin-top:4px}
-.squad-bench-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
-.squad-bench-row{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
-.bench-slot{
-  width:48px;height:62px;border-radius:8px;background:var(--bg-3);border:1px solid var(--border);
-  cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 2px;position:relative;
-  transition:border-color var(--transition),background var(--transition);
-}
-.bench-slot:hover{border-color:var(--green-dim)}
-.bench-slot.active{border-color:var(--green);background:var(--green-muted)}
-.bench-slot .pitch-slot-pos{position:relative;left:auto;bottom:auto;transform:none;margin-top:2px;font-size:8px;background:rgba(0,0,0,.4)}
-.squad-side-formation{margin-bottom:12px}
-.squad-side-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.squad-stat-cell{text-align:center;padding:8px 4px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)}
-.squad-stat-cell .lab{font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase}
-.squad-stat-cell .val{font-family:var(--display);font-size:16px;font-weight:700;color:var(--green)}
-.squad-chem-bar{height:6px;border-radius:3px;background:var(--bg-4);overflow:hidden;margin:6px 0}
-.squad-chem-fill{height:100%;background:var(--green);width:0%;transition:width .25s ease}
-.catalog-panel{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;position:sticky;top:calc(var(--topbar-h) + 12px)}
-.catalog-list{max-height:min(52vh,420px);overflow-y:auto;margin-top:10px;display:flex;flex-direction:column;gap:6px}
-.catalog-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;border:1px solid transparent;cursor:pointer;text-align:left;font:inherit;color:inherit;background:var(--bg-3);transition:border-color var(--transition)}
-.catalog-row:hover{border-color:var(--border-accent)}
-.catalog-row img{width:36px;height:36px;border-radius:4px;object-fit:cover;background:var(--bg-4);flex-shrink:0}
-.catalog-row .nm{flex:1;min-width:0}
-.catalog-row .nm b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.catalog-row .nm span{font-size:10px;color:var(--text-muted)}
-.catalog-row .ovr{font-family:var(--display);font-size:18px;font-weight:700;color:var(--green);min-width:32px;text-align:right}
-</style>
+<link rel="stylesheet" href="assets/fc26-command-center.css?v=2026.04.19.43">
 </head>
 <body>
 <a id="skip" href="#main">Aller au contenu</a>
+<header id="app-header" class="app-header">
 <div id="topbar">
-  <button type="button" class="menu-toggle" aria-label="Ouvrir le menu" onclick="toggleSidebar()">☰</button>
-  <div class="logo">FC26<em>COMMAND CENTER</em></div>
+  <div class="topbar-inner">
+  <div class="logo">
+    <div class="logo-lockup">
+      <span class="logo-title">FC26</span>
+      <span class="logo-divider" aria-hidden="true"></span>
+      <a class="logo-credit" href="https://github.com/StrainUS" target="_blank" rel="noopener noreferrer me" aria-label="Par StrainUS — ouvrir le profil GitHub">
+        <span class="logo-credit-by">by</span>
+        <span class="logo-credit-name">StrainUS</span>
+        <span class="logo-credit-emoji" aria-hidden="true">🧠</span>
+      </a>
+    </div>
+    <span class="logo-tagline">Méta FC 26</span>
+  </div>
   <div class="search-wrap">
     <span class="search-icon" aria-hidden="true">⌕</span>
-    <input id="global-search" type="search" aria-label="Recherche globale" placeholder="Joueur, formation, technique…" autocomplete="off" oninput="globalSearchDebounced(this.value)">
+    <input id="global-search" type="search" aria-label="Recherche globale" placeholder="Joueur, formation, geste…" autocomplete="off" oninput="globalSearchDebounced(this.value)">
+    <span id="search-status" class="search-status td-muted" aria-live="polite"></span>
   </div>
   <div class="topbar-actions">
-    <div class="live-badge" id="live-patch-badge" title="Bundle données"><div class="live-dot" aria-hidden="true"></div><span id="live-patch-text">…</span></div>
+    <div class="live-badge" id="live-patch-badge" title="Patch"><div class="live-dot" aria-hidden="true"></div><span id="live-patch-text">…</span></div>
     <button type="button" class="theme-toggle" onclick="toggleTheme()">◑ Thème</button>
   </div>
 </div>
-
-<nav id="sidebar" aria-label="Navigation principale">
-  <div class="nav-section-label">Navigation</div>
-  <div class="nav-item active" tabindex="0" role="button" data-page="setup-express" onclick="showPage('setup-express')" onkeydown="navKey(event,'setup-express')"><span class="nav-icon">▶</span> Rivaux express</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="dashboard" onclick="showPage('dashboard')" onkeydown="navKey(event,'dashboard')"><span class="nav-icon">⬡</span> Tableau de bord</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="meta" onclick="showPage('meta')" onkeydown="navKey(event,'meta')"><span class="nav-icon">◈</span> Hub méta</div>
-  <div class="nav-section-label">Équipe</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="players" onclick="showPage('players')" onkeydown="navKey(event,'players')"><span class="nav-icon">◉</span> Joueurs méta</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="formations" onclick="showPage('formations')" onkeydown="navKey(event,'formations')"><span class="nav-icon">⊞</span> Formations</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="squad" onclick="showPage('squad')" onkeydown="navKey(event,'squad')"><span class="nav-icon">◇</span> Prototype équipe</div>
-  <div class="nav-section-label">Jeu</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="techniques" onclick="showPage('techniques')" onkeydown="navKey(event,'techniques')"><span class="nav-icon">⚡</span> Techniques</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="settings" onclick="showPage('settings')" onkeydown="navKey(event,'settings')"><span class="nav-icon">⚙</span> Réglages</div>
-  <div class="nav-section-label">Gestion club</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="sbc" onclick="showPage('sbc')" onkeydown="navKey(event,'sbc')"><span class="nav-icon">⬡</span> SBC &amp; rentabilité</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="patches" onclick="showPage('patches')" onkeydown="navKey(event,'patches')"><span class="nav-icon">📋</span> Patch notes</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="webapp" onclick="showPage('webapp')" onkeydown="navKey(event,'webapp')"><span class="nav-icon">📱</span> Application web</div>
-  <div class="nav-section-label">Veille</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="behaviors" onclick="showPage('behaviors')" onkeydown="navKey(event,'behaviors')"><span class="nav-icon">👁</span> Comportements</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="chemistry" onclick="showPage('chemistry')" onkeydown="navKey(event,'chemistry')"><span class="nav-icon">⌬</span> Chimie &amp; styles</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="updatehub" onclick="showPage('updatehub')" onkeydown="navKey(event,'updatehub')"><span class="nav-icon">↻</span> Mise à jour</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="method" onclick="showPage('method')" onkeydown="navKey(event,'method')"><span class="nav-icon">◇</span> Méthodologie</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="sources" onclick="showPage('sources')" onkeydown="navKey(event,'sources')"><span class="nav-icon">✓</span> Sources</div>
+</div>
+<nav id="site-nav" class="site-nav" aria-label="Navigation principale">
+  <div class="nav-submenu nav-submenu--flat" role="group" aria-label="Sections">
+    <button type="button" class="nav-item active" data-page="meta-home" onclick="fc26NavGo('meta-home')" onkeydown="navKey(event,'meta-home')"><span class="nav-icon" aria-hidden="true">◈</span> Méta FC 26</button>
+    <button type="button" class="nav-item" data-page="players" onclick="fc26NavGo('players')" onkeydown="navKey(event,'players')"><span class="nav-icon" aria-hidden="true">◉</span> Joueurs</button>
+    <button type="button" class="nav-item" data-page="squad" onclick="fc26NavGo('squad')" onkeydown="navKey(event,'squad')"><span class="nav-icon" aria-hidden="true">◇</span> Composeur</button>
+    <button type="button" class="nav-item" data-page="settings" onclick="fc26NavGo('settings')" onkeydown="navKey(event,'settings')"><span class="nav-icon" aria-hidden="true">⚙</span> Manette</button>
+  </div>
 </nav>
+</header>
 
-<main id="main" tabindex="-1">
-<div class="page active" id="page-setup-express">
+<main id="main" class="main-canvas" tabindex="-1">
+
+<div class="page active" id="page-meta-home">
   <div class="page-header">
-    <h1 class="page-title">Rivaux express</h1>
-    <p class="page-subtitle">Une page = où aller + quoi régler (synthèse DATA)</p>
+    <h1 class="page-title">Méta FC 26</h1>
+    <p class="page-subtitle" id="dash-subtitle">…</p>
   </div>
-  <div id="setup-express-root" class="section-block" aria-live="polite"></div>
-</div>
-<div class="page" id="page-dashboard">
-  <div class="page-header">
-    <h1 class="page-title">Tableau de bord</h1>
-    <p class="page-subtitle" id="dash-subtitle">EA SPORTS FC 26 · Chargement bundle…</p>
+
+  <div class="fc26-subtab-bar fc26-subtab-bar--meta" role="tablist" aria-label="Sections hub">
+    <button type="button" class="fc26-subtab active" role="tab" aria-selected="true" data-meta-tab="hub" onclick="fc26MetaHomeTab('hub',this)">Hub</button>
+    <button type="button" class="fc26-subtab" role="tab" aria-selected="false" data-meta-tab="tactique" onclick="fc26MetaHomeTab('tactique',this)">Formations</button>
+    <button type="button" class="fc26-subtab" role="tab" aria-selected="false" data-meta-tab="gameplay" onclick="fc26MetaHomeTab('gameplay',this)">Gameplay</button>
+    <button type="button" class="fc26-subtab" role="tab" aria-selected="false" data-meta-tab="fut" onclick="fc26MetaHomeTab('fut',this)">FUT</button>
+    <button type="button" class="fc26-subtab" role="tab" aria-selected="false" data-meta-tab="gestes" onclick="fc26MetaHomeTab('gestes',this)">Gestes</button>
   </div>
-  <div class="card" style="margin-bottom:16px;border-color:rgba(0,255,136,.35);background:linear-gradient(135deg,var(--bg-2) 0%,rgba(0,255,136,.06) 100%)">
-    <div class="card-header" style="margin-bottom:8px"><div class="card-title" style="color:var(--green)">Réponse rapide</div><span class="badge badge-analytical">1 page</span></div>
-    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Tu veux appliquer la lecture la plus méta du fichier et tester en Division Rivaux ? Tout est sur <strong>Rivaux express</strong>.</p>
-    <button type="button" class="filter-btn" onclick="showPage('setup-express')" style="font-weight:600">Ouvrir « Rivaux express »</button>
-  </div>
-  <div class="info-box warn"><strong>Fichier de données :</strong> éditer <code style="font-family:var(--mono)">fc26-meta-data.js</code> (même dossier que ce HTML) après chaque patch EA, puis recharger la page. Les évaluations « méta » joueurs / formations restent <span class="badge badge-community">Communauté</span> / <span class="badge badge-analytical">Analytique</span> sauf badge contraire.</div>
-  <div class="meta-snapshot" id="dash-snapshot">
-    <div class="meta-snapshot-title">Lecture méta — instantané (<span class="badge badge-analytical">config DATA</span>)</div>
-    <p id="dash-headline" class="td-muted" style="font-size:13px;margin-bottom:12px"></p>
-    <div class="grid-2" id="dash-pillars" style="gap:10px"></div>
-    <div class="info-box" style="margin-top:14px;margin-bottom:0" id="dash-official-patch-cta"></div>
-  </div>
-  <div class="dash-kpis" id="dash-kpis">
-    <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-patch">—</div><div class="dash-kpi-label">Patch ref</div><div class="td-muted" style="margin-top:4px">CONFIG</div></div>
-    <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-players">—</div><div class="dash-kpi-label">Fiches joueurs</div><div class="td-muted" style="margin-top:4px">DATA.js</div></div>
-    <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-form">—</div><div class="dash-kpi-label">Formations</div><div class="td-muted" style="margin-top:4px">DATA.js</div></div>
-    <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-tech">—</div><div class="dash-kpi-label">Techniques</div><div class="td-muted" style="margin-top:4px">DATA.js</div></div>
-  </div>
-  <div class="section-block">
-    <h2 class="section-title">Accès rapide</h2>
-    <div class="quick-links">
-      <div class="quick-link" tabindex="0" role="link" onclick="showPage('setup-express')" onkeydown="if(event.key==='Enter')showPage('setup-express')"><div class="quick-link-icon">▶</div><div class="quick-link-label">RIVALS EXPRESS</div></div>
-      <div class="quick-link" tabindex="0" role="link" onclick="showPage('players')" onkeydown="if(event.key==='Enter')showPage('players')"><div class="quick-link-icon">◉</div><div class="quick-link-label">JOUEURS</div></div>
-      <div class="quick-link" tabindex="0" onclick="showPage('formations')" onkeydown="if(event.key==='Enter')showPage('formations')"><div class="quick-link-icon">⊞</div><div class="quick-link-label">FORMATIONS</div></div>
-      <div class="quick-link" tabindex="0" onclick="showPage('squad')" onkeydown="if(event.key==='Enter')showPage('squad')"><div class="quick-link-icon">◇</div><div class="quick-link-label">PROTOTYPE XI</div></div>
-      <div class="quick-link" tabindex="0" onclick="showPage('techniques')" onkeydown="if(event.key==='Enter')showPage('techniques')"><div class="quick-link-icon">⚡</div><div class="quick-link-label">TECHNIQUES</div></div>
-      <div class="quick-link" tabindex="0" onclick="showPage('sbc')" onkeydown="if(event.key==='Enter')showPage('sbc')"><div class="quick-link-icon">⬡</div><div class="quick-link-label">SBC</div></div>
-      <div class="quick-link" tabindex="0" onclick="showPage('method')" onkeydown="if(event.key==='Enter')showPage('method')"><div class="quick-link-icon">◇</div><div class="quick-link-label">SCORES</div></div>
-      <div class="quick-link" tabindex="0" onclick="showPage('updatehub')" onkeydown="if(event.key==='Enter')showPage('updatehub')"><div class="quick-link-icon">↻</div><div class="quick-link-label">MAJ PATCH</div></div>
+
+  <div class="meta-home-panels">
+    <div class="fc26-subpanel is-active" id="meta-panel-hub" role="tabpanel" data-meta-tab="hub">
+      <div id="meta-app-charter-root" class="meta-app-charter-root" aria-label="Portée méta application"></div>
+      <section class="section-block section-block--compact meta-live-band" id="mf-meta-live" aria-label="Méta du moment">
+        <div id="meta-live-root" class="meta-live-root" aria-live="polite"></div>
+      </section>
+      <div class="dash-kpis" id="dash-kpis">
+        <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-patch">—</div><div class="dash-kpi-label">Patch</div></div>
+        <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-players">—</div><div class="dash-kpi-label">Fiches</div></div>
+        <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-form">—</div><div class="dash-kpi-label">Formations</div></div>
+        <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-tech">—</div><div class="dash-kpi-label">Gestes</div></div>
+      </div>
+      <section class="section-block section-block--compact" id="mf-setup">
+        <h2 class="section-title">Rivaux FUT</h2>
+        <div id="setup-express-root" aria-live="polite"></div>
+      </section>
     </div>
-  </div>
-</div>
 
-<div class="page" id="page-meta">
-  <div class="page-header"><h1 class="page-title">Hub méta</h1><p class="page-subtitle">Lecture stratégique · Badges de confiance obligatoires</p></div>
-  <div class="info-box warn">⚠ EA ne fournit pas de « tier list » officielle Ultimate Team. Toute force méta chiffrée ici est <span class="badge badge-analytical">Analytique</span> ou <span class="badge badge-community">Communauté</span>.</div>
-  <div class="section-block">
-    <h2 class="section-title">Table méta (synthèse)</h2>
-    <div class="table-wrap" id="meta-table-wrap"></div>
-  </div>
-  <div class="section-block">
-    <h2 class="section-title">Mécaniques (mix officiel + lecture)</h2>
-    <div class="grid-2">
-      <div class="card"><div class="card-header"><div class="card-title">Confirmé EA (gameplay)</div><span class="badge badge-official">Officiel</span></div>
-      <ul style="list-style:none;font-size:13px;color:var(--text-secondary);display:flex;flex-direction:column;gap:8px">
-        <li>→ Préréglages console <strong>compétition</strong> (en ligne) vs <strong>réalisme</strong> (hors ligne), décrits dans les notes gameplay du 22/07/2025.</li>
-        <li>→ Conduite de balle dynamique, touches de dribble rééquilibrées ; sprint explosif ; trois profils d’accélération (calculs hommes / femmes distincts).</li>
-        <li>→ Positionnement du gardien NG : apprentissage pour le placement ; désactivé pendant la résolution d’un arrêt.</li>
-        <li>→ v1.5.0 : passes au sol plus rapides et plus précises ; passes en profondeur avec trajectoire contextuelle sans style « passe décisive » si les stats de passe sont déjà hautes.</li>
-      </ul></div>
-      <div class="card"><div class="card-header"><div class="card-title">Lecture compétitive</div><span class="badge badge-analytical">Analytique</span></div>
-      <ul style="list-style:none;font-size:13px;color:var(--text-secondary);display:flex;flex-direction:column;gap:8px">
-        <li>→ Après v1.5.0 : pondération plus forte des <strong>stats de base</strong> passes et tirs — moins dépendant des styles Plus sur le papier.</li>
-        <li>→ v1.5.3 : impact match limité sauf cas extrême de passes au gardien ; prioriser veille sur <strong>bugs/correctifs UT</strong>.</li>
-        <li>→ Toujours croiser avec patch notes suivantes (EA SPORTS FC Tracker / news ea.com).</li>
-      </ul></div>
+    <div class="fc26-subpanel fc26-subpanel--scroll" id="meta-panel-tactique" role="tabpanel" data-meta-tab="tactique" hidden>
+      <section class="section-block section-block--compact" id="mf-formations">
+        <h2 class="section-title">Formations</h2>
+        <div class="filter-bar">
+          <button type="button" class="filter-btn active" data-ff="all" onclick="filterFormations('all',this)">Toutes</button>
+          <button type="button" class="filter-btn filter-formations-extra" onclick="filterFormations('S',this)">S</button>
+          <button type="button" class="filter-btn filter-formations-extra" onclick="filterFormations('A',this)">A</button>
+          <button type="button" class="filter-btn filter-formations-extra" onclick="filterFormations('counter',this)">Contre</button>
+          <button type="button" class="filter-btn filter-formations-extra" onclick="filterFormations('press',this)">Press</button>
+          <button type="button" class="filter-btn filter-formations-extra" onclick="filterFormations('possession',this)">Possession</button>
+        </div>
+        <div id="formations-container"></div>
+      </section>
+    </div>
+
+    <div class="fc26-subpanel fc26-subpanel--scroll" id="meta-panel-gameplay" role="tabpanel" data-meta-tab="gameplay" hidden>
+      <section class="section-block section-block--compact">
+        <h2 class="section-title">Gameplay</h2>
+        <div class="table-wrap" id="meta-table-wrap"></div>
+      </section>
+      <section class="section-block section-block--compact">
+        <h2 class="section-title">Patchs</h2>
+        <div id="patches-container"></div>
+      </section>
+      <section class="section-block section-block--compact">
+        <h2 class="section-title">Changements</h2>
+        <div id="behaviors-container"></div>
+      </section>
+    </div>
+
+    <div class="fc26-subpanel fc26-subpanel--scroll" id="meta-panel-fut" role="tabpanel" data-meta-tab="fut" hidden>
+      <section class="section-block section-block--compact">
+        <h2 class="section-title">Chimie FUT</h2>
+        <div class="card section-block section-block--compact" id="chem-official-card"></div>
+        <h3 class="section-title section-title--sm">Styles</h3>
+        <div class="table-wrap" id="chem-picks-wrap"></div>
+      </section>
+      <section class="section-block section-block--compact">
+        <h2 class="section-title">DCE</h2>
+        <div id="sbc-container"></div>
+      </section>
+      <section class="section-block section-block--compact" id="mf-celebrations">
+        <h2 class="section-title">Célébrations de but</h2>
+        <div id="mf-celebrations-body" class="celebrations-root"></div>
+      </section>
+    </div>
+
+    <div class="fc26-subpanel fc26-subpanel--scroll" id="meta-panel-gestes" role="tabpanel" data-meta-tab="gestes" hidden>
+      <section class="section-block section-block--compact" id="mf-techniques">
+        <h2 class="section-title">Gestes</h2>
+        <div class="filter-bar">
+          <button type="button" class="filter-btn active" onclick="filterTech('all',this)">Toutes</button>
+          <button type="button" class="filter-btn" onclick="filterTech('passe',this)">Passe</button>
+          <button type="button" class="filter-btn" onclick="filterTech('tir',this)">Tir</button>
+          <button type="button" class="filter-btn" onclick="filterTech('dribble',this)">Dribble</button>
+          <button type="button" class="filter-btn" onclick="filterTech('defense',this)">Défense</button>
+        </div>
+        <div id="techniques-container"></div>
+      </section>
     </div>
   </div>
 </div>
 
 <div class="page" id="page-players">
-  <div class="page-header"><h1 class="page-title">Joueurs méta</h1><p class="page-subtitle">Échantillon démo extensible · pas de stats EA intégrées</p></div>
-  <div class="info-box danger"><strong>Prix &amp; meta score :</strong> valeurs <span class="badge badge-unconfirmed">Démo / non confirmé</span> — ne pas utiliser pour achat. Vérifier FUTBIN / marché in-game.</div>
-  <div class="filter-bar">
-    <input class="filter-input" style="min-width:160px;cursor:text" id="f-q" type="search" placeholder="Recherche nom / club…" aria-label="Recherche texte" oninput="setPlayerFilter('q',this.value)">
-    <select class="filter-select" id="f-pos" aria-label="Filtre poste" onchange="setPlayerFilter('pos',this.value)"><option value="">Tous postes</option><option value="ST">ST</option><option value="CAM">CAM</option><option value="CM">CM</option><option value="CDM">CDM</option><option value="W">LW/RW</option><option value="FB">LB/RB</option><option value="CB">CB</option><option value="GK">GK</option></select>
-    <select class="filter-select" id="f-league" aria-label="Ligue" onchange="setPlayerFilter('league',this.value)"><option value="">Toutes ligues</option><option value="PL">Premier League</option><option value="LALIGA">LaLiga</option><option value="SerieA">Serie A</option><option value="Bundesliga">Bundesliga</option><option value="Ligue1">Ligue 1</option><option value="Brasileirao">Brésil</option></select>
-    <select class="filter-select" id="f-tier" aria-label="Filtre tier" onchange="setPlayerFilter('tier',this.value)"><option value="">Tous tiers</option><option value="S">S</option><option value="A">A</option><option value="B">B</option></select>
-    <select class="filter-select" id="f-acc" aria-label="Filtre accélération" onchange="setPlayerFilter('acc',this.value)"><option value="">Accélération</option><option value="Explosive">Explosive</option><option value="Controlled">Controlled</option><option value="Lengthy">Lengthy</option></select>
-    <select class="filter-select" id="f-patch" aria-label="Sensibilité patch" onchange="setPlayerFilter('patchSens',this.value)"><option value="">Sensibilité patch</option><option value="faible">Faible</option><option value="moyen">Moyen</option><option value="élevé">Élevé</option></select>
-    <button type="button" class="filter-btn" onclick="resetPlayerFilters()">Reset</button>
+  <div class="page-header"><h1 class="page-title">Joueurs</h1><p class="page-subtitle">Catalogue base FC26</p></div>
+  <div class="fc26-subtab-bar" role="tablist" aria-label="Vue joueurs">
+    <button type="button" class="fc26-subtab active" role="tab" aria-selected="true" data-players-tab="fiches" onclick="fc26PlayersTab('fiches',this)">Fiches méta</button>
+    <button type="button" class="fc26-subtab" role="tab" aria-selected="false" data-players-tab="catalog" onclick="fc26PlayersTab('catalog',this)">Cartes FC26</button>
   </div>
-  <div class="card section-block" style="padding:14px">
-    <div class="card-header"><div class="card-title">Comparateur (2 joueurs)</div><span class="badge badge-analytical">UI</span></div>
-    <div class="filter-bar" style="margin:0">
-      <select class="filter-select" id="cmp-a" aria-label="Joueur A"></select>
-      <select class="filter-select" id="cmp-b" aria-label="Joueur B"></select>
-      <button type="button" class="filter-btn active" onclick="renderCompare()">Comparer</button>
+  <div class="fc26-subpanel is-active" id="players-panel-fiches" role="tabpanel" data-players-tab="fiches">
+    <div class="filter-bar">
+      <input class="filter-input" style="min-width:160px;cursor:text" id="f-q" type="search" placeholder="Nom / club…" aria-label="Recherche texte" oninput="setPlayerFilter('q',this.value)">
+      <select class="filter-select" id="f-pos" aria-label="Filtre poste" onchange="setPlayerFilter('pos',this.value)"><option value="">Tous postes</option><option value="ST">ST</option><option value="CAM">CAM</option><option value="CM">CM</option><option value="CDM">CDM</option><option value="W">LW/RW</option><option value="FB">LB/RB</option><option value="CB">CB</option><option value="GK">GK</option></select>
+      <select class="filter-select" id="f-league" aria-label="Ligue" onchange="setPlayerFilter('league',this.value)"><option value="">Toutes ligues</option><option value="PL">Premier League</option><option value="LALIGA">LaLiga</option><option value="SerieA">Serie A</option><option value="Bundesliga">Bundesliga</option><option value="Ligue1">Ligue 1</option><option value="Brasileirao">Brésil</option></select>
+      <select class="filter-select" id="f-acc" aria-label="Filtre accélération" onchange="setPlayerFilter('acc',this.value)"><option value="">Accélération</option><option value="Explosive">Explosive</option><option value="Controlled">Controlled</option><option value="Lengthy">Lengthy</option></select>
+      <select class="filter-select" id="f-patch" aria-label="Sensibilité patch" onchange="setPlayerFilter('patchSens',this.value)"><option value="">Sensibilité patch</option><option value="faible">Faible</option><option value="moyen">Moyen</option><option value="élevé">Élevé</option></select>
+      <button type="button" class="filter-btn" onclick="resetPlayerFilters()">Reset</button>
     </div>
-    <div id="compare-out" class="table-wrap" style="margin-top:10px"></div>
+    <div class="players-grid-scroll">
+      <div class="grid-auto" id="players-grid"></div>
+    </div>
   </div>
-  <div class="grid-auto" id="players-grid"></div>
-</div>
-
-<div class="page" id="page-formations">
-  <div class="page-header"><h1 class="page-title">Formations</h1><p class="page-subtitle">Vue pro : liste + fiche (terrain, presets FC26, 11 postes). Scores &amp; curseurs = <span class="badge badge-analytical">Analytique</span> — données <code class="kbd">fc26-meta-data.js</code></p></div>
-  <div class="filter-bar">
-    <button type="button" class="filter-btn active" data-ff="all" onclick="filterFormations('all',this)">Toutes</button>
-    <button type="button" class="filter-btn" onclick="filterFormations('S',this)">S</button>
-    <button type="button" class="filter-btn" onclick="filterFormations('A',this)">A</button>
-    <button type="button" class="filter-btn" onclick="filterFormations('counter',this)">Contre</button>
-    <button type="button" class="filter-btn" onclick="filterFormations('press',this)">Press</button>
-    <button type="button" class="filter-btn" onclick="filterFormations('possession',this)">Possession</button>
+  <div class="fc26-subpanel fc26-subpanel--scroll" id="players-panel-catalog" role="tabpanel" data-players-tab="catalog" hidden>
+    <div class="card section-block section-block--compact" style="padding:16px">
+      <div class="card-header" style="margin-bottom:10px;padding:0;border:none"><div class="card-title">Catalogue</div><span class="badge badge-official">DataHub</span></div>
+      <p id="roster-load-status" class="td-muted" style="font-size:12px;margin-bottom:8px;line-height:1.4" aria-live="polite">…</p>
+      <div class="filter-bar" style="margin:0">
+        <input class="filter-input" type="search" id="roster-q" style="min-width:200px;flex:1;cursor:text" placeholder="Nom, club…" aria-label="Recherche roster" oninput="playersRosterSearchDebounced()">
+        <button type="button" class="filter-btn" onclick="renderPlayersRosterResults(true)">OK</button>
+      </div>
+      <div id="roster-results" class="catalog-list roster-results-scroll" role="listbox" aria-label="Résultats"></div>
+    </div>
   </div>
-  <div id="formations-container"></div>
 </div>
 
 <div class="page" id="page-squad">
   <div class="page-header">
-    <h1 class="page-title">Prototype d’équipe</h1>
-    <p class="page-subtitle">Montage 11 + banc · cartes issues du catalogue FC26 (<span class="badge badge-official">Données jeu</span> base roster, pas chaque variante FUT promo)</p>
+    <h1 class="page-title">Composeur</h1>
+    <p class="page-subtitle">XI + banc</p>
   </div>
-  <div class="info-box warn"><strong>Important :</strong> le fichier <code style="font-family:var(--mono)">data/fc26-cards-catalog.json</code> agrège le pool public <strong>EAFC26-DataHub</strong> (notes / attributs alignés FC26). Ce ne sont <strong>pas</strong> toutes les cartes spéciales Ultimate Team (TOTY, événements, versions IF) — EA ne publie pas ce fichier en open data. Pour un prototype tactique (postes, profils), le catalogue de base suffit ; les promos restent à saisir manuellement ailleurs si besoin. <strong>Chargement du JSON :</strong> ouvrez l’app via un serveur HTTP local (ex. <code style="font-family:var(--mono)">python3 -m http.server</code> à la racine du dépôt) : le protocole <code style="font-family:var(--mono)">file://</code> bloque souvent <code style="font-family:var(--mono)">fetch</code> du catalogue.</div>
-  <p class="td-muted" style="font-size:12px;margin-bottom:12px" id="squad-catalog-status" aria-live="polite">Chargement du catalogue…</p>
+  <p class="td-muted" style="font-size:12px;margin-bottom:10px" id="squad-catalog-status" aria-live="polite">…</p>
   <div class="squad-layout">
     <div class="squad-pitch-col">
       <div class="squad-toolbar">
-        <button type="button" class="filter-btn" onclick="squadResetAll()">Vider tout</button>
-        <button type="button" class="filter-btn" onclick="squadExportJson()">Exporter JSON</button>
+        <button type="button" class="filter-btn" onclick="squadResetAll()">Vider</button>
+        <button type="button" class="filter-btn" onclick="squadExportJson()">JSON</button>
       </div>
       <div class="squad-pitch-wrap">
-        <div class="squad-pitch" id="squad-pitch" role="application" aria-label="Terrain prototype équipe">
+        <div class="squad-pitch" id="squad-pitch" role="application" aria-label="Terrain">
           <div class="squad-pitch-grass" aria-hidden="true"></div>
           <div class="squad-pitch-lines" aria-hidden="true"></div>
           <div class="squad-pitch-slots" id="squad-pitch-slots"></div>
         </div>
       </div>
       <div class="squad-bench-wrap">
-        <div class="squad-bench-label">Banc (7) · même logique d’assignation</div>
+        <div class="squad-bench-label">Banc</div>
         <div class="squad-bench-row" id="squad-bench" role="list"></div>
       </div>
-      <p class="td-muted" style="font-size:11px;margin-top:12px">Astuce : <strong>Maj+clic</strong> sur deux cases titulaires pour <strong>échanger</strong> les joueurs. Changer la formation réinitialise le XI (comme en création d’équipe).</p>
+      <p class="td-muted" style="font-size:11px;margin-top:8px">Maj+clic : échanger deux titulaires · Échap : désélection</p>
     </div>
     <div class="catalog-panel">
       <div class="squad-side-formation">
         <label class="td-muted" style="font-size:11px;display:block;margin-bottom:6px">Formation</label>
-        <select class="filter-select" id="squad-formation" style="width:100%" aria-label="Formation du prototype" onchange="squadChangeFormation(this.value)"></select>
+        <select class="filter-select" id="squad-formation" style="width:100%" aria-label="Formation" onchange="squadChangeFormation(this.value)"></select>
       </div>
       <div class="card" style="padding:12px;margin-bottom:12px;border-color:rgba(0,255,136,.2)">
-        <div class="card-header" style="margin-bottom:8px;padding:0;border:none"><div class="card-title">Synthèse XI</div><span class="badge badge-analytical" id="squad-starters-avg">—</span></div>
-        <div id="squad-sidebar-stats" class="squad-side-stats" aria-label="Moyennes attributs titulaires"></div>
-        <div class="td-muted" style="font-size:10px;margin-bottom:4px">Chimie (démo locale, pas marché EA)</div>
+        <div class="card-header" style="margin-bottom:8px;padding:0;border:none"><div class="card-title">Titulaires</div><span class="badge badge-analytical" id="squad-starters-avg">—</span></div>
+        <div id="squad-sidebar-stats" class="squad-side-stats" aria-label="Moyennes"></div>
+        <div class="td-muted" style="font-size:10px;margin-bottom:4px">Chimie (local)</div>
         <div class="squad-chem-bar" aria-hidden="true"><div class="squad-chem-fill" id="squad-chem-fill"></div></div>
         <p class="td-muted" style="font-size:10px" id="squad-chem-label">0 / 33</p>
       </div>
-      <div class="card-header" style="margin-bottom:10px;padding:0;border:none"><div class="card-title">Catalogue</div><span class="badge badge-official" id="squad-catalog-count">—</span></div>
+      <div class="card-header" style="margin-bottom:10px;padding:0;border:none"><div class="card-title">Joueurs</div><span class="badge badge-official" id="squad-catalog-count">—</span></div>
       <div class="filter-bar" style="margin:0;flex-direction:column;align-items:stretch">
-        <input class="filter-input" type="search" id="squad-cat-q" placeholder="Nom, club, nation, ligue…" aria-label="Filtrer le catalogue" style="width:100%;cursor:text" oninput="squadCatalogFilterDebounced()">
+        <input class="filter-input" type="search" id="squad-cat-q" placeholder="Recherche…" aria-label="Catalogue" style="width:100%;cursor:text" oninput="squadCatalogFilterDebounced()">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <select class="filter-select" id="squad-cat-pos" aria-label="Poste catalogue" onchange="squadRenderCatalog()"><option value="">Poste</option><option value="GK">GK</option><option value="CB">CB</option><option value="LB">LB</option><option value="RB">RB</option><option value="CDM">CDM</option><option value="CM">CM</option><option value="CAM">CAM</option><option value="LM">LM</option><option value="RM">RM</option><option value="LW">LW</option><option value="RW">RW</option><option value="CF">CF</option><option value="ST">ST</option></select>
-          <input class="filter-input" type="number" min="1" max="99" placeholder="OVR min" id="squad-cat-minovr" aria-label="Note minimale" style="width:100px;cursor:text" oninput="squadCatalogFilterDebounced()">
+          <select class="filter-select" id="squad-cat-pos" aria-label="Poste" onchange="squadRenderCatalog()"><option value="">Poste</option><option value="GK">GK</option><option value="CB">CB</option><option value="LB">LB</option><option value="RB">RB</option><option value="CDM">CDM</option><option value="CM">CM</option><option value="CAM">CAM</option><option value="LM">LM</option><option value="RM">RM</option><option value="LW">LW</option><option value="RW">RW</option><option value="CF">CF</option><option value="ST">ST</option></select>
+          <input class="filter-input" type="number" min="1" max="99" placeholder="OVR min" id="squad-cat-minovr" aria-label="OVR min" style="width:100px;cursor:text" oninput="squadCatalogFilterDebounced()">
         </div>
       </div>
-      <p class="td-muted" style="font-size:11px;margin-top:8px">Cliquez une <strong>case sur le terrain</strong> (ou le banc), puis un joueur ci-dessous. <strong>Échap</strong> désélectionne.</p>
-      <div class="catalog-list" id="squad-catalog-list" role="listbox" aria-label="Résultats catalogue"></div>
+      <p class="td-muted" style="font-size:11px;margin-top:6px">Clic case terrain ou banc, puis joueur.</p>
+      <div class="catalog-list" id="squad-catalog-list" role="listbox" aria-label="Catalogue"></div>
     </div>
   </div>
-</div>
-
-<div class="page" id="page-techniques">
-  <div class="page-header"><h1 class="page-title">Techniques</h1><p class="page-subtitle">Inputs <span class="kbd">PlayStation</span> — adapter Xbox</p></div>
-  <div class="info-box"><strong>Officiel :</strong> schémas de touches (contrôle orienté, centres) dans les notes EA. Les timings « optimaux » compétitifs = <span class="badge badge-community">Communauté</span> sauf citation EA.</div>
-  <div class="filter-bar">
-    <button type="button" class="filter-btn active" onclick="filterTech('all',this)">Toutes</button>
-    <button type="button" class="filter-btn" onclick="filterTech('passe',this)">Passe</button>
-    <button type="button" class="filter-btn" onclick="filterTech('tir',this)">Tir</button>
-    <button type="button" class="filter-btn" onclick="filterTech('dribble',this)">Dribble</button>
-    <button type="button" class="filter-btn" onclick="filterTech('defense',this)">Défense</button>
-  </div>
-  <div id="techniques-container"></div>
 </div>
 
 <div class="page" id="page-settings">
-  <div class="page-header"><h1 class="page-title">Réglages</h1><p class="page-subtitle">Profils tactiques démo + <strong>guide sources officielles</strong> (EA) vs lecture <span class="badge badge-analytical">Analytique</span></p></div>
-  <div id="settings-meta-guide" class="section-block"></div>
-  <div class="filter-bar">
-    <button type="button" class="filter-btn active" onclick="showSettingProfile('balanced',this)">Équilibré</button>
-    <button type="button" class="filter-btn" onclick="showSettingProfile('aggressive',this)">Agressif</button>
-    <button type="button" class="filter-btn" onclick="showSettingProfile('technical',this)">Technique</button>
-    <button type="button" class="filter-btn" onclick="showSettingProfile('control',this)">Contrôle</button>
-    <button type="button" class="filter-btn" onclick="showSettingProfile('pressing',this)">Pressing</button>
-    <button type="button" class="filter-btn" onclick="showSettingProfile('defensive',this)">Défensif</button>
+  <div class="page-header"><h1 class="page-title">Manette</h1><p class="page-subtitle">Réglages</p></div>
+  <div class="fc26-subtab-bar" role="tablist" aria-label="Sections manette">
+    <button type="button" class="fc26-subtab active" role="tab" aria-selected="true" data-settings-tab="sources" onclick="fc26SettingsTab('sources',this)">Sources EA</button>
+    <button type="button" class="fc26-subtab" role="tab" aria-selected="false" data-settings-tab="sticks" onclick="fc26SettingsTab('sticks',this)">Curseurs</button>
   </div>
-  <div id="settings-container"></div>
-</div>
-
-<div class="page" id="page-sbc">
-  <div class="page-header"><h1 class="page-title">SBC Intelligence</h1><p class="page-subtitle">Méthodologie visible · lignes = démo</p></div>
-  <div class="info-box"><strong>SBC Score (démo) :</strong> <code style="font-family:var(--mono);font-size:11px">(reward/cost)*0.45 + utilMeta*0.2 + utilClub*0.15 + liquidité*0.1 + deadline*0.1</code> avec utilités normalisées 0–1. <span class="badge badge-unconfirmed">Non EA</span></div>
-  <div id="sbc-container"></div>
-</div>
-
-<div class="page" id="page-patches">
-  <div class="page-header"><h1 class="page-title">Patch notes</h1><p class="page-subtitle">Extraits alignés sources EA ci-dessous</p></div>
-  <div id="patches-container"></div>
-</div>
-
-<div class="page" id="page-webapp">
-  <div class="page-header"><h1 class="page-title">Web App / Companion</h1><p class="page-subtitle">Officiel EA + bonnes pratiques</p></div>
-  <div class="grid-2">
-    <div class="card"><div class="card-header"><div class="card-title">Officiel</div><span class="badge badge-official">EA</span></div>
-    <p style="font-size:13px;color:var(--text-secondary)">Page Web App : <a href="https://www.ea.com/games/ea-sports-fc/ultimate-team/web-app" style="color:var(--blue)">ea.com/games/ea-sports-fc/ultimate-team/web-app</a>. Pitch Notes Launch (12/09/2025) : Web App 17/09, refresh Companion 18/09.</p></div>
-    <div class="card"><div class="card-header"><div class="card-title">Analytique</div><span class="badge badge-analytical">Analytique</span></div>
-    <p style="font-size:13px;color:var(--text-secondary)">Routine : vérifier SBC expiration, objectifs, liste de transferts ; pics d’activité marché variables selon fuseau — <span class="badge badge-community">Communauté</span>.</p></div>
+  <div class="fc26-subpanel fc26-subpanel--scroll is-active" id="settings-panel-sources" role="tabpanel" data-settings-tab="sources">
+    <div id="settings-meta-guide" class="section-block section-block--compact"></div>
+  </div>
+  <div class="fc26-subpanel fc26-subpanel--scroll" id="settings-panel-sticks" role="tabpanel" data-settings-tab="sticks" hidden>
+    <div class="filter-bar">
+      <button type="button" class="filter-btn active" onclick="showSettingProfile('balanced',this)">Équilibré</button>
+      <button type="button" class="filter-btn" onclick="showSettingProfile('aggressive',this)">Agressif</button>
+      <button type="button" class="filter-btn" onclick="showSettingProfile('technical',this)">Technique</button>
+      <button type="button" class="filter-btn" onclick="showSettingProfile('control',this)">Contrôle</button>
+      <button type="button" class="filter-btn" onclick="showSettingProfile('pressing',this)">Pressing</button>
+      <button type="button" class="filter-btn" onclick="showSettingProfile('defensive',this)">Défensif</button>
+    </div>
+    <div id="settings-container"></div>
   </div>
 </div>
 
-<div class="page" id="page-behaviors">
-  <div class="page-header"><h1 class="page-title">Comportements</h1><p class="page-subtitle">Veille · sources indiquées par ligne</p></div>
-  <div id="behaviors-container"></div>
+<div class="page" id="page-formation-detail">
+  <div class="detail-back-bar">
+    <button type="button" class="filter-btn detail-back-btn" id="formation-detail-back" onclick="leaveFormationDetailPage()">← Retour</button>
+    <span class="detail-back-context td-muted" id="formation-detail-back-hint" aria-live="polite"></span>
+  </div>
+  <div id="formation-detail-root"></div>
 </div>
 
-<div class="page" id="page-method">
-  <div class="page-header"><h1 class="page-title">Méthodologie &amp; scores</h1><p class="page-subtitle">Transparence · limites</p></div>
-  <div class="card section-block"><div class="card-header"><div class="card-title">Meta score joueur (app)</div><span class="badge badge-analytical">Formule démo</span></div>
-  <p class="td-muted" style="font-size:13px;margin-bottom:10px">Pondération indicative : pace utile 20 %, finition 15 %, passe 15 %, défense 10 %, physique 10 %, polyvalence poste 10 %, playstyles 10 %, stabilité patch 5 %, valeur/cost 5 %. <strong>Données EA item non présentes → score non fiable.</strong></p>
-  <pre style="font-family:var(--mono);font-size:11px;background:var(--bg-0);padding:12px;border-radius:8px;overflow:auto">metaScore = clamp( sum(weight_i * norm(metric_i)), 0, 99)</pre></div>
-  <div class="card section-block"><div class="card-header"><div class="card-title">Meta score formation</div><span class="badge badge-analytical">Formule démo</span></div>
-  <p class="td-muted" style="font-size:13px">Équilibre déf/att, création, densité axe, couverture, exécution, adaptabilité, résistance patch (heuristique analyste), synergie profils — normalisé sur 100 dans l’UI.</p></div>
-  <div class="card section-block"><div class="card-header"><div class="card-title">Meta score technique</div><span class="badge badge-analytical">Formule démo</span></div>
-  <p class="td-muted" style="font-size:13px">efficacité estimée − coût difficulté − risque interception + bonus contexte (ex. ligne haute) ; patch sensitivity flag manuel.</p></div>
-  <div class="card section-block"><div class="card-header"><div class="card-title">SBC score</div><span class="badge badge-unconfirmed">Calcul local</span></div>
-  <p class="td-muted" style="font-size:13px">Aucune API EA pour EV pack — tout chiffre marché = externe. Afficher méthodologie et date marché.</p></div>
-</div>
-
-<div class="page" id="page-chemistry">
-  <div class="page-header"><h1 class="page-title">Chimie &amp; styles</h1><p class="page-subtitle">Séparer faits EA vs picks communautaires</p></div>
-  <div class="card section-block" id="chem-official-card"></div>
-  <div class="section-block">
-    <h2 class="section-title">Picks fréquents (non officiels)</h2>
-    <div class="table-wrap" id="chem-picks-wrap"></div>
+<div class="page" id="page-player-detail">
+  <div class="detail-back-bar">
+    <button type="button" class="filter-btn detail-back-btn" id="player-detail-back" onclick="leavePlayerDetailPage()">← Retour</button>
+    <span class="detail-back-context td-muted" id="player-detail-back-hint" aria-live="polite"></span>
   </div>
-</div>
-
-<div class="page" id="page-updatehub">
-  <div class="page-header"><h1 class="page-title">Mise à jour après patch</h1><p class="page-subtitle">Workflow mainteneur</p></div>
-  <div class="info-box"><strong>1.</strong> Lire la source EA (news ou forums). <strong>2.</strong> Dupliquer le template dans <code>fc26-meta-data.js</code> → <code>PATCHES</code>. <strong>3.</strong> Mettre à jour <code>CONFIG.lastOfficialPatchId</code> + compteurs. <strong>4.</strong> Ajuster <code>META_SNAPSHOT</code>, <code>BEHAVIORS</code>, <code>patchSens</code> joueurs concernés. <strong>5.</strong> Exporter backup JSON ci-dessous.</div>
-  <div class="card section-block">
-        <div class="card-header"><div class="card-title">Check-list express</div><span class="badge badge-analytical">Démarche</span></div>
-    <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.7">
-      <li>Copier les lignes « gameplay / UT » officielles mot pour mot si possible.</li>
-      <li>Ne pas changer les badges : tout ce qui n’est pas EA reste communautaire/analytique.</li>
-      <li>Re-trier SBC après maj prix FUTBIN (champs <code>cost</code> / <code>reward</code>).</li>
-      <li>Vérifier que le fichier data est bien dans le même dossier que le HTML.</li>
-    </ul>
-  </div>
-  <div class="filter-bar">
-    <button type="button" class="filter-btn active" onclick="exportDataJson()">Exporter JSON (backup)</button>
-    <button type="button" class="filter-btn" onclick="location.reload()">Recharger l’app</button>
-  </div>
-  <p class="td-muted" style="font-size:12px;margin-top:10px" id="export-status"></p>
-</div>
-
-<div class="page" id="page-sources">
-  <div class="page-header"><h1 class="page-title">Sources</h1><p class="page-subtitle">Hiérarchie</p></div>
-  <div class="grid-2">
-    <div class="card"><div class="card-header"><div class="card-title">EA (priorité)</div><span class="badge badge-official">Officiel</span></div>
-    <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px">
-      <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive" style="color:var(--blue)">Notes gameplay approfondies FC26 (EA)</a></li>
-      <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-title-update-1-5-0" style="color:var(--blue)">Title Update v1.5.0</a></li>
-      <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-launch-update" style="color:var(--blue)">Launch Update UT</a></li>
-      <li><a href="https://forums.ea.com/blog/ea-sports-fc-game-info-hub-en/ea-sports-fc%E2%84%A2-26--title-update-v1-5-3/13312649" style="color:var(--blue)">Title Update v1.5.3 (Forums EA)</a></li>
-    </ul></div>
-    <div class="card"><div class="card-header"><div class="card-title">Secondaires</div><span class="badge badge-analytical">Analytique</span></div>
-    <p style="font-size:13px;color:var(--text-secondary)">FUTBIN, FUTWIZ, contenus pros — toujours étiqueter communautaire / analytique et croiser avec EA.</p></div>
-  </div>
+  <div id="player-detail-root"></div>
 </div>
 </main>
-
-<div id="drawer-overlay" onclick="closeDrawer()" role="presentation"></div>
-<div id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true">
-  <button type="button" id="drawer-close" onclick="closeDrawer()" aria-label="Fermer">✕</button>
-  <div id="drawer-content"></div>
-</div>
-
-<script src="fc26-meta-data.js?v=2026.04.19.14"></script>
-<script>
-let CONFIG, PLAYERS, FORMATIONS, FC26_TACTICS_CANON, FORMATION_DETAILS, TECHNIQUES, SBC_DATA, PATCHES, BEHAVIORS, META_TABLE, META_SNAPSHOT, CHEM_OFFICIAL, CHEM_PICKS, SETTINGS, SETTINGS_META_GUIDE, META_SETUP_EXPRESS;
-let playerFilters = { q:'', pos:'', league:'', tier:'', acc:'', patchSens:'' };
-let sbcSort = { col: null, dir: 1 };
-const THEME_KEY = 'fc26-theme';
-let lastFocusBeforeDrawer = null;
-
-/** Catalogue FC26 (build script → data/fc26-cards-catalog.json) */
-let FC26_CARDS = null;
-let FC26_CARDS_META = null;
-let _fc26CatalogPromise = null;
-let _squadCardMap = null;
-let squadState = { formation: '4-2-3-1', starters: Array(11).fill(null), bench: Array(7).fill(null) };
-let squadPickSlot = null;
-let _squadStateInited = false;
-const SQUAD_LS_KEY = 'fc26-squad-prototype-v1';
-const SQUAD_CATALOG_MAX = 120;
-
-function squadInvalidateCardMap(){ _squadCardMap = null; }
-function getSquadCard(id){
-  if(id==null||id===''||!FC26_CARDS) return null;
-  if(!_squadCardMap) _squadCardMap = new Map(FC26_CARDS.map(c=>[String(c.id), c]));
-  return _squadCardMap.get(String(id)) || null;
-}
-
-function ensureCatalogLoaded(){
-  if(FC26_CARDS) return Promise.resolve(FC26_CARDS);
-  if(_fc26CatalogPromise) return _fc26CatalogPromise;
-  const v = CONFIG && CONFIG.bundleVersion ? String(CONFIG.bundleVersion) : '';
-  _fc26CatalogPromise = fetch('data/fc26-cards-catalog.json?v=' + encodeURIComponent(v))
-    .then((r) => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then((data) => {
-      FC26_CARDS = Array.isArray(data.cards) ? data.cards : [];
-      FC26_CARDS_META = data.meta || {};
-      squadInvalidateCardMap();
-      return FC26_CARDS;
-    })
-    .catch((e) => {
-      _fc26CatalogPromise = null;
-      throw e;
-    });
-  return _fc26CatalogPromise;
-}
-
-function initSquadStateOnce(){
-  if (_squadStateInited) return;
-  _squadStateInited = true;
-  try {
-    const raw = localStorage.getItem(SQUAD_LS_KEY);
-    if (!raw) return;
-    const s = JSON.parse(raw);
-    if (s && FORMATION_DETAILS && FORMATION_DETAILS[s.formation]) {
-      squadState.formation = s.formation;
-      if (Array.isArray(s.starters) && s.starters.length === 11) {
-        squadState.starters = s.starters.map((x) => (x == null || x === '' ? null : String(x)));
-      }
-      if (Array.isArray(s.bench)) {
-        const b = s.bench.map((x) => (x == null || x === '' ? null : String(x)));
-        while (b.length < 7) b.push(null);
-        squadState.bench = b.slice(0, 7);
-      }
-    }
-  } catch (_) {}
-}
-
-function saveSquadToStorage(){
-  try {
-    localStorage.setItem(
-      SQUAD_LS_KEY,
-      JSON.stringify({
-        formation: squadState.formation,
-        starters: squadState.starters,
-        bench: squadState.bench,
-      }),
-    );
-  } catch (_) {}
-}
-
-function squadGetDetail(){
-  return FORMATION_DETAILS && FORMATION_DETAILS[squadState.formation] ? FORMATION_DETAILS[squadState.formation] : null;
-}
-
-function squadPopulateFormationSelect(){
-  const sel = document.getElementById('squad-formation');
-  if (!sel || !Array.isArray(FORMATIONS)) return;
-  const names = FORMATIONS.map((f) => f.name).filter((n) => FORMATION_DETAILS && FORMATION_DETAILS[n]);
-  sel.innerHTML = names.map((n) => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
-  if (names.includes(squadState.formation)) sel.value = squadState.formation;
-  else if (names[0]) {
-    squadState.formation = names[0];
-    sel.value = names[0];
-  }
-}
-
-/**
- * Positions % sur le terrain (centre de la vignette). Ordre = slots FORMATION_DETAILS (GK → attaque, haut = camp adverse).
- * Clés = noms exacts des formations dans fc26-meta-data.js
- */
-const SQUAD_PITCH_LAYOUTS = {
-  '4-2-3-1': [
-    { l: 50, t: 90 }, { l: 12, t: 72 }, { l: 35, t: 72 }, { l: 65, t: 72 }, { l: 88, t: 72 },
-    { l: 35, t: 58 }, { l: 65, t: 58 }, { l: 12, t: 38 }, { l: 50, t: 34 }, { l: 88, t: 38 }, { l: 50, t: 14 },
-  ],
-  '4-2-1-3': [
-    { l: 50, t: 90 }, { l: 10, t: 73 }, { l: 35, t: 73 }, { l: 65, t: 73 }, { l: 90, t: 73 },
-    { l: 35, t: 58 }, { l: 65, t: 58 }, { l: 50, t: 44 }, { l: 14, t: 22 }, { l: 50, t: 14 }, { l: 86, t: 22 },
-  ],
-  '4-4-1-1': [
-    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
-    { l: 8, t: 52 }, { l: 38, t: 52 }, { l: 62, t: 52 }, { l: 92, t: 52 }, { l: 50, t: 34 }, { l: 50, t: 14 },
-  ],
-  '4-4-2 (flat)': [
-    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
-    { l: 8, t: 50 }, { l: 38, t: 50 }, { l: 62, t: 50 }, { l: 92, t: 50 }, { l: 38, t: 15 }, { l: 62, t: 15 },
-  ],
-  '4-3-2-1': [
-    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
-    { l: 28, t: 48 }, { l: 50, t: 48 }, { l: 72, t: 48 }, { l: 22, t: 26 }, { l: 78, t: 26 }, { l: 50, t: 12 },
-  ],
-  '4-3-3 (4)': [
-    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
-    { l: 30, t: 48 }, { l: 50, t: 48 }, { l: 70, t: 48 }, { l: 14, t: 20 }, { l: 50, t: 14 }, { l: 86, t: 20 },
-  ],
-  '4-1-2-1-2 (étroit)': [
-    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
-    { l: 50, t: 62 }, { l: 35, t: 46 }, { l: 65, t: 46 }, { l: 50, t: 32 }, { l: 38, t: 16 }, { l: 62, t: 16 },
-  ],
-  '3-5-2': [
-    { l: 50, t: 90 }, { l: 26, t: 74 }, { l: 50, t: 74 }, { l: 74, t: 74 }, { l: 6, t: 46 },
-    { l: 30, t: 48 }, { l: 50, t: 48 }, { l: 70, t: 48 }, { l: 94, t: 46 }, { l: 38, t: 14 }, { l: 62, t: 14 },
-  ],
-  '5-3-2': [
-    { l: 50, t: 90 }, { l: 6, t: 70 }, { l: 28, t: 76 }, { l: 50, t: 76 }, { l: 72, t: 76 }, { l: 94, t: 70 },
-    { l: 32, t: 50 }, { l: 50, t: 50 }, { l: 68, t: 50 }, { l: 38, t: 16 }, { l: 62, t: 16 },
-  ],
-  '4-2-2-2': [
-    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
-    { l: 38, t: 60 }, { l: 62, t: 60 }, { l: 38, t: 36 }, { l: 62, t: 36 }, { l: 38, t: 16 }, { l: 62, t: 16 },
-  ],
-  '4-3-1-2': [
-    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
-    { l: 30, t: 48 }, { l: 50, t: 48 }, { l: 70, t: 48 }, { l: 50, t: 30 }, { l: 38, t: 14 }, { l: 62, t: 14 },
-  ],
-  '4-5-1': [
-    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
-    { l: 6, t: 50 }, { l: 32, t: 50 }, { l: 50, t: 50 }, { l: 68, t: 50 }, { l: 94, t: 50 }, { l: 50, t: 12 },
-  ],
-  '3-4-2-1': [
-    { l: 50, t: 90 }, { l: 26, t: 74 }, { l: 50, t: 74 }, { l: 74, t: 74 }, { l: 6, t: 46 },
-    { l: 40, t: 50 }, { l: 60, t: 50 }, { l: 94, t: 46 }, { l: 24, t: 26 }, { l: 76, t: 26 }, { l: 50, t: 12 },
-  ],
-};
-
-function squadPitchCoords(formationName, index){
-  const L = SQUAD_PITCH_LAYOUTS[formationName] || SQUAD_PITCH_LAYOUTS['4-2-3-1'];
-  const p = L[index] || L[0] || { l: 50, t: 50 };
-  return { l: p.l, t: p.t };
-}
-
-function squadChangeFormation(name){
-  if (!FORMATION_DETAILS || !FORMATION_DETAILS[name]) return;
-  squadState.formation = name;
-  squadState.starters = Array(11).fill(null);
-  squadState.bench = Array(7).fill(null);
-  squadPickSlot = null;
-  saveSquadToStorage();
-  squadPopulateFormationSelect();
-  renderSquadSlots();
-}
-
-function squadActivateSlot(kind, i){
-  if (squadPickSlot && squadPickSlot.kind === kind && squadPickSlot.i === i) squadPickSlot = null;
-  else squadPickSlot = { kind, i };
-  renderSquadSlots();
-}
-
-function squadPitchSlotClick(ev, i){
-  if (
-    ev.shiftKey &&
-    squadPickSlot &&
-    squadPickSlot.kind === 'starter' &&
-    typeof squadPickSlot.i === 'number' &&
-    squadPickSlot.i !== i
-  ) {
-    const a = squadPickSlot.i;
-    const b = i;
-    const t = squadState.starters[a];
-    squadState.starters[a] = squadState.starters[b];
-    squadState.starters[b] = t;
-    squadPickSlot = null;
-    saveSquadToStorage();
-    renderSquadSlots();
-    return;
-  }
-  squadActivateSlot('starter', i);
-}
-
-function squadBenchSlotClick(ev, i){
-  if (
-    ev.shiftKey &&
-    squadPickSlot &&
-    squadPickSlot.kind === 'bench' &&
-    typeof squadPickSlot.i === 'number' &&
-    squadPickSlot.i !== i
-  ) {
-    const a = squadPickSlot.i;
-    const b = i;
-    const t = squadState.bench[a];
-    squadState.bench[a] = squadState.bench[b];
-    squadState.bench[b] = t;
-    squadPickSlot = null;
-    saveSquadToStorage();
-    renderSquadSlots();
-    return;
-  }
-  squadActivateSlot('bench', i);
-}
-
-function squadClearSlot(kind, i){
-  if (kind === 'starter') squadState.starters[i] = null;
-  else squadState.bench[i] = null;
-  saveSquadToStorage();
-  renderSquadSlots();
-}
-
-function squadResetAll(){
-  squadState.starters = Array(11).fill(null);
-  squadState.bench = Array(7).fill(null);
-  squadPickSlot = null;
-  saveSquadToStorage();
-  renderSquadSlots();
-  squadRenderCatalog();
-}
-
-function squadPickCard(cardId){
-  if (!cardId) return;
-  if (!squadPickSlot) {
-    const st = document.getElementById('squad-catalog-status');
-    if (st) st.textContent = 'Sélectionnez une case terrain ou banc (surbrillance verte), puis un joueur.';
-    return;
-  }
-  const { kind, i } = squadPickSlot;
-  if (kind === 'starter') squadState.starters[i] = String(cardId);
-  else squadState.bench[i] = String(cardId);
-  saveSquadToStorage();
-  renderSquadSlots();
-  squadRenderCatalog();
-}
-
-function squadChemDemo(){
-  const cards = squadState.starters.map(getSquadCard).filter(Boolean);
-  if (!cards.length) return { pts: 0, label: '0 / 33' };
-  const clubs = new Set(cards.map((c) => c.club).filter(Boolean));
-  const nations = new Set(cards.map((c) => c.nation).filter(Boolean));
-  const leagues = new Set(cards.map((c) => c.league).filter(Boolean));
-  let pts = 0;
-  if (clubs.size <= 4) pts += 6;
-  if (clubs.size <= 2) pts += 6;
-  if (nations.size <= 5) pts += 5;
-  if (nations.size <= 3) pts += 5;
-  if (leagues.size <= 3) pts += 4;
-  if (cards.length >= 11) pts += 7;
-  pts = Math.min(33, pts);
-  return { pts, label: pts + ' / 33' };
-}
-
-function squadUpdateSidebarStats(){
-  const grid = document.getElementById('squad-sidebar-stats');
-  const avgEl = document.getElementById('squad-starters-avg');
-  const chemFill = document.getElementById('squad-chem-fill');
-  const chemLab = document.getElementById('squad-chem-label');
-  const cards = squadState.starters.map(getSquadCard).filter(Boolean);
-  const n = cards.length;
-  if (avgEl) avgEl.textContent = n ? 'Moy. ' + Math.round(cards.reduce((s, c) => s + (Number(c.ovr) || 0), 0) / n) : '—';
-  const avg6 = (key) => {
-    if (!n) return '—';
-    const v = Math.round(cards.reduce((s, c) => s + (Number(c[key]) || 0), 0) / n);
-    return String(v);
-  };
-  if (grid) {
-    grid.innerHTML = ['pace', 'sho', 'pas', 'dri', 'def', 'phy']
-      .map(
-        (k) =>
-          `<div class="squad-stat-cell"><div class="lab">${escapeHtml(
-            { pace: 'PAC', sho: 'SHO', pas: 'PAS', dri: 'DRI', def: 'DEF', phy: 'PHY' }[k],
-          )}</div><div class="val">${escapeHtml(avg6(k))}</div></div>`,
-      )
-      .join('');
-  }
-  const ch = squadChemDemo();
-  if (chemFill) chemFill.style.width = Math.round((ch.pts / 33) * 100) + '%';
-  if (chemLab) chemLab.textContent = ch.label;
-}
-
-function renderSquadSlots(){
-  const detail = squadGetDetail();
-  const pitch = document.getElementById('squad-pitch-slots');
-  const bn = document.getElementById('squad-bench');
-  if (!pitch || !bn) return;
-  if (!detail || !Array.isArray(detail.slots) || detail.slots.length !== 11) {
-    pitch.innerHTML = '<p class="td-muted" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;padding:12px">Formation ou 11 postes indisponibles.</p>';
-    bn.innerHTML = '';
-    squadUpdateSidebarStats();
-    return;
-  }
-  const fn = squadState.formation;
-  pitch.innerHTML = detail.slots
-    .map((slot, i) => {
-      const id = squadState.starters[i];
-      const c = getSquadCard(id);
-      const { l, t } = squadPitchCoords(fn, i);
-      const active = squadPickSlot && squadPickSlot.kind === 'starter' && squadPickSlot.i === i;
-      const face =
-        c && c.face && /^https?:\/\//i.test(String(c.face))
-          ? `<img class="pitch-slot-face" src="${String(c.face).replace(/"/g, '%22')}" alt="" width="34" height="34" loading="lazy" decoding="async">`
-          : '';
-      const plus = !c ? '<span class="pitch-slot-plus" aria-hidden="true">+</span>' : '';
-      const ovr = c ? `<span class="pitch-slot-ovr">${escapeHtml(String(c.ovr))}</span>` : '';
-      const nm = c ? `<span class="pitch-slot-name">${escapeHtml(c.name)}</span>` : '';
-      const clr = id
-        ? `<button type="button" class="pitch-slot-clear" onclick="event.stopPropagation();squadClearSlot('starter',${i})" aria-label="Retirer le joueur">×</button>`
-        : '';
-      return `<div class="pitch-slot${active ? ' active' : ''}" role="button" tabindex="0" style="--pl:${l}%;--pt:${t}%"
-        aria-label="Poste ${escapeHtml(slot.poste)}${c ? ', ' + escapeHtml(c.name) : ', vide'}"
-        aria-pressed="${active}" data-slot-idx="${i}"
-        onclick="squadPitchSlotClick(event,${i})"
-        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();squadPitchSlotClick(event,${i});}">${clr}${face}${plus}${ovr}${nm}<span class="pitch-slot-pos">${escapeHtml(slot.poste)}</span></div>`;
-    })
-    .join('');
-  bn.innerHTML = [0, 1, 2, 3, 4, 5, 6]
-    .map((i) => {
-      const id = squadState.bench[i];
-      const c = getSquadCard(id);
-      const active = squadPickSlot && squadPickSlot.kind === 'bench' && squadPickSlot.i === i;
-      const face =
-        c && c.face && /^https?:\/\//i.test(String(c.face))
-          ? `<img class="pitch-slot-face" src="${String(c.face).replace(/"/g, '%22')}" alt="" width="30" height="30" loading="lazy">`
-          : '';
-      const plus = !c ? '<span class="pitch-slot-plus" style="font-size:18px">+</span>' : '';
-      const ovr = c ? `<span class="pitch-slot-ovr" style="font-size:13px">${escapeHtml(String(c.ovr))}</span>` : '';
-      const nm = c ? `<span class="pitch-slot-name">${escapeHtml(c.name)}</span>` : '';
-      const clr = id
-        ? `<button type="button" class="pitch-slot-clear" onclick="event.stopPropagation();squadClearSlot('bench',${i})" aria-label="Retirer">×</button>`
-        : '';
-      return `<div class="bench-slot${active ? ' active' : ''}" role="button" tabindex="0" aria-pressed="${active}"
-        onclick="squadBenchSlotClick(event,${i})"
-        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();squadBenchSlotClick(event,${i});}">${clr}${face}${plus}${ovr}${nm}<span class="pitch-slot-pos">R${i + 1}</span></div>`;
-    })
-    .join('');
-  squadUpdateSidebarStats();
-}
-
-let _squadCatTimer;
-function squadCatalogFilterDebounced(){
-  clearTimeout(_squadCatTimer);
-  _squadCatTimer = setTimeout(squadRenderCatalog, 200);
-}
-
-function squadRenderCatalog(){
-  const list = document.getElementById('squad-catalog-list');
-  if (!list) return;
-  if (!FC26_CARDS || !FC26_CARDS.length) {
-    list.innerHTML = '<p class="td-muted" style="padding:10px">Aucune carte — lancez le script de build ou vérifiez le chemin data/fc26-cards-catalog.json.</p>';
-    return;
-  }
-  const qEl = document.getElementById('squad-cat-q');
-  const posEl = document.getElementById('squad-cat-pos');
-  const minEl = document.getElementById('squad-cat-minovr');
-  const q = (qEl && qEl.value ? qEl.value : '').trim().toLowerCase();
-  const pos = posEl && posEl.value ? posEl.value : '';
-  const minRaw = minEl && minEl.value !== '' ? minEl.value : '';
-  const minOvr = minRaw === '' ? NaN : Number(minRaw);
-  const filtered = FC26_CARDS.filter((c) => {
-    if (!Number.isNaN(minOvr) && (Number(c.ovr) || 0) < minOvr) return false;
-    if (pos) {
-      const positions = Array.isArray(c.positions) ? c.positions : [];
-      if (c.pos !== pos && !positions.includes(pos)) return false;
-    }
-    if (q) {
-      const blob = [c.name, c.shortName, c.club, c.nation, c.league, String(c.ovr || '')].join(' ').toLowerCase();
-      if (!blob.includes(q)) return false;
-    }
-    return true;
-  });
-  const slice = filtered.slice(0, SQUAD_CATALOG_MAX);
-  const more =
-    filtered.length > SQUAD_CATALOG_MAX
-      ? `<p class="td-muted" style="font-size:11px;padding:8px 4px">… ${filtered.length - SQUAD_CATALOG_MAX} autres résultats : affinez la recherche ou le poste.</p>`
-      : '';
-  list.innerHTML =
-    slice
-      .map((c) => {
-        const fid = escapeJsString(String(c.id));
-        const fu = c.face && /^https?:\/\//i.test(String(c.face)) ? String(c.face).replace(/"/g, '%22') : '';
-        const img = fu
-          ? `<img src="${fu}" alt="" width="36" height="36" loading="lazy" decoding="async">`
-          : `<span style="width:36px;height:36px;display:inline-block;border-radius:4px;background:var(--bg-4)" aria-hidden="true"></span>`;
-        return `<button type="button" class="catalog-row" role="option" onclick="squadPickCard('${fid}')">${img}<span class="nm"><b>${escapeHtml(c.name)}</b><span>${escapeHtml([c.pos, c.club].filter(Boolean).join(' · '))}</span></span><span class="ovr">${escapeHtml(String(c.ovr != null ? c.ovr : '—'))}</span></button>`;
-      })
-      .join('') + more;
-}
-
-function squadExportJson(){
-  const detail = squadGetDetail();
-  const map = _squadCardMap || (FC26_CARDS ? new Map(FC26_CARDS.map((c) => [String(c.id), c])) : new Map());
-  const pick = (id) => {
-    if (!id) return null;
-    return map.get(String(id)) || { id: String(id) };
-  };
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    formation: squadState.formation,
-    formationMeta: detail ? { approcheDefensive: detail.approcheDefensive, styleConstruction: detail.styleConstruction } : null,
-    starters: squadState.starters.map(pick),
-    bench: squadState.bench.map(pick),
-    catalogMeta: FC26_CARDS_META || null,
-  };
-  try {
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'fc26-prototype-equipe.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  } catch (e) {
-    alert('Export impossible : ' + (e && e.message));
-  }
-}
-
-function initSquadPage(){
-  initSquadStateOnce();
-  squadPopulateFormationSelect();
-  const statusEl = document.getElementById('squad-catalog-status');
-  const countEl = document.getElementById('squad-catalog-count');
-  const afterLoad = () => {
-    if (statusEl) {
-      statusEl.textContent = FC26_CARDS_META
-        ? `Catalogue : ${FC26_CARDS.length} cartes · généré ${FC26_CARDS_META.generatedAt || '—'}`
-        : `Catalogue : ${FC26_CARDS.length} cartes`;
-    }
-    if (countEl) countEl.textContent = String(FC26_CARDS.length);
-    squadInvalidateCardMap();
-    renderSquadSlots();
-    squadRenderCatalog();
-  };
-  if (FC26_CARDS && FC26_CARDS.length) afterLoad();
-  else {
-    if (statusEl) statusEl.textContent = 'Chargement de data/fc26-cards-catalog.json…';
-    ensureCatalogLoaded()
-      .then(afterLoad)
-      .catch((e) => {
-        if (statusEl) {
-          statusEl.textContent =
-            'Catalogue indisponible : ' +
-            (e && e.message) +
-            ' — exécutez « node scripts/build-fc26-cards-catalog.mjs » dans le dépôt, puis rechargez.';
-        }
-        if (countEl) countEl.textContent = '0';
-        renderSquadSlots();
-        squadRenderCatalog();
-      });
-  }
-}
-
-function escapeHtml(s){
-  if(s==null) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-function escapeJsString(s){
-  return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r|\n/g,' ');
-}
-function initTheme(){
-  try{
-    const saved = localStorage.getItem(THEME_KEY);
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
-  }catch(_){ document.documentElement.dataset.theme = 'dark'; }
-}
-
-function loadData(){
-  const D = window.FC26_META_DATA;
-  if(!D){ alert('Fichier fc26-meta-data.js introuvable : placez-le dans le même dossier que ce HTML.'); return false; }
-  CONFIG = D.CONFIG;
-  PLAYERS = D.PLAYERS;
-  FORMATIONS = D.FORMATIONS;
-  FORMATION_DETAILS = D.FORMATION_DETAILS || {};
-  FC26_TACTICS_CANON = D.FC26_TACTICS_CANON || null;
-  TECHNIQUES = D.TECHNIQUES;
-  SBC_DATA = D.SBC_DATA;
-  PATCHES = D.PATCHES;
-  BEHAVIORS = D.BEHAVIORS;
-  META_TABLE = D.META_TABLE || [];
-  META_SNAPSHOT = D.META_SNAPSHOT || { headline:'', pillars:[] };
-  CHEM_OFFICIAL = D.CHEM_OFFICIAL || { headline:'', bullets:[], sourceUrl:'' };
-  CHEM_PICKS = D.CHEM_PICKS || [];
-  SETTINGS = D.SETTINGS || {};
-  SETTINGS_META_GUIDE = D.SETTINGS_META_GUIDE || null;
-  META_SETUP_EXPRESS = D.META_SETUP_EXPRESS || null;
-  return true;
-}
-
-function getBadge(src){
-  const map={ official:'badge-official', analytical:'badge-analytical', community:'badge-community', unconfirmed:'badge-unconfirmed' };
-  const label={ official:'Officiel', analytical:'Analytique', community:'Communauté', unconfirmed:'Non confirmé' };
-  return `<span class="badge ${map[src]||'badge-unconfirmed'}">${label[src]||src}</span>`;
-}
-function getTierBadge(t){ const m={ S:'badge-meta-s',A:'badge-meta-a',B:'badge-meta-b',C:'badge-meta-c' }; return `<span class="badge ${m[t]||'badge-meta-c'}">Palier ${escapeHtml(t)}</span>`; }
-function getBar(v,max=100){ const pct=Math.round(v/max*100); const cls=pct>=85?'s':pct>=70?'a':pct>=50?'b':'c'; return `<div class="score-wrap" aria-label="Score ${v}"><div class="score-bar"><div class="score-fill ${cls}" style="width:${pct}%"></div></div><div class="score-label">${v}</div></div>`; }
-
-function playerMatchesFilters(p){
-  const q=(playerFilters.q||'').trim().toLowerCase();
-  if(q){
-    const blob=[p.name,p.club,p.league,p.nation,p.metaRole,(p.altPos||[]).join(' ')].join(' ').toLowerCase();
-    if(!blob.includes(q)) return false;
-  }
-  if(playerFilters.league && p.league!==playerFilters.league) return false;
-  if(playerFilters.tier && p.tier!==playerFilters.tier) return false;
-  if(playerFilters.acc && p.acc!==playerFilters.acc) return false;
-  if(playerFilters.patchSens && (p.patchSens||'')!==playerFilters.patchSens) return false;
-  if(playerFilters.pos){
-    if(playerFilters.pos==='W'){ if(p.pos!=='LW'&&p.pos!=='RW') return false; }
-    else if(playerFilters.pos==='FB'){ if(p.pos!=='LB'&&p.pos!=='RB') return false; }
-    else if(p.bestPos!==playerFilters.pos&&p.pos!==playerFilters.pos&&!(p.altPos||[]).includes(playerFilters.pos)) return false;
-  }
-  return true;
-}
-
-function srcBadgePlayer(p){
-  if(p.source==='official') return getBadge('official');
-  if(p.source==='analytical'||p.confidence==='analytical') return getBadge('analytical');
-  return getBadge('community');
-}
-
-function renderPlayers(arr){
-  const g=document.getElementById('players-grid');
-  if(!arr.length){ g.innerHTML='<p class="td-muted" style="padding:20px">Aucun résultat.</p>'; return; }
-  g.innerHTML=arr.map(p=>`
-    <article class="player-card" tabindex="0" role="button" aria-label="Détail ${escapeHtml(p.name)}" onclick="openPlayerDrawer('${escapeJsString(p.id)}')" onkeydown="if(event.key==='Enter')openPlayerDrawer('${escapeJsString(p.id)}')">
-      <div class="player-card-header"><div><div class="player-card-name">${escapeHtml(p.name)}</div><div class="player-card-meta">${escapeHtml(p.club)} · ${escapeHtml(p.league)}</div></div>
-      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><div class="player-card-pos">${escapeHtml(p.bestPos)}</div>${getTierBadge(p.tier)}</div></div>
-      ${getBar(p.metaScore)}
-      <div class="player-card-meta">${escapeHtml(p.metaRole||'')}</div>
-      <div class="player-card-meta">Accél : ${escapeHtml(p.acc)} · Patch : <span class="badge ${(p.patchSens||'')==='élevé'?'badge-patch':'badge-stable'}">${escapeHtml(p.patchSens||'—')}</span></div>
-      <div class="player-card-meta">Alt : ${escapeHtml((p.altPos||[]).join(', ')||'—')}</div>
-      <div class="player-card-playstyles">${(p.playstyles||[]).map(ps=>`<span class="ps-chip ${String(ps).endsWith('+')?'plus':''}">${escapeHtml(ps)}</span>`).join('')}</div>
-      <div class="player-card-meta">${escapeHtml(p.strengths||'')}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        <span style="font-family:var(--mono);font-size:11px;color:var(--gold)">${escapeHtml(p.cost||'—')}</span>${srcBadgePlayer(p)}
-      </div>
-    </article>`).join('');
-}
-
-function openPlayerDrawer(id){
-  const p=PLAYERS.find(x=>x.id===id); if(!p) return;
-  lastFocusBeforeDrawer = document.activeElement;
-  const alts=(p.altPos||[]).map(a=>`<span class="badge badge-analytical">${escapeHtml(a)}</span>`).join(' ')||'<span class="td-muted">—</span>';
-  document.getElementById('drawer-content').innerHTML=`
-    <h2 id="drawer-title" style="font-family:var(--display);font-size:22px">${escapeHtml(p.name)}</h2>
-    <p class="td-muted">${escapeHtml(p.club)} · ${escapeHtml(p.nation)} · ${escapeHtml(p.league)}</p>
-    <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap">${getTierBadge(p.tier)}${srcBadgePlayer(p)}
-    <span class="badge ${(p.patchSens||'')==='élevé'?'badge-patch':'badge-stable'}">Patch ${escapeHtml(p.patchSens||'n/a')}</span></div>
-    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Rôle méta</div>
-    <p style="font-size:13px;color:var(--text-secondary)">${escapeHtml(p.metaRole||'—')}</p></div>
-    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Meilleur poste / alternatifs</div>
-    <p><span class="badge badge-role">${escapeHtml(p.bestPos)}</span> ${alts}</p></div>
-    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Styles chimie (indicatif)</div>
-    <p style="font-size:13px;color:var(--text-secondary)"><strong>Sans +3 :</strong> ${escapeHtml(p.chemNone||'—')}<br><strong>Avec +3 :</strong> ${escapeHtml(p.chemChem||'—')}</p>
-    <p class="td-muted" style="font-size:11px">Modèle 3/6/9 et trade-offs pace : voir page Chimie (officiel EA, Launch Update).</p></div>
-    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Tactique</div><p style="font-size:13px;color:var(--text-secondary)">${escapeHtml(p.tacticalFit||'—')}</p></div>
-    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Atouts / limites</div>
-    <p style="font-size:13px;color:var(--text-secondary)"><strong>+</strong> ${escapeHtml(p.strengths||'—')}<br><strong>−</strong> ${escapeHtml(p.limits||'—')}</p></div>`;
-  document.getElementById('drawer-overlay').classList.add('active');
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('drawer').setAttribute('aria-hidden','false');
-  document.getElementById('drawer-close').focus();
-}
-
-function closeDrawer(){
-  document.getElementById('drawer-overlay').classList.remove('active');
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('drawer').setAttribute('aria-hidden','true');
-  const prev = lastFocusBeforeDrawer;
-  lastFocusBeforeDrawer = null;
-  if(prev && typeof prev.focus==='function'){
-    try{ prev.focus({preventScroll:true}); }catch(_){}
-  }
-}
-
-function pitchMiniDotColor(poste){
-  const p = String(poste || '').toUpperCase();
-  if (p === 'GK') return '#4da6ff';
-  if (/ST|LW|RW|LF|RF|CAM|CF/.test(p)) return '#ff6b6b';
-  if (/M|CDM/.test(p)) return '#ffd700';
-  return '#8b9cb3';
-}
-
-/** Mini terrain SVG (positions = même ordre que FORMATION_DETAILS / SQUAD_PITCH_LAYOUTS). */
-function renderFormationPitchMini(formationName, slots){
-  const W = 220;
-  const H = 320;
-  const L = SQUAD_PITCH_LAYOUTS[formationName] || SQUAD_PITCH_LAYOUTS['4-2-3-1'];
-  const list = Array.isArray(slots) ? slots : [];
-  const circles = list
-    .map((s, i) => {
-      const c = L[i] || { l: 50, t: 50 };
-      const cx = (c.l / 100) * W;
-      const cy = (c.t / 100) * H;
-      const col = pitchMiniDotColor(s.poste);
-      const title = escapeHtml([s.poste, s.libelle].filter(Boolean).join(' — '));
-      return `<circle cx="${cx}" cy="${cy}" r="8.5" fill="${col}" stroke="rgba(255,255,255,.35)" stroke-width="1"><title>${title}</title></circle>`;
-    })
-    .join('');
-  const fn = escapeHtml(formationName || '');
-  return `<svg class="mini-pitch" viewBox="0 0 ${W} ${H}" role="img" aria-label="Schéma ${fn}">
-    <defs><linearGradient id="fc26pitchg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d3d22"/><stop offset="50%" stop-color="#0a5c32"/><stop offset="100%" stop-color="#0d3d22"/></linearGradient></defs>
-    <rect width="${W}" height="${H}" fill="url(#fc26pitchg)"/>
-    <rect x="10" y="10" width="${W - 20}" height="${H - 20}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
-    <line x1="10" y1="${H / 2}" x2="${W - 10}" y2="${H / 2}" stroke="rgba(255,255,255,.18)"/>
-    <circle cx="${W / 2}" cy="${H / 2}" r="26" fill="none" stroke="rgba(255,255,255,.16)"/>
-    ${circles}
-  </svg>`;
-}
-
-function consignesToChips(consignes){
-  if (!consignes || typeof consignes !== 'string') return '<span class="td-muted">—</span>';
-  const parts = consignes.split(/\s*·\s*/).map((s) => s.trim()).filter(Boolean);
-  if (!parts.length) return `<span class="td-muted">${escapeHtml(consignes)}</span>`;
-  return parts.map((p, i) => `<span class="inst-chip${i === 0 ? ' accent' : ''}">${escapeHtml(p)}</span>`).join('');
-}
-
-function readingLines(s){
-  if (!s || typeof s !== 'string') return [];
-  return s.split(/\s*·\s*/).map((x) => x.trim()).filter(Boolean);
-}
-
-function renderFormationSlotRows(slots){
-  if(!Array.isArray(slots)||!slots.length) return '<p class="td-muted">Aucune ligne poste.</p>';
-  return `<div class="table-wrap"><table class="slot-table" role="grid" aria-label="Rôles par poste"><thead><tr>
-    <th scope="col">Poste</th><th scope="col">Rôle+ &amp; objectif</th><th scope="col">Consignes (aperçu DATA)</th>
-  </tr></thead><tbody>${slots.map(s=>`<tr>
-    <td class="td-name">${escapeHtml(s.poste)}<div class="td-muted" style="font-size:11px;margin-top:2px">${escapeHtml(s.libelle||'')}</div></td>
-    <td><span class="badge badge-role">${escapeHtml(s.rolePlus||'—')}</span><p style="margin-top:6px;font-size:12px;color:var(--text-secondary);font-style:italic;border-left:2px solid var(--green-dim);padding-left:8px">${escapeHtml(s.objectifRole||'—')}</p></td>
-    <td><div class="inst-wrap">${consignesToChips(s.consignes)}</div></td>
-  </tr>`).join('')}</tbody></table></div>`;
-}
-
-function getTopMetaFormation(){
-  if(!Array.isArray(FORMATIONS)||FORMATIONS.length===0) return null;
-  const sorted=[...FORMATIONS].sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
-  const formation=sorted[0];
-  const detail=FORMATION_DETAILS&&FORMATION_DETAILS[formation.name]?FORMATION_DETAILS[formation.name]:null;
-  return { formation, detail };
-}
-
-function renderSetupExpress(){
-  const root=document.getElementById('setup-express-root');
-  if(!root) return;
-  const E=META_SETUP_EXPRESS;
-  const top=getTopMetaFormation();
-  if(!E){
-    root.innerHTML='<p class="td-muted">Bloc META_SETUP_EXPRESS absent du fichier de données.</p>';
-    return;
-  }
-  if(!top){
-    root.innerHTML='<p class="td-muted">Impossible de déterminer la formation (liste vide).</p>';
-    return;
-  }
-  const f=top.formation;
-  const d=top.detail;
-  const gabarits=d&&Array.isArray(d.gabaritsSelecteur)?d.gabaritsSelecteur.join(' · '):'—';
-  const appr=d?d.approcheDefensive:'—';
-  const styleC=d?d.styleConstruction:'—';
-  const balanced=SETTINGS&&SETTINGS.balanced;
-  const tactRows=(balanced&&balanced.groups&&balanced.groups[0]&&balanced.groups[0].items)?balanced.groups[0].items:[];
-  const tactTable=tactRows.length?`<div class="table-wrap" style="margin-top:12px"><table class="slot-table"><thead><tr><th>Paramètre</th><th>Valeur conseillée</th><th>Note</th></tr></thead><tbody>
-    ${tactRows.map(i=>`<tr><td class="td-name">${escapeHtml(i.label)}</td><td class="td-val" style="font-size:12px">${escapeHtml(i.val)}</td><td class="td-muted">${escapeHtml(i.note)}</td></tr>`).join('')}
-  </tbody></table></div>`:'';
-  const etapes=(E.etapes||[]).map((st,i)=>`<li style="margin-bottom:14px"><strong style="color:var(--text-primary)">${i+1}. ${escapeHtml(st.titre)}</strong><p class="td-muted" style="margin-top:4px;font-size:13px;line-height:1.55">${escapeHtml(st.texte)}</p></li>`).join('');
-  const topPlayers=[...PLAYERS].sort((a,b)=>(Number(b.metaScore)||0)-(Number(a.metaScore)||0)).slice(0,5);
-  const playersList=topPlayers.map(p=>`<li style="margin-bottom:6px">${escapeHtml(p.name)} <span class="td-muted">(${escapeHtml(p.bestPos)})</span> — <span class="td-val" style="font-size:12px">${escapeHtml(String(p.metaScore??'—'))}</span> <span class="td-muted">DATA</span></li>`).join('');
-  const fname=JSON.stringify(f.name);
-  root.innerHTML=`
-    <div class="info-box danger" style="margin-bottom:16px"><strong>Rappel :</strong> ${escapeHtml(E.disclaimer)}</div>
-    <p style="font-size:15px;color:var(--text-secondary);max-width:720px;line-height:1.6;margin-bottom:20px">${escapeHtml(E.accroche)}</p>
-    <div class="grid-2" style="gap:14px;margin-bottom:22px">
-      <div class="card" style="border-color:rgba(0,255,136,.35)">
-        <div class="card-header" style="margin-bottom:10px"><div class="card-title" style="color:var(--green)">Formation n°1 (score DATA)</div>${getBadge('community')}</div>
-        <div class="formation-name" style="font-size:22px;margin-bottom:6px">${escapeHtml(f.name)}</div>
-        <p class="td-muted" style="font-size:12px;margin-bottom:8px">${escapeHtml(f.style)} · ${getTierBadge(f.tier)} · score ${escapeHtml(String(f.score))}</p>
-        ${getBar(f.score)}
-        <p style="margin-top:12px;font-size:13px;color:var(--text-secondary)"><strong>Gabarit(s) au sélecteur :</strong> <span class="td-val" style="font-size:13px">${escapeHtml(gabarits)}</span></p>
-        ${d&&d.noteGabarits?`<p class="td-muted" style="font-size:12px;margin-top:6px">${escapeHtml(d.noteGabarits)}</p>`:''}
-        <button type="button" class="filter-btn" style="margin-top:14px;font-weight:600" onclick='openFormationDrawer(${fname})'>Ouvrir le détail 11 postes (rôles+)</button>
-      </div>
-      <div class="card" style="border-color:rgba(168,85,247,.35)">
-        <div class="card-header" style="margin-bottom:10px"><div class="card-title" style="color:var(--purple)">À régler dans FUT (même ordre que les menus)</div>${getBadge('analytical')}</div>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Copie ces deux presets tactiques tels quels :</p>
-        <div style="display:grid;gap:10px">
-          <div style="padding:12px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)"><span class="td-muted" style="font-size:11px">Approche défensive</span><p style="font-size:18px;font-weight:700;color:var(--blue);margin-top:4px">${escapeHtml(appr)}</p></div>
-          <div style="padding:12px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)"><span class="td-muted" style="font-size:11px">Style de construction</span><p style="font-size:18px;font-weight:700;color:var(--green);margin-top:4px">${escapeHtml(styleC)}</p></div>
-        </div>
-        <p class="td-muted" style="font-size:11px;margin-top:12px">Si ton jeu est en français, les libellés peuvent légèrement différer — garde la même idée (4 niveaux défense / 3 styles construction).</p>
-      </div>
-    </div>
-    <div class="card section-block">
-      <div class="card-header"><div class="card-title">Dans quel ordre je clique ?</div>${getBadge('analytical')}</div>
-      <ol style="list-style:none;padding:0;margin:12px 0 0 0">${etapes}</ol>
-    </div>
-    <div class="grid-2" style="margin-top:16px;gap:14px">
-      <div class="card">
-        <div class="card-header"><div class="card-title">Curseurs (profil équilibré DATA)</div>${getBadge('analytical')}</div>
-        <p class="td-muted" style="font-size:12px;margin-bottom:8px">Optionnel : aligne les curseurs tactiques sur le profil « Équilibré » exporté ici.</p>
-        ${tactTable||'<p class="td-muted">Profil SETTINGS.balanced introuvable.</p>'}
-        <button type="button" class="filter-btn" style="margin-top:12px" onclick="showPage('settings')">Page Réglages (autres profils)</button>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Joueurs les plus hauts score DATA</div>${getBadge('community')}</div>
-        <p class="td-muted" style="font-size:12px;margin-bottom:10px">Exemple de noyau « cher » — à adapter à ton budget ; chimie : page dédiée.</p>
-        <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.5">${playersList}</ul>
-        <p class="td-muted" style="font-size:12px;margin-top:12px">${escapeHtml(E.rappelChimieUneLigne)}</p>
-        <button type="button" class="filter-btn" style="margin-top:12px" onclick="showPage('chemistry')">Chimie &amp; styles</button>
-      </div>
-    </div>`;
-}
-
-function openFormationDrawer(formationName){
-  const f=FORMATIONS.find(x=>x.name===formationName);
-  if(!f) return;
-  const d=FORMATION_DETAILS[formationName];
-  lastFocusBeforeDrawer=document.activeElement;
-  const strengthsList = readingLines(f.strengths).map((x) => `<li>${escapeHtml(x)}</li>`).join('') || `<li>${escapeHtml(f.strengths || '—')}</li>`;
-  const weakList = readingLines(f.weaknesses).map((x) => `<li>${escapeHtml(x)}</li>`).join('') || `<li>${escapeHtml(f.weaknesses || '—')}</li>`;
-  const counterCtx = [f.counters ? `<li><strong>Contre :</strong> ${escapeHtml(f.counters)}</li>` : '', f.context ? `<li><strong>Contexte :</strong> ${escapeHtml(f.context)}</li>` : ''].join('');
-  let bodyInner = '';
-  if (d) {
-    const tplList = Array.isArray(d.gabaritsSelecteur) && d.gabaritsSelecteur.length
-      ? d.gabaritsSelecteur.map((t) => `<code style="font-size:12px">${escapeHtml(t)}</code>`).join(' · ')
-      : '';
-    const tplBlock = tplList
-      ? `<div class="card" style="padding:12px;margin-bottom:12px"><div class="card-header" style="margin-bottom:8px"><span class="card-title" style="font-size:11px">Gabarits sélecteur</span>${getBadge('community')}</div>
-        <p style="font-size:13px;font-weight:600;line-height:1.5">${tplList}</p>
-        ${d.noteGabarits ? `<p class="td-muted" style="font-size:12px;margin-top:8px">${escapeHtml(d.noteGabarits)}</p>` : ''}</div>`
-      : '';
-    const styleConstr = d.styleConstruction || '—';
-    const approchDef = d.approcheDefensive || '—';
-    const eaQuotes =
-      FC26_TACTICS_CANON && Array.isArray(FC26_TACTICS_CANON.citationsEa)
-        ? FC26_TACTICS_CANON.citationsEa
-            .map(
-              (q) =>
-                `<p style="margin-bottom:8px;font-size:11px;color:var(--text-secondary)">${escapeHtml(q.texteFr)} <a href="${safeExternalHref(q.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">EA</a></p>`,
-            )
-            .join('')
-        : '';
-    const eaBlock = eaQuotes
-      ? `<details style="margin-top:12px"><summary style="cursor:pointer;font-size:12px;color:var(--text-muted)">Faits EA (tactique — pitch notes)</summary><div style="margin-top:8px">${eaQuotes}</div></details>`
-      : '';
-    bodyInner = `
-    ${tplBlock}
-    <div class="grid-2" style="gap:10px;margin-bottom:12px">
-      <div class="card" style="padding:12px"><div class="card-header" style="margin-bottom:6px"><span class="card-title" style="font-size:11px">Style de construction</span>${getBadge('analytical')}</div>
-        <p style="font-size:15px;font-weight:700;color:var(--green)">${escapeHtml(styleConstr)}</p>
-        <p class="td-muted" style="font-size:11px;margin-top:4px">Menu FUT — trois styles usuels (FR).</p></div>
-      <div class="card" style="padding:12px"><div class="card-header" style="margin-bottom:6px"><span class="card-title" style="font-size:11px">Approche défensive</span>${getBadge('analytical')}</div>
-        <p style="font-size:15px;font-weight:700;color:var(--blue)">${escapeHtml(approchDef)}</p>
-        <p class="td-muted" style="font-size:11px;margin-top:4px">Quatre niveaux usuels (FR).</p></div>
-    </div>
-    <div class="info-box warn" style="margin-bottom:12px">${getBadge('community')} <strong>Rôle+ / objectif / consignes</strong> : synthèse DATA en français — à recouper avec FUT &gt; Tactiques (libellés exacts selon patch).</div>
-    ${FC26_TACTICS_CANON && FC26_TACTICS_CANON.noteAnalytique ? `<p class="td-muted" style="font-size:11px;margin-bottom:10px">${escapeHtml(FC26_TACTICS_CANON.noteAnalytique)}</p>` : ''}
-    ${eaBlock}
-    <h3 class="section-title" style="font-size:14px;margin:16px 0 10px">Onze postes</h3>
-    ${renderFormationSlotRows(d.slots)}`;
-  } else {
-    bodyInner = `<p class="td-muted">Fiche absente dans <code>FORMATION_DETAILS</code> pour cette formation.</p>`;
-  }
-  const statTiles = `
-    <div class="fd-pro-stat"><div class="v">${escapeHtml(String(f.score ?? '—'))}</div><div class="l">Score DATA</div></div>
-    <div class="fd-pro-stat"><div class="v" style="color:var(--blue)">${escapeHtml(d ? d.styleConstruction || '—' : '—')}</div><div class="l">Construction</div></div>
-    <div class="fd-pro-stat"><div class="v" style="color:#80c4ff">${escapeHtml(d ? d.approcheDefensive || '—' : '—')}</div><div class="l">Défense (preset)</div></div>
-    <div class="fd-pro-stat"><div class="v" style="font-size:14px;color:var(--text-primary)">${escapeHtml(String(f.width ?? '—'))}<span class="td-muted"> / </span>${escapeHtml(String(f.depth ?? '—'))}</div><div class="l">Largeur · prof.</div></div>`;
-  const pitchBlock = d && Array.isArray(d.slots) ? renderFormationPitchMini(f.name, d.slots) : `<p class="td-muted" style="text-align:center;font-size:12px">Schéma disponible quand la fiche 11 postes est dans DATA.</p>`;
-  document.getElementById('drawer-content').innerHTML = `
-    <div class="fd-pro">
-      <div class="fd-pro-header">
-        <h2 id="drawer-title" class="fd-pro-title">${escapeHtml(f.name)}</h2>
-        <div class="fd-pro-sub">${escapeHtml(f.style)} · ${getTierBadge(f.tier)} <span class="badge badge-stable">${escapeHtml(f.stability)}</span> ${getBadge('community')}</div>
-        ${getBar(f.score)}
-        <div class="fd-pro-stats">${statTiles}</div>
-      </div>
-      <div class="fd-pro-body">
-        <div class="fd-pro-pitch">
-          <span class="td-muted" style="font-size:9px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">Schéma positions</span>
-          ${pitchBlock}
-          <p class="td-muted" style="font-size:10px;text-align:center;line-height:1.45">Bleu = GK · or = milieux · rouge = ligne offensive.</p>
-        </div>
-        <div class="fd-pro-detail">${bodyInner}</div>
-      </div>
-      <div class="philo-grid" style="padding:14px 18px 18px;background:var(--bg-2);border-top:1px solid var(--border)">
-        <div class="philo-card"><h4>Atouts (DATA)</h4><ul>${strengthsList}</ul></div>
-        <div class="philo-card neg"><h4>Limites</h4><ul>${weakList}</ul></div>
-      </div>
-      ${counterCtx ? `<div style="padding:0 18px 18px;background:var(--bg-2)"><div class="philo-card" style="border-left-color:var(--orange)"><h4>Lecture jeu</h4><ul>${counterCtx}</ul></div></div>` : ''}
-    </div>`;
-  document.getElementById('drawer-overlay').classList.add('active');
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('drawer').setAttribute('aria-hidden','false');
-  document.getElementById('drawer-close').focus();
-}
-
-function onFormationsContainerClick(e){
-  const card=e.target.closest('.formation-row-card[data-formation]');
-  if(!card) return;
-  const raw=card.getAttribute('data-formation');
-  if(!raw) return;
-  document.querySelectorAll('.formation-row-card.is-active').forEach((el)=>el.classList.remove('is-active'));
-  card.classList.add('is-active');
-  try{ openFormationDrawer(decodeURIComponent(raw)); }catch(_){ openFormationDrawer(raw); }
-}
-function onFormationsContainerKeydown(e){
-  if(e.key!=='Enter'&&e.key!==' ') return;
-  const card=e.target.closest('.formation-row-card[data-formation]');
-  if(!card) return;
-  e.preventDefault();
-  const raw=card.getAttribute('data-formation');
-  if(raw) try{ openFormationDrawer(decodeURIComponent(raw)); }catch(_){ openFormationDrawer(raw); }
-}
-
-function renderFormations(arr){
-  const n = arr.length;
-  const aside = `<aside class="formations-pro-aside card" style="padding:16px">
-    <div class="card-header" style="margin-bottom:10px;padding:0;border:none"><div class="card-title">Pilotage</div><span class="badge badge-analytical">Pro</span></div>
-    <p style="font-size:12px;color:var(--text-secondary);line-height:1.55;margin-bottom:12px">Chaque ligne ouvre la <strong>fiche tactique</strong> : schéma des 11 postes, presets menu FR (construction / défense) et rôles+ issus du DATA.</p>
-    <button type="button" class="filter-btn" style="width:100%;margin-bottom:10px;font-weight:600" onclick="showPage('setup-express')">Rivaux express</button>
-    <button type="button" class="filter-btn" style="width:100%" onclick="showPage('squad')">Prototype équipe</button>
-    <p class="td-muted" style="font-size:11px;margin-top:14px">${n} formation${n > 1 ? 's' : ''} — popularité &amp; score = heuristique démo.</p>
-  </aside>`;
-  const rows = arr
-    .map(
-      (f) => `
-    <section class="formation-row-card" tabindex="0" role="button" aria-label="Fiche formation ${escapeHtml(f.name)}" data-formation="${encodeURIComponent(f.name)}">
-      <div class="formation-row-main">
-        <div class="formation-row-name">${escapeHtml(f.name)}</div>
-        <div class="formation-row-meta">${escapeHtml(f.style)} · pop. ${escapeHtml(String(f.popularity))}/100 · aggr ${escapeHtml(String(f.aggression ?? '—'))}/ctrl ${escapeHtml(String(f.control ?? '—'))}</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">${getTierBadge(f.tier)}<span class="badge badge-stable">${escapeHtml(f.stability)}</span>${getBadge('community')}</div>
-        <p class="td-muted" style="font-size:11px;margin-top:8px;line-height:1.45"><strong>Tags</strong> ${escapeHtml((f.tags || []).join(' · ') || '—')}</p>
-      </div>
-      <div style="min-width:120px;text-align:right">
-        <div class="formation-row-score">${escapeHtml(String(f.score))}</div>
-        ${getBar(f.score)}
-        <p class="formation-hint" style="margin-top:8px">Fiche · Entrée</p>
-      </div>
-    </section>`,
-    )
-    .join('');
-  document.getElementById('formations-container').innerHTML = `<div class="formations-pro-grid"><div class="formations-pro-list" role="list">${rows}</div>${aside}</div>`;
-}
-
-function catTechBadge(cat){
-  const cmap={ tir:'badge-meta-s', passe:'badge-meta-a', defense:'badge-role', dribble:'badge-meta-b' };
-  return cmap[cat]||'badge-meta-c';
-}
-
-function renderTechniques(arr){
-  document.getElementById('techniques-container').innerHTML=`<div class="grid-auto">${arr.map(t=>`
-    <article class="technique-card card">
-      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:8px">
-        <h3 style="font-family:var(--display);font-size:16px;margin:0">${escapeHtml(t.name)}</h3>${getTierBadge(t.tier)}</div>
-      <div class="input-chip" aria-label="Input">${escapeHtml(t.input)}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
-        <span class="badge ${catTechBadge(t.category)}">${escapeHtml(String(t.category||'').toUpperCase())}</span>
-        ${getBadge(t.source==='official'?'official':'community')}
-        <span class="badge badge-analytical">${escapeHtml(t.diff||'')}</span>
-      </div>
-      ${getBar(t.eff)}
-      <p style="margin-top:10px;font-size:12px;color:var(--text-secondary)">
-        <span class="td-muted">Quand</span> ${escapeHtml(t.when||'—')} · <span class="td-muted">Pourquoi</span> ${escapeHtml(t.why||'—')}<br>
-        <span class="td-muted">Contre</span> ${escapeHtml(t.against||'—')} · <span class="td-muted">Zone</span> ${escapeHtml(t.zone||'—')}<br>
-        <span class="td-muted">Timing</span> ${escapeHtml(t.timing)}<br><span class="td-muted">Contexte</span> ${escapeHtml(t.context)}<br>
-        <span class="td-muted">Erreur</span> <span style="color:var(--red)">${escapeHtml(t.error)}</span><br>
-        <span class="td-muted">Chaîne</span> ${escapeHtml(t.chain)}<br><span class="td-muted">Patch</span> ${escapeHtml(t.patch||'—')}<br>
-        <span class="td-muted">Profil</span> ${escapeHtml(t.profile||'—')}
-      </p>
-      ${t.simple?`<p style="font-size:11px;color:var(--text-muted)"><strong>Variante simple :</strong> ${escapeHtml(t.simple)}</p>`:''}
-      ${t.advanced?`<p style="font-size:11px;color:var(--text-muted)"><strong>Variante avancée :</strong> ${escapeHtml(t.advanced)}</p>`:''}
-      ${t.counterRead?`<p style="font-size:11px;color:var(--orange)"><strong>Contre-lecture :</strong> ${escapeHtml(t.counterRead)}</p>`:''}
-      <p style="font-size:11px;margin-top:6px"><span class="td-muted">Risque</span> ${escapeHtml(t.risk)} · <span class="td-muted">Reward</span> ${escapeHtml(t.reward)}</p>
-    </article>`).join('')}</div>`;
-}
-
-function computeSbcScore(s){
-  const utilMeta=s.utilMeta, utilClub=s.utilClub, liq=s.liq, deadline=s.deadline;
-  const ratio=Math.min(s.reward/Math.max(s.cost,1),3)/3;
-  return +(ratio*.45 + utilMeta*.2 + utilClub*.15 + liq*.1 + deadline*.1).toFixed(2);
-}
-
-function renderSBC(arr){
-  const rows=arr.map(s=>{
-    const sc=computeSbcScore(s);
-    return `<tr data-cost="${s.cost}" data-reward="${s.reward}" data-score="${sc}"><td class="td-name">${escapeHtml(s.name)}</td><td>${escapeHtml(s.cat)}</td><td class="td-val">${(s.cost/1000).toFixed(0)}K</td><td class="td-val">${(s.reward/1000).toFixed(0)}K</td><td class="td-val">${sc.toFixed(2)}</td><td>${escapeHtml(s.reco)}</td></tr>`;
-  }).join('');
-  document.getElementById('sbc-container').innerHTML=`<div class="table-wrap"><table id="sbc-table"><thead><tr>
-    <th scope="col" data-col="0">SBC</th><th scope="col" data-col="1">Cat</th>
-    <th scope="col" data-col="2">Coût</th><th scope="col" data-col="3">Reward</th><th scope="col" data-col="4">Score</th><th scope="col" data-col="5">Reco</th>
-  </tr></thead><tbody>${rows}</tbody></table></div>`;
-  document.querySelectorAll('#sbc-table th[data-col]').forEach(th=>{
-    th.addEventListener('click',()=>sortSbcTable(+th.dataset.col));
-  });
-}
-
-function sortSbcTable(col){
-  const tbody=document.querySelector('#sbc-table tbody'); if(!tbody) return;
-  const rows=[...tbody.querySelectorAll('tr')];
-  const dir=sbcSort.col===col? -sbcSort.dir : 1;
-  sbcSort={ col, dir };
-  const numKey=['','','cost','reward','score'][col];
-  rows.sort((a,b)=>{
-    if(col<=1||col>=5||!numKey){
-      const ca=a.children[col].textContent, cb=b.children[col].textContent;
-      return dir*ca.localeCompare(cb,'fr',{sensitivity:'base'});
-    }
-    const av=parseFloat(a.dataset[numKey])||0, bv=parseFloat(b.dataset[numKey])||0;
-    return dir*(av-bv);
-  });
-  rows.forEach(r=>tbody.appendChild(r));
-  document.querySelectorAll('#sbc-table th').forEach(th=>th.classList.remove('sort-asc','sort-desc'));
-  const th=document.querySelector(`#sbc-table th[data-col="${col}"]`);
-  if(th) th.classList.add(dir===1?'sort-asc':'sort-desc');
-}
-
-function renderMetaTable(){
-  const el=document.getElementById('meta-table-wrap'); if(!el||!META_TABLE.length) return;
-  el.innerHTML=`<table><thead><tr><th>Élément</th><th>Force</th><th>Stabilité</th><th>Risque nerf</th><th>Source</th></tr></thead><tbody>
-    ${META_TABLE.map(r=>`<tr><td class="td-name">${escapeHtml(r.el)}</td><td>${getTierBadge(r.force)}</td><td>${escapeHtml(r.stab)}</td><td>${escapeHtml(r.nerf)}</td><td>${getBadge(r.src==='official'?'official':'community')}</td></tr>`).join('')}
-  </tbody></table>`;
-}
-
-function renderChemistryPage(){
-  const oc=document.getElementById('chem-official-card');
-  const rawUrl = String(CHEM_OFFICIAL.sourceUrl||'');
-  const safeHref = /^https?:\/\//i.test(rawUrl) ? rawUrl.replace(/"/g,'%22') : '#';
-  if(oc) oc.innerHTML=`<div class="card-header"><div class="card-title">EA — Chimie / styles (Launch)</div>${getBadge('official')}</div>
-    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">${escapeHtml(CHEM_OFFICIAL.headline||'')}</p>
-    <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px">${(CHEM_OFFICIAL.bullets||[]).map(b=>`<li>${escapeHtml(b)}</li>`).join('')}</ul>
-    <p style="margin-top:10px"><a href="${safeHref}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">Source : Launch Update EA</a></p>`;
-  const pw=document.getElementById('chem-picks-wrap');
-  if(pw) pw.innerHTML=`<table><thead><tr><th>Rôle</th><th>Sans +3 (indicatif)</th><th>Avec +3</th><th>Confiance</th></tr></thead><tbody>
-    ${(CHEM_PICKS||[]).map(r=>`<tr><td class="td-name">${escapeHtml(r.role)}</td><td>${escapeHtml(r.noChem)}</td><td>${escapeHtml(r.withChem)}</td><td>${getBadge(r.conf==='community'?'community':'analytical')}</td></tr>`).join('')}
-  </tbody></table>`;
-}
-
-function initDashboard(){
-  const sub=document.getElementById('dash-subtitle');
-  if(sub) sub.textContent=`Bundle ${CONFIG.bundleVersion} · révision ${CONFIG.dataRevision} · patch ref ${CONFIG.lastOfficialPatchId}`;
-  const live=document.getElementById('live-patch-text');
-  if(live) live.textContent=CONFIG.lastOfficialPatchId;
-  const h=document.getElementById('dash-headline');
-  if(h) h.textContent=META_SNAPSHOT.headline||'';
-  const cta=document.getElementById('dash-official-patch-cta');
-  if(cta){
-    const ref = CONFIG.lastOfficialPatchId || '—';
-    const recent = (PATCHES||[]).filter(p=>!String(p.version||'').includes('TEMPLATE')&&(p.sourceType==='official'||!p.sourceType)).slice(0,4).map(p=>p.version).filter(Boolean);
-    const extra = recent.length ? ` · suivis : ${recent.join(', ')}` : '';
-    cta.innerHTML = `<strong class="badge badge-official" style="margin-right:6px">Officiel</strong> Patch ref <strong>${escapeHtml(ref)}</strong>${escapeHtml(extra)} : voir page <a href="#" id="dash-patch-link" style="color:var(--blue)">Patch notes</a> (textes alignés EA).`;
-    const link=document.getElementById('dash-patch-link');
-    if(link) link.addEventListener('click',e=>{ e.preventDefault(); showPage('patches'); });
-  }
-  const pl=document.getElementById('dash-pillars');
-  if(pl) pl.innerHTML=(META_SNAPSHOT.pillars||[]).map(p=>`
-    <div style="padding:10px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)">
-      <div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">${escapeHtml(p.k)} ${getBadge(p.src||'community')}</div>
-      <div style="font-size:12px;color:var(--text-secondary)">${escapeHtml(p.v)}</div>
-    </div>`).join('');
-  const kp=document.getElementById('kpi-patch'); if(kp) kp.textContent=CONFIG.lastOfficialPatchId;
-  const kpp=document.getElementById('kpi-players'); if(kpp) kpp.textContent=String(PLAYERS.length);
-  const kf=document.getElementById('kpi-form'); if(kf) kf.textContent=String(FORMATIONS.length);
-  const kt=document.getElementById('kpi-tech'); if(kt) kt.textContent=String(TECHNIQUES.length);
-}
-
-function exportDataJson(){
-  const el=document.getElementById('export-status');
-  try{
-    const blob=new Blob([JSON.stringify(window.FC26_META_DATA,null,2)],{type:'application/json'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='fc26-meta-backup.json'; a.click(); URL.revokeObjectURL(a.href);
-    if(el) el.textContent='Export fc26-meta-backup.json déclenché (navigateur).';
-  }catch(e){ if(el) el.textContent='Erreur export : '+e; }
-}
-
-function renderPatches(){
-  const list=PATCHES.filter(p=>!String(p.version||'').includes('TEMPLATE'));
-  document.getElementById('patches-container').innerHTML=list.map(p=>{
-    const rawU = String(p.sourceUrl||'');
-    const hrefPatch = /^https?:\/\//i.test(rawU) ? rawU.replace(/"/g,'%22') : '#';
-    const ch = Array.isArray(p.changes) ? p.changes : [];
-    return `
-    <article class="patch-card">
-      <header style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-        <div><div class="patch-version">${escapeHtml(p.version)}</div><div class="patch-date">${escapeHtml(p.date)} · ${escapeHtml(p.channel)}</div></div>
-        <div style="display:flex;gap:6px;align-items:center">${getBadge(p.sourceType)}
-        <a class="badge badge-official" href="${hrefPatch}" target="_blank" rel="noopener noreferrer">Source EA</a></div>
-      </header>
-      <p class="info-box" style="margin-bottom:10px"><strong>Résumé :</strong> ${escapeHtml(p.summary)}</p>
-      <ul class="patch-changes">${ch.map(c=>{ const dot=['buff','nerf','neutral'].includes(c.type)?c.type:'neutral'; return `<li><span class="impact-dot ${dot}" aria-hidden="true"></span>${escapeHtml(c.text)}</li>`; }).join('')}</ul>
-      <div class="grid-2" style="margin-top:12px;gap:8px">
-        <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:12px"><div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">Impact méta (lecture)</div>${escapeHtml(p.metaImpact)}</div>
-        <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:12px"><div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">Bascule</div>${escapeHtml(p.bascule)}</div>
-      </div>
-    </article>`;
-  }).join('');
-}
-
-function renderBehaviors(){
-  document.getElementById('behaviors-container').innerHTML=`<div class="table-wrap"><table><thead><tr>
-    <th>Comportement</th><th>Zone</th><th>Fréquence</th><th>Statut</th><th>Risque</th><th>Source</th><th>Note</th>
-  </tr></thead><tbody>${BEHAVIORS.map(b=>`<tr>
-    <td class="td-name">${escapeHtml(b.name)}</td><td class="td-muted">${escapeHtml(b.zone)}</td><td>${escapeHtml(b.freq)}</td><td>${escapeHtml(b.status)}</td><td>${escapeHtml(b.risk)}</td><td>${getBadge(b.source==='official'?'official':'community')}</td><td class="td-muted" style="max-width:220px">${escapeHtml(b.note)}</td>
-  </tr>`).join('')}</tbody></table></div>`;
-}
-
-function safeExternalHref(u){
-  const s=String(u||'');
-  return /^https?:\/\//i.test(s)?s.replace(/"/g,'%22'):'#';
-}
-
-function renderSettingsMetaGuide(){
-  const el=document.getElementById('settings-meta-guide');
-  if(!el) return;
-  const G=SETTINGS_META_GUIDE;
-  if(!G){ el.innerHTML='<p class="td-muted">Guide réglages / sources : données absentes.</p>'; return; }
-  const op=(G.officialPresets?.bullets||[]).map(b=>`<li>${escapeHtml(b.text)} — <a href="${safeExternalHref(b.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-size:11px">${escapeHtml(b.src||'EA')}</a></li>`).join('');
-  const co=(G.controllerOfficial?.bullets||[]).map(b=>`<li>${escapeHtml(b.text)} — <a href="${safeExternalHref(b.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-size:11px">${escapeHtml(b.src||'EA')}</a></li>`).join('');
-  const sys=(G.officialGameplaySystems?.items||[]).map(it=>`<li style="margin-bottom:8px">${escapeHtml(it.text)} <span class="badge badge-official" style="margin-left:4px">${escapeHtml(it.tag||'')}</span> <a href="${safeExternalHref(it.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-size:11px;margin-left:6px">Source</a></li>`).join('');
-  const rows=(G.controllerAnalytical?.rows||[]).map(r=>`<tr><td class="td-name">${escapeHtml(r.param)}</td><td class="td-val" style="font-size:12px">${escapeHtml(r.pick)}</td><td class="td-muted">${escapeHtml(r.why)}</td></tr>`).join('');
-  const steps=(G.optimizePlay?.steps||[]).map(t=>`<li>${escapeHtml(t)}</li>`).join('');
-  const links=(G.sourceLinks||[]).map(l=>`<li><a href="${safeExternalHref(l.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">${escapeHtml(l.title)}</a></li>`).join('');
-  const um=G.utMenusNote||{};
-  el.innerHTML=`
-    <h2 class="section-title">Paramètres « meta » : officiel EA vs lecture analytique</h2>
-    <div class="info-box danger" style="margin-bottom:16px"><strong>Important :</strong> ${escapeHtml(G.disclaimer)}</div>
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header"><div class="card-title">${escapeHtml(G.officialPresets?.title||'Préréglages')}</div>${getBadge('official')}</div>
-        <p class="td-muted" style="font-size:12px;margin-bottom:10px">${escapeHtml(G.officialPresets?.lead||'')}</p>
-        <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.65">${op}</ul>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">${escapeHtml(G.controllerOfficial?.title||'Manette')}</div>${getBadge('official')}</div>
-        <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.65">${co}</ul>
-      </div>
-    </div>
-    <div class="card section-block" style="margin-top:16px">
-      <div class="card-header"><div class="card-title">${escapeHtml(G.officialGameplaySystems?.title||'Systèmes de jeu')}</div>${getBadge('official')}</div>
-      <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.6;margin-top:8px">${sys}</ul>
-    </div>
-    <div class="grid-2" style="margin-top:16px">
-      <div class="card">
-        <div class="card-header"><div class="card-title">${escapeHtml(G.controllerAnalytical?.title||'Manette')}</div>${getBadge('analytical')}</div>
-        <p class="td-muted" style="font-size:12px;margin-bottom:10px">${escapeHtml(G.controllerAnalytical?.intro||'')}</p>
-        <div class="table-wrap"><table class="slot-table"><thead><tr><th>Paramètre</th><th>Piste fréquente</th><th>Pourquoi (lecture)</th></tr></thead><tbody>${rows}</tbody></table></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">${escapeHtml(um.title||'UT')}</div>${getBadge('official')}</div>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px"><span class="badge badge-official" style="margin-right:6px">EA (Pitch Notes)</span>${escapeHtml(um.official||'')}</p>
-        ${um.clientPresets?`<p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px"><span class="badge badge-community" style="margin-right:6px">Client FC26</span>${escapeHtml(um.clientPresets)}</p>`:''}
-        <p style="font-size:12px;color:var(--text-muted)"><span class="badge badge-analytical" style="margin-right:6px">Ce centre</span>${escapeHtml(um.analytical||'')}</p>
-      </div>
-    </div>
-    <div class="card section-block" style="margin-top:16px">
-      <div class="card-header"><div class="card-title">${escapeHtml(G.optimizePlay?.title||'Méthode')}</div><span class="badge badge-analytical">Démarche</span></div>
-      <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.7;margin-top:8px">${steps}</ul>
-    </div>
-    <div class="card section-block" style="margin-top:16px">
-      <div class="card-header"><div class="card-title">Sources EA (liens)</div>${getBadge('official')}</div>
-      <ul style="font-size:13px;padding-left:18px;line-height:1.8;margin-top:8px">${links}</ul>
-    </div>`;
-}
-
-function renderSettings(profile){
-  const s=SETTINGS[profile]; const c=document.getElementById('settings-container');
-  if(!s){ c.innerHTML='<p class="td-muted">Profil de réglages indisponible.</p>'; return; }
-  c.innerHTML=`<div class="info-box"><strong>${escapeHtml(s.label)}</strong> — ${escapeHtml(s.desc)} ${getBadge('analytical')}</div>
-    ${(s.groups||[]).map(g=>`<section class="section-block"><h3 class="section-title" style="font-size:15px">${escapeHtml(g.title)}</h3>
-      <div class="table-wrap"><table><thead><tr><th>Paramètre</th><th>Valeur</th><th>Note</th></tr></thead><tbody>
-      ${(g.items||[]).map(i=>`<tr><td class="td-name">${escapeHtml(i.label)}</td><td class="td-val" style="font-size:12px">${escapeHtml(i.val)}</td><td class="td-muted">${escapeHtml(i.note)}</td></tr>`).join('')}
-      </tbody></table></div></section>`).join('')}`;
-}
-
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const page=document.getElementById('page-'+id);
-  if(page) page.classList.add('active');
-  const nav=document.querySelector(`.nav-item[data-page="${id}"]`);
-  if(nav) nav.classList.add('active');
-  if(id==='setup-express') renderSetupExpress();
-  if(id==='dashboard') initDashboard();
-  if(id==='meta') renderMetaTable();
-  if(id==='players'){ populateCompareSelects(); applyPlayerFilters(); }
-  if(id==='formations'){ document.querySelectorAll('#page-formations .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderFormations(FORMATIONS); }
-  if(id==='squad') initSquadPage();
-  if(id==='techniques'){ document.querySelectorAll('#page-techniques .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderTechniques(TECHNIQUES); }
-  if(id==='settings'){ document.querySelectorAll('#page-settings .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderSettingsMetaGuide(); renderSettings('balanced'); }
-  if(id==='sbc') renderSBC(SBC_DATA);
-  if(id==='patches') renderPatches();
-  if(id==='behaviors') renderBehaviors();
-  if(id==='chemistry') renderChemistryPage();
-  if(window.innerWidth<=900) document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('main').focus({preventScroll:true});
-}
-function navKey(e,id){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showPage(id);} }
-function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
-function toggleTheme(){
-  const h=document.documentElement;
-  h.dataset.theme=h.dataset.theme==='dark'?'light':'dark';
-  try{ localStorage.setItem(THEME_KEY, h.dataset.theme); }catch(_){}
-}
-
-function setPlayerFilter(k,v){ playerFilters[k]=v; applyPlayerFilters(); }
-function applyPlayerFilters(){ renderPlayers(PLAYERS.filter(playerMatchesFilters)); }
-function resetPlayerFilters(){
-  playerFilters={q:'',pos:'',league:'',tier:'',acc:'',patchSens:''};
-  ['f-q','f-pos','f-league','f-tier','f-acc','f-patch'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-  applyPlayerFilters();
-}
-
-function filterFormations(f,btn){
-  document.querySelectorAll('#page-formations .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  let arr=FORMATIONS;
-  if(f!=='all'){ if(f==='S'||f==='A') arr=FORMATIONS.filter(x=>x.tier===f); else arr=FORMATIONS.filter(x=>x.tags.includes(f)); }
-  renderFormations(arr);
-}
-function filterTech(cat,btn){
-  document.querySelectorAll('#page-techniques .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTechniques(cat==='all'?TECHNIQUES:TECHNIQUES.filter(t=>t.category===cat));
-}
-function showSettingProfile(profile,btn){
-  document.querySelectorAll('#page-settings .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderSettings(profile);
-}
-
-let _gsTimer;
-function globalSearchDebounced(q){
-  clearTimeout(_gsTimer);
-  _gsTimer=setTimeout(()=>globalSearch(q),200);
-}
-function globalSearch(q){
-  const t=(q||'').trim().toLowerCase();
-  if(t.length<2) return;
-  const pHits=PLAYERS.filter(p=>p.name.toLowerCase().includes(t)||p.club.toLowerCase().includes(t));
-  const fHits=FORMATIONS.filter(f=>f.name.toLowerCase().includes(t)||f.style.toLowerCase().includes(t));
-  const techHits=TECHNIQUES.filter(x=>x.name.toLowerCase().includes(t)||x.input.toLowerCase().includes(t));
-  if(pHits.length){
-    showPage('players');
-    playerFilters={q:'',pos:'',league:'',tier:'',acc:'',patchSens:''};
-    ['f-pos','f-league','f-tier','f-acc','f-patch'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-    const fq=document.getElementById('f-q'); if(fq) fq.value='';
-    renderPlayers(pHits);
-    return;
-  }
-  if(fHits.length){ showPage('formations'); document.querySelectorAll('#page-formations .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderFormations(fHits); return; }
-  if(techHits.length){ showPage('techniques'); document.querySelectorAll('#page-techniques .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderTechniques(techHits); return; }
-  alert('Aucun résultat (joueurs/formations/techniques) pour : ' + String(q).slice(0, 160));
-}
-
-function populateCompareSelects(){
-  const opts='<option value="">—</option>'+PLAYERS.map(p=>`<option value="${escapeJsString(p.id)}">${escapeHtml(p.name)}</option>`).join('');
-  const a=document.getElementById('cmp-a'); const b=document.getElementById('cmp-b');
-  if(a&&b){ a.innerHTML=opts; b.innerHTML=opts; }
-}
-function renderCompare(){
-  const ida=document.getElementById('cmp-a').value; const idb=document.getElementById('cmp-b').value;
-  const pa=PLAYERS.find(x=>x.id===ida); const pb=PLAYERS.find(x=>x.id===idb);
-  const out=document.getElementById('compare-out');
-  if(!pa||!pb||ida===idb){ out.innerHTML='<p class="td-muted">Choisissez deux joueurs distincts.</p>'; return; }
-  const keys=[['Score méta','metaScore'],['Palier','tier'],['Accélération','acc'],['Sensibilité patch','patchSens'],['Rôle','metaRole'],['Meilleur poste','bestPos'],['Postes alternatifs','altPos'],['Chimie sans +3','chemNone'],['Chimie +3','chemChem']];
-  const cell=v=>escapeHtml(Array.isArray(v)?v.join(', '):String(v??'—'));
-  out.innerHTML=`<table><thead><tr><th>Champ</th><th>${escapeHtml(pa.name)}</th><th>${escapeHtml(pb.name)}</th></tr></thead><tbody>
-    ${keys.map(([l,k])=>`<tr><td class="td-name">${escapeHtml(l)}</td><td>${cell(pa[k])}</td><td>${cell(pb[k])}</td></tr>`).join('')}
-  </tbody></table>`;
-}
-
-document.addEventListener('keydown',e=>{
-  const drawer=document.getElementById('drawer');
-  const open=drawer&&drawer.classList.contains('open');
-  if(e.key==='Escape'&&open){ e.preventDefault(); closeDrawer(); return; }
-  if(e.key==='Escape'){
-    const squadPage=document.getElementById('page-squad');
-    if(squadPage&&squadPage.classList.contains('active')&&squadPickSlot){
-      e.preventDefault();
-      squadPickSlot=null;
-      renderSquadSlots();
-      return;
-    }
-  }
-  if(!open||e.key!=='Tab') return;
-  const focusables=drawer.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
-  const list=[...focusables].filter(el=>el.getClientRects().length>0);
-  if(list.length===0) return;
-  const first=list[0], last=list[list.length-1];
-  if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
-  else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
-});
-
-document.addEventListener('DOMContentLoaded',()=>{
-  initTheme();
-  if(!loadData()) return;
-  renderSetupExpress();
-  initDashboard();
-  renderMetaTable();
-  renderPlayers(PLAYERS);
-  renderSettingsMetaGuide();
-  const fcont=document.getElementById('formations-container');
-  if(fcont){
-    fcont.addEventListener('click',onFormationsContainerClick);
-    fcont.addEventListener('keydown',onFormationsContainerKeydown);
-  }
-});
-</script>
+<script src="assets/fc26-meta-data.js?v=2026.04.19.43"></script>
+<script src="assets/fc26-command-center.js?v=2026.04.19.43"></script>
 </body>
 </html>

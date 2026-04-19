@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "noteFr": "Joueurs absents du dump EAFC26-DataHub (retraités, icônes, etc.). Fichier éditable : ajoutez des objets « carte » au même schéma que fc26-cards-catalog.json. Portrait vide = initiales dans l’app.",
+    "source": "FC26-Meta complément manuel"
+  },
+  "cards": [
+    {
+      "id": "199208",
+      "name": "Wayne Mark Rooney",
+      "shortName": "W. Rooney",
+      "ovr": 80,
+      "pot": 80,
+      "age": 40,
+      "pos": "ST",
+      "positions": ["ST", "CAM"],
+      "club": "Hors pool DataHub FC26",
+      "nation": "England",
+      "league": "Complément FC26-Meta",
+      "face": "",
+      "pace": 62,
+      "sho": 85,
+      "pas": 78,
+      "dri": 76,
+      "def": 45,
+      "phy": 78,
+      "sm": 3,
+      "wf": 4,
+      "cardType": "Complément (icône / légende)",
+      "dataSource": "extra"
+    }
+  ]
+}

@@ -16,10 +16,12 @@ function fail(msg) {
   process.exit(1);
 }
 
-const dataPath = path.join(root, 'fc26-meta-data.js');
+const dataPath = path.join(root, 'assets', 'fc26-meta-data.js');
+const appJsPath = path.join(root, 'assets', 'fc26-command-center.js');
 const htmlPath = path.join(root, 'fc26-meta-command-center.html');
 
 if (!fs.existsSync(dataPath)) fail(`Fichier manquant : ${dataPath}`);
+if (!fs.existsSync(appJsPath)) fail(`Fichier manquant : ${appJsPath}`);
 if (!fs.existsSync(htmlPath)) fail(`Fichier manquant : ${htmlPath}`);
 
 const chk = spawnSync(process.execPath, ['--check', dataPath], { encoding: 'utf8' });
@@ -50,12 +52,22 @@ const {
   SETTINGS,
   SETTINGS_META_GUIDE,
   META_SETUP_EXPRESS,
+  META_TABLE,
+  LIVE_META,
+  CELEBRATIONS,
+  META_APP_CHARTER,
 } = D;
 
 if (!CONFIG || typeof CONFIG.bundleVersion !== 'string' || !CONFIG.bundleVersion.trim()) {
   fail('CONFIG.bundleVersion requis');
 }
+if (CONFIG.appMode && !['meta_lab', 'official_only'].includes(CONFIG.appMode)) {
+  fail('CONFIG.appMode doit être meta_lab ou official_only');
+}
 if (!CONFIG.lastOfficialPatchId) fail('CONFIG.lastOfficialPatchId requis');
+if (!CONFIG.expressFormationRef || typeof CONFIG.expressFormationRef !== 'string') {
+  fail('CONFIG.expressFormationRef requis (formation exemple pour Rivaux express — pas un classement EA)');
+}
 
 for (const [name, arr] of [
   ['PLAYERS', PLAYERS],
@@ -143,36 +155,130 @@ for (const st of META_SETUP_EXPRESS.etapes) {
     fail('META_SETUP_EXPRESS.etapes : chaque entrée doit avoir titre et texte');
   }
 }
-const topScoreForm = [...FORMATIONS].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0))[0];
-if (!FORMATION_DETAILS[topScoreForm.name]) {
-  fail(`FORMATION_DETAILS doit inclure la formation au score max (${topScoreForm.name}) pour Rivaux express`);
+if (!Array.isArray(META_TABLE) || META_TABLE.length < 1) {
+  fail('META_TABLE doit être un tableau d’au moins une ligne (synthèse gameplay EA)');
+}
+for (const r of META_TABLE) {
+  if (!r || typeof r.el !== 'string' || typeof r.rappel !== 'string') {
+    fail(`META_TABLE : chaque ligne doit avoir el et rappel — ${JSON.stringify(r)}`);
+  }
+  if (typeof r.perimetre !== 'string' || typeof r.suivi !== 'string') {
+    fail(`META_TABLE : perimetre et suivi requis — ${JSON.stringify(r)}`);
+  }
+  if (r.src !== 'official' && r.src !== 'analytical') {
+    fail(`META_TABLE : src doit être official ou analytical — ${JSON.stringify(r)}`);
+  }
+}
+const formationNameSet = new Set((FORMATIONS || []).map((f) => f.name));
+if (!LIVE_META || typeof LIVE_META !== 'object') fail('LIVE_META requis');
+if (typeof LIVE_META.headline !== 'string' || !LIVE_META.headline.trim()) fail('LIVE_META.headline requis');
+if (typeof LIVE_META.updatedAt !== 'string' || !LIVE_META.updatedAt.trim()) fail('LIVE_META.updatedAt requis (ex. YYYY-MM-DD)');
+if (!Array.isArray(LIVE_META.picks) || LIVE_META.picks.length < 1) {
+  fail('LIVE_META.picks : au moins une entrée (hub méta type Warzone)');
+}
+const liveKinds = new Set(['formation', 'gestes', 'players', 'squad', 'guide', 'note', 'celebrations']);
+for (const p of LIVE_META.picks) {
+  if (!p || typeof p.id !== 'string' || !p.id.trim()) fail(`LIVE_META.picks : id requis — ${JSON.stringify(p)}`);
+  if (!p.kind || typeof p.kind !== 'string' || !liveKinds.has(p.kind)) {
+    fail(`LIVE_META.picks.kind invalide pour ${p.id} — utiliser formation|gestes|players|squad|guide|note`);
+  }
+  if (typeof p.title !== 'string' || !p.title.trim()) fail(`LIVE_META.picks.title requis — ${p.id}`);
+  if (typeof p.blurb !== 'string' || !p.blurb.trim()) fail(`LIVE_META.picks.blurb requis — ${p.id}`);
+  if (p.tag != null && typeof p.tag !== 'string') fail(`LIVE_META.picks.tag doit être une chaîne — ${p.id}`);
+  if (p.tier != null && typeof p.tier !== 'string') fail(`LIVE_META.picks.tier doit être une chaîne — ${p.id}`);
+  if (p.kind === 'formation') {
+    if (!p.formationName || typeof p.formationName !== 'string' || !formationNameSet.has(p.formationName)) {
+      fail(`LIVE_META.picks.formationName doit exister dans FORMATIONS — ${p.id}`);
+    }
+  }
+  if (p.kind === 'gestes' && p.scrollTo != null && typeof p.scrollTo !== 'string') {
+    fail(`LIVE_META.picks.scrollTo doit être une chaîne — ${p.id}`);
+  }
+}
+if (!FORMATION_DETAILS[CONFIG.expressFormationRef]) {
+  fail(`FORMATION_DETAILS doit inclure CONFIG.expressFormationRef (${CONFIG.expressFormationRef})`);
+}
+if (!META_APP_CHARTER || typeof META_APP_CHARTER !== 'object') fail('META_APP_CHARTER manquant');
+for (const k of ['lead', 'appBlock', 'eaBlock']) {
+  if (typeof META_APP_CHARTER[k] !== 'string' || !META_APP_CHARTER[k].trim()) {
+    fail(`META_APP_CHARTER.${k} requis (chaîne non vide)`);
+  }
+}
+if (!CELEBRATIONS || typeof CELEBRATIONS !== 'object') fail('CELEBRATIONS manquant');
+if (!Array.isArray(CELEBRATIONS.basics) || CELEBRATIONS.basics.length < 2) {
+  fail('CELEBRATIONS.basics : au moins 2 entrées (signature / aléatoire / passer…)');
+}
+for (const b of CELEBRATIONS.basics) {
+  if (!b || typeof b.name !== 'string' || typeof b.ps !== 'string' || typeof b.xbox !== 'string') {
+    fail('CELEBRATIONS.basics : chaque ligne doit avoir name, ps, xbox');
+  }
+}
+if (!Array.isArray(CELEBRATIONS.sections) || CELEBRATIONS.sections.length < 1) {
+  fail('CELEBRATIONS.sections : au moins une section (finition, course, etc.)');
+}
+for (const sec of CELEBRATIONS.sections) {
+  if (!sec || typeof sec.title !== 'string' || !Array.isArray(sec.rows) || sec.rows.length < 1) {
+    fail(`CELEBRATIONS.section invalide : ${JSON.stringify(sec && sec.title)}`);
+  }
+  for (const r of sec.rows) {
+    if (!r || typeof r.name !== 'string' || typeof r.ps !== 'string' || typeof r.xbox !== 'string') {
+      fail(`CELEBRATIONS.rows : name, ps, xbox requis — ${JSON.stringify(r)}`);
+    }
+  }
 }
 if (!Array.isArray(SETTINGS_META_GUIDE.sourceLinks) || SETTINGS_META_GUIDE.sourceLinks.length < 2) {
   fail('SETTINGS_META_GUIDE.sourceLinks incomplet');
 }
 
 const html = fs.readFileSync(htmlPath, 'utf8');
+const appJs = fs.readFileSync(appJsPath, 'utf8');
+const synApp = spawnSync(process.execPath, ['--check', appJsPath], { encoding: 'utf8' });
+if (synApp.status !== 0) {
+  fail(`Syntaxe assets/fc26-command-center.js : ${synApp.stderr || synApp.stdout || 'erreur'}`);
+}
+
 const required = [
   'function escapeHtml',
   'function initTheme',
   'function escapeJsString',
   'function ensureCatalogLoaded',
+  'function playersRosterEnsureCatalog',
+  'function buildCatalogPlayerDetailHTML',
   'initTheme();',
   'localStorage.setItem(THEME_KEY',
-  'lastFocusBeforeDrawer',
-  'dash-official-patch-cta',
+  'page-formation-detail',
+  'id="dash-kpis"',
   'id="page-squad"',
+  'id="site-nav"',
+  'function fc26SyncHeaderHeight',
+  'id="page-meta-home"',
+  'function renderMetaHome',
+  'id="meta-live-root"',
+  'function renderMetaLive',
+  'function fc26MetaHomeTab',
+  'function renderCelebrationsPage',
+  'meta-panel-hub',
+  'meta-app-charter-root',
+  'function renderMetaAppCharter',
 ];
+const htmlPlusApp = html + '\n' + appJs;
 for (const needle of required) {
-  if (!html.includes(needle)) fail(`HTML : chaîne requise absente — ${needle}`);
+  if (!htmlPlusApp.includes(needle)) fail(`HTML / app JS : chaîne requise absente — ${needle}`);
 }
 
-const srcMatch = html.match(/<script\s+src="fc26-meta-data\.js(\?v=([^"]+))?"/);
-if (!srcMatch) fail('Balise script fc26-meta-data.js introuvable dans le HTML');
-if (srcMatch[2] && srcMatch[2] !== CONFIG.bundleVersion) {
-  fail(
-    `Cache-bust : src indique ?v=${srcMatch[2]} mais CONFIG.bundleVersion=${CONFIG.bundleVersion} (relancer push.sh pour synchroniser).`,
-  );
+const assetRefs = [
+  ['assets/fc26-meta-data.js', /assets\/fc26-meta-data\.js\?v=([^"]+)/],
+  ['assets/fc26-command-center.js', /assets\/fc26-command-center\.js\?v=([^"]+)/],
+  ['assets/fc26-command-center.css', /assets\/fc26-command-center\.css\?v=([^"]+)/],
+];
+for (const [label, re] of assetRefs) {
+  const m = html.match(re);
+  if (!m) fail(`Référence manquante dans le HTML : ${label}?v=…`);
+  if (m[1] !== CONFIG.bundleVersion) {
+    fail(
+      `Cache-bust ${label} : ?v=${m[1]} mais CONFIG.bundleVersion=${CONFIG.bundleVersion} (relancer push.sh pour synchroniser).`,
+    );
+  }
 }
 
 const catalogPath = path.join(root, 'data', 'fc26-cards-catalog.json');
@@ -186,6 +292,20 @@ if (!fs.existsSync(catalogPath)) {
     if (n < 1000) console.warn('VERIFY WARN: catalogue FC26 très petit (' + n + ' cartes)');
   } catch (e) {
     console.warn('VERIFY WARN: fc26-cards-catalog.json illisible :', e.message);
+  }
+}
+
+const extraPath = path.join(root, 'data', 'fc26-catalog-extra.json');
+if (fs.existsSync(extraPath)) {
+  try {
+    const ex = JSON.parse(fs.readFileSync(extraPath, 'utf8'));
+    if (!Array.isArray(ex.cards)) fail('fc26-catalog-extra.json : propriété cards[] requise');
+    for (const c of ex.cards) {
+      if (!c || !c.id || !c.name) fail('fc26-catalog-extra.json : chaque carte doit avoir id et name');
+    }
+  } catch (e) {
+    if (e.message && e.message.startsWith('VERIFY')) throw e;
+    fail(`fc26-catalog-extra.json : ${e.message}`);
   }
 }
 

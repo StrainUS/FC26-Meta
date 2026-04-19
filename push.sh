@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Déploiement : synchronise le cache-busting du bundle, vérifie les données, commit, push.
+# Déploiement : synchronise ?v= avec bundleVersion, vérifie les données, commit, push.
 set -euo pipefail
 cd "$(dirname "$0")"
 
-if [[ ! -f fc26-meta-command-center.html || ! -f fc26-meta-data.js ]]; then
-  echo "Fichiers manquants dans $(pwd)" >&2
+if [[ ! -f fc26-meta-command-center.html || ! -f assets/fc26-meta-data.js ]]; then
+  echo "Fichiers manquants dans $(pwd) (attendu : HTML racine + assets/fc26-meta-data.js)" >&2
   exit 1
 fi
 
@@ -13,17 +13,25 @@ if [[ ! -f scripts/verify-fc26.mjs ]]; then
   exit 1
 fi
 
-BUNDLE_VER="$(grep -oE "bundleVersion:[[:space:]]*'[^']+'" fc26-meta-data.js | head -1 | sed -E "s/bundleVersion:[[:space:]]*'([^']+)'.*/\1/" || true)"
+BUNDLE_VER="$(grep -oE "bundleVersion:[[:space:]]*'[^']+'" assets/fc26-meta-data.js | head -1 | sed -E "s/bundleVersion:[[:space:]]*'([^']+)'.*/\1/" || true)"
 if [[ -z "${BUNDLE_VER}" ]]; then
-  echo "Impossible de lire bundleVersion dans fc26-meta-data.js" >&2
+  echo "Impossible de lire bundleVersion dans assets/fc26-meta-data.js" >&2
   exit 1
 fi
 
-echo "→ Sync cache-bust fc26-meta-data.js → ?v=${BUNDLE_VER}"
+echo "→ Sync cache-bust assets → ?v=${BUNDLE_VER}"
 if [[ "$(uname -s)" == "Darwin" ]]; then
-  sed -i '' "s|src=\"fc26-meta-data.js[^\"]*\"|src=\"fc26-meta-data.js?v=${BUNDLE_VER}\"|" fc26-meta-command-center.html
+  sed -i '' \
+    -e "s|\\(assets/fc26-meta-data\\.js\\)?v=[^\"]*|\\1?v=${BUNDLE_VER}|g" \
+    -e "s|\\(assets/fc26-command-center\\.js\\)?v=[^\"]*|\\1?v=${BUNDLE_VER}|g" \
+    -e "s|\\(assets/fc26-command-center\\.css\\)?v=[^\"]*|\\1?v=${BUNDLE_VER}|g" \
+    fc26-meta-command-center.html
 else
-  sed -i "s|src=\"fc26-meta-data.js[^\"]*\"|src=\"fc26-meta-data.js?v=${BUNDLE_VER}\"|" fc26-meta-command-center.html
+  sed -i \
+    -e "s|\\(assets/fc26-meta-data\\.js\\)?v=[^\"]*|\\1?v=${BUNDLE_VER}|g" \
+    -e "s|\\(assets/fc26-command-center\\.js\\)?v=[^\"]*|\\1?v=${BUNDLE_VER}|g" \
+    -e "s|\\(assets/fc26-command-center\\.css\\)?v=[^\"]*|\\1?v=${BUNDLE_VER}|g" \
+    fc26-meta-command-center.html
 fi
 
 echo "→ Vérifications Node (données + HTML)"
@@ -33,18 +41,15 @@ if [[ ! -d .git ]]; then
   git init
 fi
 
-git add .gitignore index.html fc26-meta-command-center.html fc26-meta-data.js push.sh scripts/verify-fc26.mjs scripts/build-fc26-cards-catalog.mjs data/fc26-cards-catalog.json 2>/dev/null \
-  || git add .gitignore index.html fc26-meta-command-center.html fc26-meta-data.js scripts/verify-fc26.mjs scripts/build-fc26-cards-catalog.mjs data/fc26-cards-catalog.json
+git add -A .
 
 if git diff --staged --quiet; then
   echo "Rien de nouveau à committer."
 else
   git commit -m "$(cat <<'EOF'
-perf: optimiser rendu, thème persistant et cache-busting
+chore: hub onglets, charte méta app, célébrations et dépôt assets
 
-Échappement HTML/JS sur les vues dynamiques, piège au focus du drawer,
-CTA patch aligné sur CONFIG/PATCHES, garde-fous réglages et patch notes.
-push.sh synchronise ?v= avec bundleVersion puis exécute scripts/verify-fc26.mjs.
+Synchronise ?v= avec CONFIG.bundleVersion. Hub Méta en onglets (scroll interne), META_APP_CHARTER (ligne FC26-Meta vs cadre EA), LIVE_META, CELEBRATIONS PS/Xbox/PC, scripts/verify-fc26.mjs. Données et JS/CSS sous assets/ ; suppression de l’ancien fc26-meta-data.js à la racine.
 EOF
 )"
 fi
@@ -55,6 +60,6 @@ if ! git remote get-url origin &>/dev/null; then
   git remote add origin https://github.com/StrainUS/FC26-Meta.git
 fi
 
-echo "→ git push vers https://github.com/StrainUS/FC26-Meta"
+echo "→ git push vers origin (main)"
 echo "  Si auth échoue : gh auth login -h github.com"
 git push -u origin main
