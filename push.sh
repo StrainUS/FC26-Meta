@@ -33,8 +33,8 @@ if [[ ! -d .git ]]; then
   git init
 fi
 
-git add .gitignore index.html fc26-meta-command-center.html fc26-meta-data.js push.sh scripts/verify-fc26.mjs 2>/dev/null \
-  || git add .gitignore index.html fc26-meta-command-center.html fc26-meta-data.js scripts/verify-fc26.mjs
+git add .gitignore index.html fc26-meta-command-center.html fc26-meta-data.js push.sh scripts/verify-fc26.mjs scripts/build-fc26-cards-catalog.mjs data/fc26-cards-catalog.json 2>/dev/null \
+  || git add .gitignore index.html fc26-meta-command-center.html fc26-meta-data.js scripts/verify-fc26.mjs scripts/build-fc26-cards-catalog.mjs data/fc26-cards-catalog.json
 
 if git diff --staged --quiet; then
   echo "Rien de nouveau à committer."

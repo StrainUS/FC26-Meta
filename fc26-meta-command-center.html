@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FC 26 · Meta Command Center</title>
+<title>FC 26 · Meta Command Center Pro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-0:#080b0f;--bg-1:#0d1117;--bg-2:#141a23;--bg-3:#1c2534;--bg-4:#243040;
@@ -14,7 +14,7 @@
   --gold:#ffd700;--red:#ff4444;--orange:#ff8c00;--blue:#4da6ff;--purple:#a855f7;
   --text-primary:#e8edf3;--text-secondary:#7a8a9e;--text-muted:#485566;
   --sidebar-w:220px;--topbar-h:56px;--radius:8px;--radius-lg:12px;
-  --mono:'JetBrains Mono',monospace;--display:'Rajdhani',sans-serif;--body:'Inter',sans-serif;
+  --mono:'JetBrains Mono',monospace;--display:'Rajdhani',sans-serif;--body:'Barlow','Inter',system-ui,sans-serif;
   --transition:.18s cubic-bezier(.4,0,.2,1);
 }
 [data-theme="light"]{
@@ -30,6 +30,7 @@ body{font-family:var(--body);background:var(--bg-0);color:var(--text-primary);di
 #skip:focus{position:fixed;left:12px;top:12px;z-index:2000;width:auto;height:auto;padding:8px 12px;background:var(--bg-1);border:1px solid var(--green);border-radius:6px}
 #topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:var(--bg-1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 20px;z-index:1000;backdrop-filter:blur(12px)}
 .logo{font-family:var(--display);font-size:20px;font-weight:700;letter-spacing:2px;color:var(--green);white-space:nowrap;flex-shrink:0}
+.logo em{font-style:normal;color:var(--text-muted);font-weight:400;font-size:11px;font-family:var(--body);letter-spacing:0;margin-left:8px;vertical-align:middle}
 .logo span{color:var(--text-muted);font-weight:400;font-size:13px;letter-spacing:0;margin-left:6px}
 #global-search{flex:1;max-width:420px;background:var(--bg-2);border:1px solid var(--border);border-radius:6px;padding:0 12px 0 36px;height:34px;color:var(--text-primary);font-size:13px;font-family:var(--body);transition:border-color var(--transition)}
 #global-search:focus{outline:2px solid var(--green-dim);outline-offset:1px;border-color:var(--green-dim)}
@@ -111,7 +112,62 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 .ps-chip{font-size:10px;font-family:var(--mono);padding:2px 6px;border-radius:3px;background:var(--bg-4);color:var(--text-secondary);border:1px solid var(--border)}
 .ps-chip.plus{background:rgba(0,255,136,.1);color:var(--green);border-color:var(--border-accent)}
 .formation-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;transition:all var(--transition)}
+.formation-card--clickable{cursor:pointer}
+.formation-card--clickable:hover{border-color:var(--border-accent);box-shadow:0 0 0 1px var(--border-accent)}
+.formation-card--clickable:focus-visible{outline:2px solid var(--green-dim);outline-offset:2px}
 .formation-card:hover{border-color:var(--border-accent)}
+.formation-hint{font-size:10px;color:var(--text-muted);margin-top:12px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.formations-pro-grid{display:grid;grid-template-columns:1fr minmax(240px,300px);gap:20px;align-items:start}
+@media(max-width:1024px){.formations-pro-grid{grid-template-columns:1fr}}
+.formations-pro-aside{position:sticky;top:calc(var(--topbar-h) + 16px)}
+.formations-pro-aside .card-title{font-size:11px}
+.formation-row-card{
+  display:flex;align-items:center;gap:16px;padding:16px 18px;border-radius:var(--radius-lg);cursor:pointer;transition:all var(--transition);
+  border:1px solid var(--border);background:var(--bg-2);margin-bottom:10px;
+}
+.formation-row-card:hover,.formation-row-card:focus-visible{border-color:var(--border-accent);background:var(--bg-3);box-shadow:0 0 0 1px rgba(0,255,136,.12)}
+.formation-row-card:focus-visible{outline:2px solid var(--green-dim);outline-offset:2px}
+.formation-row-card.is-active{border-color:var(--green-dim);background:var(--green-muted)}
+.formation-row-main{flex:1;min-width:0}
+.formation-row-name{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:2px;color:var(--green);line-height:1.1}
+.formation-row-meta{font-size:12px;color:var(--text-muted);margin-top:4px}
+.formation-row-score{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--gold);min-width:44px;text-align:right}
+.fd-pro{border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-top:4px;background:var(--bg-2)}
+.fd-pro-header{
+  background:linear-gradient(135deg,var(--bg-3) 0%,rgba(0,255,136,.07) 100%);
+  padding:20px 22px;border-bottom:1px solid var(--border);
+}
+.fd-pro-title{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:2px;color:var(--green);line-height:1.1}
+.fd-pro-sub{font-size:12px;color:var(--text-muted);margin-top:6px}
+.fd-pro-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+@media(max-width:480px){.fd-pro-stats{grid-template-columns:repeat(2,1fr)}}
+.fd-pro-stat{background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center}
+.fd-pro-stat .v{font-family:var(--display);font-size:17px;font-weight:700;color:var(--green)}
+.fd-pro-stat .l{font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:var(--text-muted);font-family:var(--mono);margin-top:4px}
+.fd-pro-body{display:grid;grid-template-columns:240px 1fr;gap:0;min-height:0}
+@media(max-width:540px){.fd-pro-body{grid-template-columns:1fr}}
+.fd-pro-pitch{padding:18px;background:var(--bg-3);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:10px}
+@media(max-width:540px){.fd-pro-pitch{border-right:none;border-bottom:1px solid var(--border)}}
+.fd-pro-detail{padding:18px 20px 22px;overflow-y:auto;max-height:min(62vh,520px)}
+.mini-pitch{width:100%;max-width:220px;border-radius:10px;border:1px solid var(--border);display:block}
+.mini-pitch-dot{filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+.inst-chip{font-size:10px;font-family:var(--mono);padding:3px 7px;border-radius:4px;background:var(--bg-4);color:var(--text-secondary);border:1px solid var(--border);margin:2px 4px 2px 0;display:inline-block}
+.inst-chip.accent{background:rgba(0,255,136,.1);color:var(--green);border-color:var(--border-accent)}
+.philo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media(max-width:480px){.philo-grid{grid-template-columns:1fr}}
+.philo-card{background:var(--bg-3);border-radius:8px;padding:12px 14px;border-left:3px solid var(--green)}
+.philo-card.neg{border-left-color:var(--red)}
+.philo-card h4{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-family:var(--mono);color:var(--text-muted);margin-bottom:8px}
+.philo-card ul{margin:0;padding-left:16px;font-size:12px;color:var(--text-secondary);line-height:1.55}
+.fd-pro-steps{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:6px}
+.fd-pro-steps li{font-size:12px;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
+.fd-pro-steps li:last-child{border-bottom:none}
+.fd-step-num{font-family:var(--mono);font-size:10px;color:var(--green);background:var(--green-muted);border-radius:3px;padding:2px 6px;flex-shrink:0}
+.slot-table .inst-wrap{margin-top:6px;line-height:1.5}
+.slot-table{font-size:12px}
+.slot-table th,.slot-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.slot-table th{background:var(--bg-3);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.slot-table tr:last-child td{border-bottom:none}
 .formation-name{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:2px;color:var(--green);margin-bottom:4px}
 .formation-style{font-size:12px;color:var(--text-muted);margin-bottom:10px}
 .technique-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:all var(--transition)}
@@ -138,11 +194,11 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 .quick-link-label{font-size:12px;color:var(--text-secondary);font-family:var(--mono)}
 #drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;backdrop-filter:blur(2px)}
 #drawer-overlay.active{display:block}
-#drawer{position:fixed;top:0;right:-480px;bottom:0;width:480px;max-width:100%;background:var(--bg-1);border-left:1px solid var(--border);z-index:1200;overflow-y:auto;padding:24px;transition:right .3s cubic-bezier(.4,0,.2,1)}
+#drawer{position:fixed;top:0;right:-580px;bottom:0;width:min(580px,100vw);max-width:100%;background:var(--bg-1);border-left:1px solid var(--border);z-index:1200;overflow-y:auto;padding:0;transition:right .3s cubic-bezier(.4,0,.2,1)}
 #drawer.open{right:0}
-#drawer-close{position:absolute;top:16px;right:16px;background:var(--bg-3);border:1px solid var(--border);border-radius:6px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-secondary)}
+#drawer-close{position:absolute;top:18px;right:18px;background:var(--bg-3);border:1px solid var(--border);border-radius:6px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text-secondary);z-index:2}
 #drawer-close:hover,#drawer-close:focus-visible{color:var(--red);border-color:var(--red)}
-#drawer-content{margin-top:16px}
+#drawer-content{padding:56px 24px 32px;margin-top:0}
 .kbd{font-family:var(--mono);font-size:10px;border:1px solid var(--border);padding:1px 5px;border-radius:3px;background:var(--bg-3)}
 @media (max-width:900px){
   #sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}
@@ -150,13 +206,91 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 }
 @media (max-width:540px){#main{padding:16px}.dash-kpis{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}.logo span{display:none}}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--bg-4);border-radius:3px}
+.squad-layout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(300px,380px);gap:20px;align-items:start}
+@media (max-width:900px){.squad-layout{grid-template-columns:1fr}}
+.squad-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.squad-pitch-col{min-width:0}
+.squad-pitch-wrap{
+  perspective:900px;margin:0 auto 16px;max-width:520px;
+}
+.squad-pitch{
+  position:relative;width:100%;aspect-ratio:58/88;border-radius:14px;overflow:hidden;
+  transform:rotateX(12deg);transform-style:preserve-3d;box-shadow:0 24px 48px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.06);
+  border:1px solid var(--border);
+}
+.squad-pitch-grass{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 120% 85% at 50% 45%,rgba(0,90,45,.25) 0%,transparent 55%),
+    linear-gradient(180deg,#0d3d22 0%,#0a5c32 18%,#0d4d28 50%,#0a5c32 82%,#0d3d22 100%);
+}
+.squad-pitch-lines{
+  position:absolute;inset:0;pointer-events:none;opacity:.85;
+  background:
+    linear-gradient(90deg,transparent 0%,transparent calc(50% - 1px),rgba(255,255,255,.35) calc(50% - 1px),rgba(255,255,255,.35) calc(50% + 1px),transparent calc(50% + 1px)),
+    radial-gradient(circle at 50% 50%,transparent 31%,rgba(255,255,255,.28) 31.5%,rgba(255,255,255,.28) 32.5%,transparent 33%),
+    linear-gradient(180deg,transparent 14%,rgba(255,255,255,.2) 14%,rgba(255,255,255,.2) 14.3%,transparent 14.3%),
+    linear-gradient(180deg,transparent 86%,rgba(255,255,255,.2) 86%,rgba(255,255,255,.2) 86.3%,transparent 86.3%);
+}
+.squad-pitch-slots{position:absolute;inset:0}
+.pitch-slot{
+  position:absolute;left:var(--pl);top:var(--pt);transform:translate(-50%,-50%);
+  width:52px;height:68px;border-radius:10px 10px 8px 8px;
+  background:linear-gradient(180deg,#2a3444 0%,#1a2230 100%);
+  border:1px solid rgba(255,255,255,.12);box-shadow:0 4px 12px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4px 3px 2px;
+  transition:border-color var(--transition),box-shadow var(--transition),transform var(--transition);
+  z-index:2;
+}
+.pitch-slot:hover{border-color:var(--green-dim);transform:translate(-50%,-50%) scale(1.03)}
+.pitch-slot.active{border-color:var(--green);box-shadow:0 0 0 2px var(--border-accent),0 6px 16px rgba(0,255,136,.15)}
+.pitch-slot-face{width:34px;height:34px;border-radius:6px;object-fit:cover;background:var(--bg-4);flex-shrink:0}
+.pitch-slot-plus{font-size:22px;font-weight:700;color:var(--green);line-height:1;margin-top:2px}
+.pitch-slot-ovr{font-family:var(--display);font-size:15px;font-weight:700;color:var(--green);line-height:1;margin-top:2px}
+.pitch-slot-name{font-size:8px;font-weight:600;color:var(--text-primary);text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px;line-height:1.15}
+.pitch-slot-pos{
+  position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);
+  font-family:var(--mono);font-size:9px;font-weight:600;color:#fff;text-shadow:0 1px 3px #000;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.55);white-space:nowrap;pointer-events:none;
+}
+.pitch-slot-clear{
+  position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:1px solid var(--border);
+  background:var(--bg-1);color:var(--text-secondary);font-size:12px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;z-index:3;
+}
+.pitch-slot-clear:hover{color:var(--red);border-color:var(--red)}
+.squad-bench-wrap{margin-top:4px}
+.squad-bench-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.squad-bench-row{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.bench-slot{
+  width:48px;height:62px;border-radius:8px;background:var(--bg-3);border:1px solid var(--border);
+  cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 2px;position:relative;
+  transition:border-color var(--transition),background var(--transition);
+}
+.bench-slot:hover{border-color:var(--green-dim)}
+.bench-slot.active{border-color:var(--green);background:var(--green-muted)}
+.bench-slot .pitch-slot-pos{position:relative;left:auto;bottom:auto;transform:none;margin-top:2px;font-size:8px;background:rgba(0,0,0,.4)}
+.squad-side-formation{margin-bottom:12px}
+.squad-side-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.squad-stat-cell{text-align:center;padding:8px 4px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)}
+.squad-stat-cell .lab{font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase}
+.squad-stat-cell .val{font-family:var(--display);font-size:16px;font-weight:700;color:var(--green)}
+.squad-chem-bar{height:6px;border-radius:3px;background:var(--bg-4);overflow:hidden;margin:6px 0}
+.squad-chem-fill{height:100%;background:var(--green);width:0%;transition:width .25s ease}
+.catalog-panel{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;position:sticky;top:calc(var(--topbar-h) + 12px)}
+.catalog-list{max-height:min(52vh,420px);overflow-y:auto;margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.catalog-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;border:1px solid transparent;cursor:pointer;text-align:left;font:inherit;color:inherit;background:var(--bg-3);transition:border-color var(--transition)}
+.catalog-row:hover{border-color:var(--border-accent)}
+.catalog-row img{width:36px;height:36px;border-radius:4px;object-fit:cover;background:var(--bg-4);flex-shrink:0}
+.catalog-row .nm{flex:1;min-width:0}
+.catalog-row .nm b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.catalog-row .nm span{font-size:10px;color:var(--text-muted)}
+.catalog-row .ovr{font-family:var(--display);font-size:18px;font-weight:700;color:var(--green);min-width:32px;text-align:right}
 </style>
 </head>
 <body>
 <a id="skip" href="#main">Aller au contenu</a>
 <div id="topbar">
   <button type="button" class="menu-toggle" aria-label="Ouvrir le menu" onclick="toggleSidebar()">☰</button>
-  <div class="logo">FC26<span>META CENTER</span></div>
+  <div class="logo">FC26<em>COMMAND CENTER</em></div>
   <div class="search-wrap">
     <span class="search-icon" aria-hidden="true">⌕</span>
     <input id="global-search" type="search" aria-label="Recherche globale" placeholder="Joueur, formation, technique…" autocomplete="off" oninput="globalSearchDebounced(this.value)">
@@ -169,18 +303,20 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 
 <nav id="sidebar" aria-label="Navigation principale">
   <div class="nav-section-label">Navigation</div>
-  <div class="nav-item active" tabindex="0" role="button" data-page="dashboard" onclick="showPage('dashboard')" onkeydown="navKey(event,'dashboard')"><span class="nav-icon">⬡</span> Dashboard</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="meta" onclick="showPage('meta')" onkeydown="navKey(event,'meta')"><span class="nav-icon">◈</span> Meta Hub</div>
+  <div class="nav-item active" tabindex="0" role="button" data-page="setup-express" onclick="showPage('setup-express')" onkeydown="navKey(event,'setup-express')"><span class="nav-icon">▶</span> Rivaux express</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="dashboard" onclick="showPage('dashboard')" onkeydown="navKey(event,'dashboard')"><span class="nav-icon">⬡</span> Tableau de bord</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="meta" onclick="showPage('meta')" onkeydown="navKey(event,'meta')"><span class="nav-icon">◈</span> Hub méta</div>
   <div class="nav-section-label">Équipe</div>
   <div class="nav-item" tabindex="0" role="button" data-page="players" onclick="showPage('players')" onkeydown="navKey(event,'players')"><span class="nav-icon">◉</span> Joueurs méta</div>
   <div class="nav-item" tabindex="0" role="button" data-page="formations" onclick="showPage('formations')" onkeydown="navKey(event,'formations')"><span class="nav-icon">⊞</span> Formations</div>
-  <div class="nav-section-label">Gameplay</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="squad" onclick="showPage('squad')" onkeydown="navKey(event,'squad')"><span class="nav-icon">◇</span> Prototype équipe</div>
+  <div class="nav-section-label">Jeu</div>
   <div class="nav-item" tabindex="0" role="button" data-page="techniques" onclick="showPage('techniques')" onkeydown="navKey(event,'techniques')"><span class="nav-icon">⚡</span> Techniques</div>
   <div class="nav-item" tabindex="0" role="button" data-page="settings" onclick="showPage('settings')" onkeydown="navKey(event,'settings')"><span class="nav-icon">⚙</span> Réglages</div>
   <div class="nav-section-label">Gestion club</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="sbc" onclick="showPage('sbc')" onkeydown="navKey(event,'sbc')"><span class="nav-icon">⬡</span> SBC Intelligence</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="sbc" onclick="showPage('sbc')" onkeydown="navKey(event,'sbc')"><span class="nav-icon">⬡</span> SBC &amp; rentabilité</div>
   <div class="nav-item" tabindex="0" role="button" data-page="patches" onclick="showPage('patches')" onkeydown="navKey(event,'patches')"><span class="nav-icon">📋</span> Patch notes</div>
-  <div class="nav-item" tabindex="0" role="button" data-page="webapp" onclick="showPage('webapp')" onkeydown="navKey(event,'webapp')"><span class="nav-icon">📱</span> Web App</div>
+  <div class="nav-item" tabindex="0" role="button" data-page="webapp" onclick="showPage('webapp')" onkeydown="navKey(event,'webapp')"><span class="nav-icon">📱</span> Application web</div>
   <div class="nav-section-label">Veille</div>
   <div class="nav-item" tabindex="0" role="button" data-page="behaviors" onclick="showPage('behaviors')" onkeydown="navKey(event,'behaviors')"><span class="nav-icon">👁</span> Comportements</div>
   <div class="nav-item" tabindex="0" role="button" data-page="chemistry" onclick="showPage('chemistry')" onkeydown="navKey(event,'chemistry')"><span class="nav-icon">⌬</span> Chimie &amp; styles</div>
@@ -190,10 +326,22 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 </nav>
 
 <main id="main" tabindex="-1">
-<div class="page active" id="page-dashboard">
+<div class="page active" id="page-setup-express">
   <div class="page-header">
-    <h1 class="page-title">Dashboard</h1>
+    <h1 class="page-title">Rivaux express</h1>
+    <p class="page-subtitle">Une page = où aller + quoi régler (synthèse DATA)</p>
+  </div>
+  <div id="setup-express-root" class="section-block" aria-live="polite"></div>
+</div>
+<div class="page" id="page-dashboard">
+  <div class="page-header">
+    <h1 class="page-title">Tableau de bord</h1>
     <p class="page-subtitle" id="dash-subtitle">EA SPORTS FC 26 · Chargement bundle…</p>
+  </div>
+  <div class="card" style="margin-bottom:16px;border-color:rgba(0,255,136,.35);background:linear-gradient(135deg,var(--bg-2) 0%,rgba(0,255,136,.06) 100%)">
+    <div class="card-header" style="margin-bottom:8px"><div class="card-title" style="color:var(--green)">Réponse rapide</div><span class="badge badge-analytical">1 page</span></div>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Tu veux appliquer la lecture la plus méta du fichier et tester en Division Rivaux ? Tout est sur <strong>Rivaux express</strong>.</p>
+    <button type="button" class="filter-btn" onclick="showPage('setup-express')" style="font-weight:600">Ouvrir « Rivaux express »</button>
   </div>
   <div class="info-box warn"><strong>Fichier de données :</strong> éditer <code style="font-family:var(--mono)">fc26-meta-data.js</code> (même dossier que ce HTML) après chaque patch EA, puis recharger la page. Les évaluations « méta » joueurs / formations restent <span class="badge badge-community">Communauté</span> / <span class="badge badge-analytical">Analytique</span> sauf badge contraire.</div>
   <div class="meta-snapshot" id="dash-snapshot">
@@ -211,8 +359,10 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
   <div class="section-block">
     <h2 class="section-title">Accès rapide</h2>
     <div class="quick-links">
+      <div class="quick-link" tabindex="0" role="link" onclick="showPage('setup-express')" onkeydown="if(event.key==='Enter')showPage('setup-express')"><div class="quick-link-icon">▶</div><div class="quick-link-label">RIVALS EXPRESS</div></div>
       <div class="quick-link" tabindex="0" role="link" onclick="showPage('players')" onkeydown="if(event.key==='Enter')showPage('players')"><div class="quick-link-icon">◉</div><div class="quick-link-label">JOUEURS</div></div>
       <div class="quick-link" tabindex="0" onclick="showPage('formations')" onkeydown="if(event.key==='Enter')showPage('formations')"><div class="quick-link-icon">⊞</div><div class="quick-link-label">FORMATIONS</div></div>
+      <div class="quick-link" tabindex="0" onclick="showPage('squad')" onkeydown="if(event.key==='Enter')showPage('squad')"><div class="quick-link-icon">◇</div><div class="quick-link-label">PROTOTYPE XI</div></div>
       <div class="quick-link" tabindex="0" onclick="showPage('techniques')" onkeydown="if(event.key==='Enter')showPage('techniques')"><div class="quick-link-icon">⚡</div><div class="quick-link-label">TECHNIQUES</div></div>
       <div class="quick-link" tabindex="0" onclick="showPage('sbc')" onkeydown="if(event.key==='Enter')showPage('sbc')"><div class="quick-link-icon">⬡</div><div class="quick-link-label">SBC</div></div>
       <div class="quick-link" tabindex="0" onclick="showPage('method')" onkeydown="if(event.key==='Enter')showPage('method')"><div class="quick-link-icon">◇</div><div class="quick-link-label">SCORES</div></div>
@@ -222,7 +372,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 </div>
 
 <div class="page" id="page-meta">
-  <div class="page-header"><h1 class="page-title">Meta Hub</h1><p class="page-subtitle">Lecture stratégique · Badges de confiance obligatoires</p></div>
+  <div class="page-header"><h1 class="page-title">Hub méta</h1><p class="page-subtitle">Lecture stratégique · Badges de confiance obligatoires</p></div>
   <div class="info-box warn">⚠ EA ne fournit pas de « tier list » officielle Ultimate Team. Toute force méta chiffrée ici est <span class="badge badge-analytical">Analytique</span> ou <span class="badge badge-community">Communauté</span>.</div>
   <div class="section-block">
     <h2 class="section-title">Table méta (synthèse)</h2>
@@ -233,14 +383,14 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
     <div class="grid-2">
       <div class="card"><div class="card-header"><div class="card-title">Confirmé EA (gameplay)</div><span class="badge badge-official">Officiel</span></div>
       <ul style="list-style:none;font-size:13px;color:var(--text-secondary);display:flex;flex-direction:column;gap:8px">
-        <li>→ Préréglages <strong>Competitive</strong> vs <strong>Authentic</strong> (online vs offline réaliste). Deep Dive 22/07/2025.</li>
-        <li>→ <strong>Dynamic Dribbling</strong>, touches réajustées ; <strong>Explosive Sprint</strong> ; retour à <strong>3 Acceleration Types</strong> (formules H/F séparées).</li>
-        <li>→ <strong>RL Goalkeeper Positioning</strong> (NG) : ML pour positionnement ; pas actif pendant la réalisation de l’arrêt.</li>
-        <li>→ v1.5.0 : passes au sol plus rapides/précises (surtout hauts attributs passe) ; courbure through ball contextuelle sans PlayStyle Incisive si attributs élevés.</li>
+        <li>→ Préréglages console <strong>compétition</strong> (en ligne) vs <strong>réalisme</strong> (hors ligne), décrits dans les notes gameplay du 22/07/2025.</li>
+        <li>→ Conduite de balle dynamique, touches de dribble rééquilibrées ; sprint explosif ; trois profils d’accélération (calculs hommes / femmes distincts).</li>
+        <li>→ Positionnement du gardien NG : apprentissage pour le placement ; désactivé pendant la résolution d’un arrêt.</li>
+        <li>→ v1.5.0 : passes au sol plus rapides et plus précises ; passes en profondeur avec trajectoire contextuelle sans style « passe décisive » si les stats de passe sont déjà hautes.</li>
       </ul></div>
       <div class="card"><div class="card-header"><div class="card-title">Lecture compétitive</div><span class="badge badge-analytical">Analytique</span></div>
       <ul style="list-style:none;font-size:13px;color:var(--text-secondary);display:flex;flex-direction:column;gap:8px">
-        <li>→ Après v1.5.0 : pondération plus forte des <strong>stats de base</strong> sur passes/tirs — moins dépendant des PlayStyles surpapier.</li>
+        <li>→ Après v1.5.0 : pondération plus forte des <strong>stats de base</strong> passes et tirs — moins dépendant des styles Plus sur le papier.</li>
         <li>→ v1.5.3 : impact match limité sauf cas extrême de passes au gardien ; prioriser veille sur <strong>bugs/correctifs UT</strong>.</li>
         <li>→ Toujours croiser avec patch notes suivantes (EA SPORTS FC Tracker / news ea.com).</li>
       </ul></div>
@@ -273,7 +423,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 </div>
 
 <div class="page" id="page-formations">
-  <div class="page-header"><h1 class="page-title">Formations</h1><p class="page-subtitle">Estimations popularité / score = <span class="badge badge-analytical">Analytique</span> démo</p></div>
+  <div class="page-header"><h1 class="page-title">Formations</h1><p class="page-subtitle">Vue pro : liste + fiche (terrain, presets FC26, 11 postes). Scores &amp; curseurs = <span class="badge badge-analytical">Analytique</span> — données <code class="kbd">fc26-meta-data.js</code></p></div>
   <div class="filter-bar">
     <button type="button" class="filter-btn active" data-ff="all" onclick="filterFormations('all',this)">Toutes</button>
     <button type="button" class="filter-btn" onclick="filterFormations('S',this)">S</button>
@@ -285,9 +435,61 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
   <div id="formations-container"></div>
 </div>
 
+<div class="page" id="page-squad">
+  <div class="page-header">
+    <h1 class="page-title">Prototype d’équipe</h1>
+    <p class="page-subtitle">Montage 11 + banc · cartes issues du catalogue FC26 (<span class="badge badge-official">Données jeu</span> base roster, pas chaque variante FUT promo)</p>
+  </div>
+  <div class="info-box warn"><strong>Important :</strong> le fichier <code style="font-family:var(--mono)">data/fc26-cards-catalog.json</code> agrège le pool public <strong>EAFC26-DataHub</strong> (notes / attributs alignés FC26). Ce ne sont <strong>pas</strong> toutes les cartes spéciales Ultimate Team (TOTY, événements, versions IF) — EA ne publie pas ce fichier en open data. Pour un prototype tactique (postes, profils), le catalogue de base suffit ; les promos restent à saisir manuellement ailleurs si besoin. <strong>Chargement du JSON :</strong> ouvrez l’app via un serveur HTTP local (ex. <code style="font-family:var(--mono)">python3 -m http.server</code> à la racine du dépôt) : le protocole <code style="font-family:var(--mono)">file://</code> bloque souvent <code style="font-family:var(--mono)">fetch</code> du catalogue.</div>
+  <p class="td-muted" style="font-size:12px;margin-bottom:12px" id="squad-catalog-status" aria-live="polite">Chargement du catalogue…</p>
+  <div class="squad-layout">
+    <div class="squad-pitch-col">
+      <div class="squad-toolbar">
+        <button type="button" class="filter-btn" onclick="squadResetAll()">Vider tout</button>
+        <button type="button" class="filter-btn" onclick="squadExportJson()">Exporter JSON</button>
+      </div>
+      <div class="squad-pitch-wrap">
+        <div class="squad-pitch" id="squad-pitch" role="application" aria-label="Terrain prototype équipe">
+          <div class="squad-pitch-grass" aria-hidden="true"></div>
+          <div class="squad-pitch-lines" aria-hidden="true"></div>
+          <div class="squad-pitch-slots" id="squad-pitch-slots"></div>
+        </div>
+      </div>
+      <div class="squad-bench-wrap">
+        <div class="squad-bench-label">Banc (7) · même logique d’assignation</div>
+        <div class="squad-bench-row" id="squad-bench" role="list"></div>
+      </div>
+      <p class="td-muted" style="font-size:11px;margin-top:12px">Astuce : <strong>Maj+clic</strong> sur deux cases titulaires pour <strong>échanger</strong> les joueurs. Changer la formation réinitialise le XI (comme en création d’équipe).</p>
+    </div>
+    <div class="catalog-panel">
+      <div class="squad-side-formation">
+        <label class="td-muted" style="font-size:11px;display:block;margin-bottom:6px">Formation</label>
+        <select class="filter-select" id="squad-formation" style="width:100%" aria-label="Formation du prototype" onchange="squadChangeFormation(this.value)"></select>
+      </div>
+      <div class="card" style="padding:12px;margin-bottom:12px;border-color:rgba(0,255,136,.2)">
+        <div class="card-header" style="margin-bottom:8px;padding:0;border:none"><div class="card-title">Synthèse XI</div><span class="badge badge-analytical" id="squad-starters-avg">—</span></div>
+        <div id="squad-sidebar-stats" class="squad-side-stats" aria-label="Moyennes attributs titulaires"></div>
+        <div class="td-muted" style="font-size:10px;margin-bottom:4px">Chimie (démo locale, pas marché EA)</div>
+        <div class="squad-chem-bar" aria-hidden="true"><div class="squad-chem-fill" id="squad-chem-fill"></div></div>
+        <p class="td-muted" style="font-size:10px" id="squad-chem-label">0 / 33</p>
+      </div>
+      <div class="card-header" style="margin-bottom:10px;padding:0;border:none"><div class="card-title">Catalogue</div><span class="badge badge-official" id="squad-catalog-count">—</span></div>
+      <div class="filter-bar" style="margin:0;flex-direction:column;align-items:stretch">
+        <input class="filter-input" type="search" id="squad-cat-q" placeholder="Nom, club, nation, ligue…" aria-label="Filtrer le catalogue" style="width:100%;cursor:text" oninput="squadCatalogFilterDebounced()">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="filter-select" id="squad-cat-pos" aria-label="Poste catalogue" onchange="squadRenderCatalog()"><option value="">Poste</option><option value="GK">GK</option><option value="CB">CB</option><option value="LB">LB</option><option value="RB">RB</option><option value="CDM">CDM</option><option value="CM">CM</option><option value="CAM">CAM</option><option value="LM">LM</option><option value="RM">RM</option><option value="LW">LW</option><option value="RW">RW</option><option value="CF">CF</option><option value="ST">ST</option></select>
+          <input class="filter-input" type="number" min="1" max="99" placeholder="OVR min" id="squad-cat-minovr" aria-label="Note minimale" style="width:100px;cursor:text" oninput="squadCatalogFilterDebounced()">
+        </div>
+      </div>
+      <p class="td-muted" style="font-size:11px;margin-top:8px">Cliquez une <strong>case sur le terrain</strong> (ou le banc), puis un joueur ci-dessous. <strong>Échap</strong> désélectionne.</p>
+      <div class="catalog-list" id="squad-catalog-list" role="listbox" aria-label="Résultats catalogue"></div>
+    </div>
+  </div>
+</div>
+
 <div class="page" id="page-techniques">
   <div class="page-header"><h1 class="page-title">Techniques</h1><p class="page-subtitle">Inputs <span class="kbd">PlayStation</span> — adapter Xbox</p></div>
-  <div class="info-box"><strong>Officiel :</strong> schémas de touches BAG / crosses dans Pitch Notes Deep Dive. Les timings « optimaux » compétitifs = <span class="badge badge-community">Communauté</span> sauf citation EA.</div>
+  <div class="info-box"><strong>Officiel :</strong> schémas de touches (contrôle orienté, centres) dans les notes EA. Les timings « optimaux » compétitifs = <span class="badge badge-community">Communauté</span> sauf citation EA.</div>
   <div class="filter-bar">
     <button type="button" class="filter-btn active" onclick="filterTech('all',this)">Toutes</button>
     <button type="button" class="filter-btn" onclick="filterTech('passe',this)">Passe</button>
@@ -299,7 +501,8 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 </div>
 
 <div class="page" id="page-settings">
-  <div class="page-header"><h1 class="page-title">Réglages</h1><p class="page-subtitle">Profils recommandés = <span class="badge badge-analytical">Analytique</span> — vérifier menus in-game</p></div>
+  <div class="page-header"><h1 class="page-title">Réglages</h1><p class="page-subtitle">Profils tactiques démo + <strong>guide sources officielles</strong> (EA) vs lecture <span class="badge badge-analytical">Analytique</span></p></div>
+  <div id="settings-meta-guide" class="section-block"></div>
   <div class="filter-bar">
     <button type="button" class="filter-btn active" onclick="showSettingProfile('balanced',this)">Équilibré</button>
     <button type="button" class="filter-btn" onclick="showSettingProfile('aggressive',this)">Agressif</button>
@@ -363,7 +566,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
   <div class="page-header"><h1 class="page-title">Mise à jour après patch</h1><p class="page-subtitle">Workflow mainteneur</p></div>
   <div class="info-box"><strong>1.</strong> Lire la source EA (news ou forums). <strong>2.</strong> Dupliquer le template dans <code>fc26-meta-data.js</code> → <code>PATCHES</code>. <strong>3.</strong> Mettre à jour <code>CONFIG.lastOfficialPatchId</code> + compteurs. <strong>4.</strong> Ajuster <code>META_SNAPSHOT</code>, <code>BEHAVIORS</code>, <code>patchSens</code> joueurs concernés. <strong>5.</strong> Exporter backup JSON ci-dessous.</div>
   <div class="card section-block">
-    <div class="card-header"><div class="card-title">Check-list express</div><span class="badge badge-analytical">Process</span></div>
+        <div class="card-header"><div class="card-title">Check-list express</div><span class="badge badge-analytical">Démarche</span></div>
     <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.7">
       <li>Copier les lignes « gameplay / UT » officielles mot pour mot si possible.</li>
       <li>Ne pas changer les badges : tout ce qui n’est pas EA reste communautaire/analytique.</li>
@@ -383,7 +586,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
   <div class="grid-2">
     <div class="card"><div class="card-header"><div class="card-title">EA (priorité)</div><span class="badge badge-official">Officiel</span></div>
     <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px">
-      <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive" style="color:var(--blue)">Gameplay Deep Dive</a></li>
+      <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive" style="color:var(--blue)">Notes gameplay approfondies FC26 (EA)</a></li>
       <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-title-update-1-5-0" style="color:var(--blue)">Title Update v1.5.0</a></li>
       <li><a href="https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-launch-update" style="color:var(--blue)">Launch Update UT</a></li>
       <li><a href="https://forums.ea.com/blog/ea-sports-fc-game-info-hub-en/ea-sports-fc%E2%84%A2-26--title-update-v1-5-3/13312649" style="color:var(--blue)">Title Update v1.5.3 (Forums EA)</a></li>
@@ -400,13 +603,473 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
   <div id="drawer-content"></div>
 </div>
 
-<script src="fc26-meta-data.js?v=2026.04.19.2"></script>
+<script src="fc26-meta-data.js?v=2026.04.19.14"></script>
 <script>
-let CONFIG, PLAYERS, FORMATIONS, TECHNIQUES, SBC_DATA, PATCHES, BEHAVIORS, META_TABLE, META_SNAPSHOT, CHEM_OFFICIAL, CHEM_PICKS, SETTINGS;
+let CONFIG, PLAYERS, FORMATIONS, FC26_TACTICS_CANON, FORMATION_DETAILS, TECHNIQUES, SBC_DATA, PATCHES, BEHAVIORS, META_TABLE, META_SNAPSHOT, CHEM_OFFICIAL, CHEM_PICKS, SETTINGS, SETTINGS_META_GUIDE, META_SETUP_EXPRESS;
 let playerFilters = { q:'', pos:'', league:'', tier:'', acc:'', patchSens:'' };
 let sbcSort = { col: null, dir: 1 };
 const THEME_KEY = 'fc26-theme';
 let lastFocusBeforeDrawer = null;
+
+/** Catalogue FC26 (build script → data/fc26-cards-catalog.json) */
+let FC26_CARDS = null;
+let FC26_CARDS_META = null;
+let _fc26CatalogPromise = null;
+let _squadCardMap = null;
+let squadState = { formation: '4-2-3-1', starters: Array(11).fill(null), bench: Array(7).fill(null) };
+let squadPickSlot = null;
+let _squadStateInited = false;
+const SQUAD_LS_KEY = 'fc26-squad-prototype-v1';
+const SQUAD_CATALOG_MAX = 120;
+
+function squadInvalidateCardMap(){ _squadCardMap = null; }
+function getSquadCard(id){
+  if(id==null||id===''||!FC26_CARDS) return null;
+  if(!_squadCardMap) _squadCardMap = new Map(FC26_CARDS.map(c=>[String(c.id), c]));
+  return _squadCardMap.get(String(id)) || null;
+}
+
+function ensureCatalogLoaded(){
+  if(FC26_CARDS) return Promise.resolve(FC26_CARDS);
+  if(_fc26CatalogPromise) return _fc26CatalogPromise;
+  const v = CONFIG && CONFIG.bundleVersion ? String(CONFIG.bundleVersion) : '';
+  _fc26CatalogPromise = fetch('data/fc26-cards-catalog.json?v=' + encodeURIComponent(v))
+    .then((r) => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then((data) => {
+      FC26_CARDS = Array.isArray(data.cards) ? data.cards : [];
+      FC26_CARDS_META = data.meta || {};
+      squadInvalidateCardMap();
+      return FC26_CARDS;
+    })
+    .catch((e) => {
+      _fc26CatalogPromise = null;
+      throw e;
+    });
+  return _fc26CatalogPromise;
+}
+
+function initSquadStateOnce(){
+  if (_squadStateInited) return;
+  _squadStateInited = true;
+  try {
+    const raw = localStorage.getItem(SQUAD_LS_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (s && FORMATION_DETAILS && FORMATION_DETAILS[s.formation]) {
+      squadState.formation = s.formation;
+      if (Array.isArray(s.starters) && s.starters.length === 11) {
+        squadState.starters = s.starters.map((x) => (x == null || x === '' ? null : String(x)));
+      }
+      if (Array.isArray(s.bench)) {
+        const b = s.bench.map((x) => (x == null || x === '' ? null : String(x)));
+        while (b.length < 7) b.push(null);
+        squadState.bench = b.slice(0, 7);
+      }
+    }
+  } catch (_) {}
+}
+
+function saveSquadToStorage(){
+  try {
+    localStorage.setItem(
+      SQUAD_LS_KEY,
+      JSON.stringify({
+        formation: squadState.formation,
+        starters: squadState.starters,
+        bench: squadState.bench,
+      }),
+    );
+  } catch (_) {}
+}
+
+function squadGetDetail(){
+  return FORMATION_DETAILS && FORMATION_DETAILS[squadState.formation] ? FORMATION_DETAILS[squadState.formation] : null;
+}
+
+function squadPopulateFormationSelect(){
+  const sel = document.getElementById('squad-formation');
+  if (!sel || !Array.isArray(FORMATIONS)) return;
+  const names = FORMATIONS.map((f) => f.name).filter((n) => FORMATION_DETAILS && FORMATION_DETAILS[n]);
+  sel.innerHTML = names.map((n) => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+  if (names.includes(squadState.formation)) sel.value = squadState.formation;
+  else if (names[0]) {
+    squadState.formation = names[0];
+    sel.value = names[0];
+  }
+}
+
+/**
+ * Positions % sur le terrain (centre de la vignette). Ordre = slots FORMATION_DETAILS (GK → attaque, haut = camp adverse).
+ * Clés = noms exacts des formations dans fc26-meta-data.js
+ */
+const SQUAD_PITCH_LAYOUTS = {
+  '4-2-3-1': [
+    { l: 50, t: 90 }, { l: 12, t: 72 }, { l: 35, t: 72 }, { l: 65, t: 72 }, { l: 88, t: 72 },
+    { l: 35, t: 58 }, { l: 65, t: 58 }, { l: 12, t: 38 }, { l: 50, t: 34 }, { l: 88, t: 38 }, { l: 50, t: 14 },
+  ],
+  '4-2-1-3': [
+    { l: 50, t: 90 }, { l: 10, t: 73 }, { l: 35, t: 73 }, { l: 65, t: 73 }, { l: 90, t: 73 },
+    { l: 35, t: 58 }, { l: 65, t: 58 }, { l: 50, t: 44 }, { l: 14, t: 22 }, { l: 50, t: 14 }, { l: 86, t: 22 },
+  ],
+  '4-4-1-1': [
+    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
+    { l: 8, t: 52 }, { l: 38, t: 52 }, { l: 62, t: 52 }, { l: 92, t: 52 }, { l: 50, t: 34 }, { l: 50, t: 14 },
+  ],
+  '4-4-2 (flat)': [
+    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
+    { l: 8, t: 50 }, { l: 38, t: 50 }, { l: 62, t: 50 }, { l: 92, t: 50 }, { l: 38, t: 15 }, { l: 62, t: 15 },
+  ],
+  '4-3-2-1': [
+    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
+    { l: 28, t: 48 }, { l: 50, t: 48 }, { l: 72, t: 48 }, { l: 22, t: 26 }, { l: 78, t: 26 }, { l: 50, t: 12 },
+  ],
+  '4-3-3 (4)': [
+    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
+    { l: 30, t: 48 }, { l: 50, t: 48 }, { l: 70, t: 48 }, { l: 14, t: 20 }, { l: 50, t: 14 }, { l: 86, t: 20 },
+  ],
+  '4-1-2-1-2 (étroit)': [
+    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
+    { l: 50, t: 62 }, { l: 35, t: 46 }, { l: 65, t: 46 }, { l: 50, t: 32 }, { l: 38, t: 16 }, { l: 62, t: 16 },
+  ],
+  '3-5-2': [
+    { l: 50, t: 90 }, { l: 26, t: 74 }, { l: 50, t: 74 }, { l: 74, t: 74 }, { l: 6, t: 46 },
+    { l: 30, t: 48 }, { l: 50, t: 48 }, { l: 70, t: 48 }, { l: 94, t: 46 }, { l: 38, t: 14 }, { l: 62, t: 14 },
+  ],
+  '5-3-2': [
+    { l: 50, t: 90 }, { l: 6, t: 70 }, { l: 28, t: 76 }, { l: 50, t: 76 }, { l: 72, t: 76 }, { l: 94, t: 70 },
+    { l: 32, t: 50 }, { l: 50, t: 50 }, { l: 68, t: 50 }, { l: 38, t: 16 }, { l: 62, t: 16 },
+  ],
+  '4-2-2-2': [
+    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
+    { l: 38, t: 60 }, { l: 62, t: 60 }, { l: 38, t: 36 }, { l: 62, t: 36 }, { l: 38, t: 16 }, { l: 62, t: 16 },
+  ],
+  '4-3-1-2': [
+    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
+    { l: 30, t: 48 }, { l: 50, t: 48 }, { l: 70, t: 48 }, { l: 50, t: 30 }, { l: 38, t: 14 }, { l: 62, t: 14 },
+  ],
+  '4-5-1': [
+    { l: 50, t: 90 }, { l: 10, t: 74 }, { l: 36, t: 74 }, { l: 64, t: 74 }, { l: 90, t: 74 },
+    { l: 6, t: 50 }, { l: 32, t: 50 }, { l: 50, t: 50 }, { l: 68, t: 50 }, { l: 94, t: 50 }, { l: 50, t: 12 },
+  ],
+  '3-4-2-1': [
+    { l: 50, t: 90 }, { l: 26, t: 74 }, { l: 50, t: 74 }, { l: 74, t: 74 }, { l: 6, t: 46 },
+    { l: 40, t: 50 }, { l: 60, t: 50 }, { l: 94, t: 46 }, { l: 24, t: 26 }, { l: 76, t: 26 }, { l: 50, t: 12 },
+  ],
+};
+
+function squadPitchCoords(formationName, index){
+  const L = SQUAD_PITCH_LAYOUTS[formationName] || SQUAD_PITCH_LAYOUTS['4-2-3-1'];
+  const p = L[index] || L[0] || { l: 50, t: 50 };
+  return { l: p.l, t: p.t };
+}
+
+function squadChangeFormation(name){
+  if (!FORMATION_DETAILS || !FORMATION_DETAILS[name]) return;
+  squadState.formation = name;
+  squadState.starters = Array(11).fill(null);
+  squadState.bench = Array(7).fill(null);
+  squadPickSlot = null;
+  saveSquadToStorage();
+  squadPopulateFormationSelect();
+  renderSquadSlots();
+}
+
+function squadActivateSlot(kind, i){
+  if (squadPickSlot && squadPickSlot.kind === kind && squadPickSlot.i === i) squadPickSlot = null;
+  else squadPickSlot = { kind, i };
+  renderSquadSlots();
+}
+
+function squadPitchSlotClick(ev, i){
+  if (
+    ev.shiftKey &&
+    squadPickSlot &&
+    squadPickSlot.kind === 'starter' &&
+    typeof squadPickSlot.i === 'number' &&
+    squadPickSlot.i !== i
+  ) {
+    const a = squadPickSlot.i;
+    const b = i;
+    const t = squadState.starters[a];
+    squadState.starters[a] = squadState.starters[b];
+    squadState.starters[b] = t;
+    squadPickSlot = null;
+    saveSquadToStorage();
+    renderSquadSlots();
+    return;
+  }
+  squadActivateSlot('starter', i);
+}
+
+function squadBenchSlotClick(ev, i){
+  if (
+    ev.shiftKey &&
+    squadPickSlot &&
+    squadPickSlot.kind === 'bench' &&
+    typeof squadPickSlot.i === 'number' &&
+    squadPickSlot.i !== i
+  ) {
+    const a = squadPickSlot.i;
+    const b = i;
+    const t = squadState.bench[a];
+    squadState.bench[a] = squadState.bench[b];
+    squadState.bench[b] = t;
+    squadPickSlot = null;
+    saveSquadToStorage();
+    renderSquadSlots();
+    return;
+  }
+  squadActivateSlot('bench', i);
+}
+
+function squadClearSlot(kind, i){
+  if (kind === 'starter') squadState.starters[i] = null;
+  else squadState.bench[i] = null;
+  saveSquadToStorage();
+  renderSquadSlots();
+}
+
+function squadResetAll(){
+  squadState.starters = Array(11).fill(null);
+  squadState.bench = Array(7).fill(null);
+  squadPickSlot = null;
+  saveSquadToStorage();
+  renderSquadSlots();
+  squadRenderCatalog();
+}
+
+function squadPickCard(cardId){
+  if (!cardId) return;
+  if (!squadPickSlot) {
+    const st = document.getElementById('squad-catalog-status');
+    if (st) st.textContent = 'Sélectionnez une case terrain ou banc (surbrillance verte), puis un joueur.';
+    return;
+  }
+  const { kind, i } = squadPickSlot;
+  if (kind === 'starter') squadState.starters[i] = String(cardId);
+  else squadState.bench[i] = String(cardId);
+  saveSquadToStorage();
+  renderSquadSlots();
+  squadRenderCatalog();
+}
+
+function squadChemDemo(){
+  const cards = squadState.starters.map(getSquadCard).filter(Boolean);
+  if (!cards.length) return { pts: 0, label: '0 / 33' };
+  const clubs = new Set(cards.map((c) => c.club).filter(Boolean));
+  const nations = new Set(cards.map((c) => c.nation).filter(Boolean));
+  const leagues = new Set(cards.map((c) => c.league).filter(Boolean));
+  let pts = 0;
+  if (clubs.size <= 4) pts += 6;
+  if (clubs.size <= 2) pts += 6;
+  if (nations.size <= 5) pts += 5;
+  if (nations.size <= 3) pts += 5;
+  if (leagues.size <= 3) pts += 4;
+  if (cards.length >= 11) pts += 7;
+  pts = Math.min(33, pts);
+  return { pts, label: pts + ' / 33' };
+}
+
+function squadUpdateSidebarStats(){
+  const grid = document.getElementById('squad-sidebar-stats');
+  const avgEl = document.getElementById('squad-starters-avg');
+  const chemFill = document.getElementById('squad-chem-fill');
+  const chemLab = document.getElementById('squad-chem-label');
+  const cards = squadState.starters.map(getSquadCard).filter(Boolean);
+  const n = cards.length;
+  if (avgEl) avgEl.textContent = n ? 'Moy. ' + Math.round(cards.reduce((s, c) => s + (Number(c.ovr) || 0), 0) / n) : '—';
+  const avg6 = (key) => {
+    if (!n) return '—';
+    const v = Math.round(cards.reduce((s, c) => s + (Number(c[key]) || 0), 0) / n);
+    return String(v);
+  };
+  if (grid) {
+    grid.innerHTML = ['pace', 'sho', 'pas', 'dri', 'def', 'phy']
+      .map(
+        (k) =>
+          `<div class="squad-stat-cell"><div class="lab">${escapeHtml(
+            { pace: 'PAC', sho: 'SHO', pas: 'PAS', dri: 'DRI', def: 'DEF', phy: 'PHY' }[k],
+          )}</div><div class="val">${escapeHtml(avg6(k))}</div></div>`,
+      )
+      .join('');
+  }
+  const ch = squadChemDemo();
+  if (chemFill) chemFill.style.width = Math.round((ch.pts / 33) * 100) + '%';
+  if (chemLab) chemLab.textContent = ch.label;
+}
+
+function renderSquadSlots(){
+  const detail = squadGetDetail();
+  const pitch = document.getElementById('squad-pitch-slots');
+  const bn = document.getElementById('squad-bench');
+  if (!pitch || !bn) return;
+  if (!detail || !Array.isArray(detail.slots) || detail.slots.length !== 11) {
+    pitch.innerHTML = '<p class="td-muted" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;padding:12px">Formation ou 11 postes indisponibles.</p>';
+    bn.innerHTML = '';
+    squadUpdateSidebarStats();
+    return;
+  }
+  const fn = squadState.formation;
+  pitch.innerHTML = detail.slots
+    .map((slot, i) => {
+      const id = squadState.starters[i];
+      const c = getSquadCard(id);
+      const { l, t } = squadPitchCoords(fn, i);
+      const active = squadPickSlot && squadPickSlot.kind === 'starter' && squadPickSlot.i === i;
+      const face =
+        c && c.face && /^https?:\/\//i.test(String(c.face))
+          ? `<img class="pitch-slot-face" src="${String(c.face).replace(/"/g, '%22')}" alt="" width="34" height="34" loading="lazy" decoding="async">`
+          : '';
+      const plus = !c ? '<span class="pitch-slot-plus" aria-hidden="true">+</span>' : '';
+      const ovr = c ? `<span class="pitch-slot-ovr">${escapeHtml(String(c.ovr))}</span>` : '';
+      const nm = c ? `<span class="pitch-slot-name">${escapeHtml(c.name)}</span>` : '';
+      const clr = id
+        ? `<button type="button" class="pitch-slot-clear" onclick="event.stopPropagation();squadClearSlot('starter',${i})" aria-label="Retirer le joueur">×</button>`
+        : '';
+      return `<div class="pitch-slot${active ? ' active' : ''}" role="button" tabindex="0" style="--pl:${l}%;--pt:${t}%"
+        aria-label="Poste ${escapeHtml(slot.poste)}${c ? ', ' + escapeHtml(c.name) : ', vide'}"
+        aria-pressed="${active}" data-slot-idx="${i}"
+        onclick="squadPitchSlotClick(event,${i})"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();squadPitchSlotClick(event,${i});}">${clr}${face}${plus}${ovr}${nm}<span class="pitch-slot-pos">${escapeHtml(slot.poste)}</span></div>`;
+    })
+    .join('');
+  bn.innerHTML = [0, 1, 2, 3, 4, 5, 6]
+    .map((i) => {
+      const id = squadState.bench[i];
+      const c = getSquadCard(id);
+      const active = squadPickSlot && squadPickSlot.kind === 'bench' && squadPickSlot.i === i;
+      const face =
+        c && c.face && /^https?:\/\//i.test(String(c.face))
+          ? `<img class="pitch-slot-face" src="${String(c.face).replace(/"/g, '%22')}" alt="" width="30" height="30" loading="lazy">`
+          : '';
+      const plus = !c ? '<span class="pitch-slot-plus" style="font-size:18px">+</span>' : '';
+      const ovr = c ? `<span class="pitch-slot-ovr" style="font-size:13px">${escapeHtml(String(c.ovr))}</span>` : '';
+      const nm = c ? `<span class="pitch-slot-name">${escapeHtml(c.name)}</span>` : '';
+      const clr = id
+        ? `<button type="button" class="pitch-slot-clear" onclick="event.stopPropagation();squadClearSlot('bench',${i})" aria-label="Retirer">×</button>`
+        : '';
+      return `<div class="bench-slot${active ? ' active' : ''}" role="button" tabindex="0" aria-pressed="${active}"
+        onclick="squadBenchSlotClick(event,${i})"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();squadBenchSlotClick(event,${i});}">${clr}${face}${plus}${ovr}${nm}<span class="pitch-slot-pos">R${i + 1}</span></div>`;
+    })
+    .join('');
+  squadUpdateSidebarStats();
+}
+
+let _squadCatTimer;
+function squadCatalogFilterDebounced(){
+  clearTimeout(_squadCatTimer);
+  _squadCatTimer = setTimeout(squadRenderCatalog, 200);
+}
+
+function squadRenderCatalog(){
+  const list = document.getElementById('squad-catalog-list');
+  if (!list) return;
+  if (!FC26_CARDS || !FC26_CARDS.length) {
+    list.innerHTML = '<p class="td-muted" style="padding:10px">Aucune carte — lancez le script de build ou vérifiez le chemin data/fc26-cards-catalog.json.</p>';
+    return;
+  }
+  const qEl = document.getElementById('squad-cat-q');
+  const posEl = document.getElementById('squad-cat-pos');
+  const minEl = document.getElementById('squad-cat-minovr');
+  const q = (qEl && qEl.value ? qEl.value : '').trim().toLowerCase();
+  const pos = posEl && posEl.value ? posEl.value : '';
+  const minRaw = minEl && minEl.value !== '' ? minEl.value : '';
+  const minOvr = minRaw === '' ? NaN : Number(minRaw);
+  const filtered = FC26_CARDS.filter((c) => {
+    if (!Number.isNaN(minOvr) && (Number(c.ovr) || 0) < minOvr) return false;
+    if (pos) {
+      const positions = Array.isArray(c.positions) ? c.positions : [];
+      if (c.pos !== pos && !positions.includes(pos)) return false;
+    }
+    if (q) {
+      const blob = [c.name, c.shortName, c.club, c.nation, c.league, String(c.ovr || '')].join(' ').toLowerCase();
+      if (!blob.includes(q)) return false;
+    }
+    return true;
+  });
+  const slice = filtered.slice(0, SQUAD_CATALOG_MAX);
+  const more =
+    filtered.length > SQUAD_CATALOG_MAX
+      ? `<p class="td-muted" style="font-size:11px;padding:8px 4px">… ${filtered.length - SQUAD_CATALOG_MAX} autres résultats : affinez la recherche ou le poste.</p>`
+      : '';
+  list.innerHTML =
+    slice
+      .map((c) => {
+        const fid = escapeJsString(String(c.id));
+        const fu = c.face && /^https?:\/\//i.test(String(c.face)) ? String(c.face).replace(/"/g, '%22') : '';
+        const img = fu
+          ? `<img src="${fu}" alt="" width="36" height="36" loading="lazy" decoding="async">`
+          : `<span style="width:36px;height:36px;display:inline-block;border-radius:4px;background:var(--bg-4)" aria-hidden="true"></span>`;
+        return `<button type="button" class="catalog-row" role="option" onclick="squadPickCard('${fid}')">${img}<span class="nm"><b>${escapeHtml(c.name)}</b><span>${escapeHtml([c.pos, c.club].filter(Boolean).join(' · '))}</span></span><span class="ovr">${escapeHtml(String(c.ovr != null ? c.ovr : '—'))}</span></button>`;
+      })
+      .join('') + more;
+}
+
+function squadExportJson(){
+  const detail = squadGetDetail();
+  const map = _squadCardMap || (FC26_CARDS ? new Map(FC26_CARDS.map((c) => [String(c.id), c])) : new Map());
+  const pick = (id) => {
+    if (!id) return null;
+    return map.get(String(id)) || { id: String(id) };
+  };
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    formation: squadState.formation,
+    formationMeta: detail ? { approcheDefensive: detail.approcheDefensive, styleConstruction: detail.styleConstruction } : null,
+    starters: squadState.starters.map(pick),
+    bench: squadState.bench.map(pick),
+    catalogMeta: FC26_CARDS_META || null,
+  };
+  try {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'fc26-prototype-equipe.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch (e) {
+    alert('Export impossible : ' + (e && e.message));
+  }
+}
+
+function initSquadPage(){
+  initSquadStateOnce();
+  squadPopulateFormationSelect();
+  const statusEl = document.getElementById('squad-catalog-status');
+  const countEl = document.getElementById('squad-catalog-count');
+  const afterLoad = () => {
+    if (statusEl) {
+      statusEl.textContent = FC26_CARDS_META
+        ? `Catalogue : ${FC26_CARDS.length} cartes · généré ${FC26_CARDS_META.generatedAt || '—'}`
+        : `Catalogue : ${FC26_CARDS.length} cartes`;
+    }
+    if (countEl) countEl.textContent = String(FC26_CARDS.length);
+    squadInvalidateCardMap();
+    renderSquadSlots();
+    squadRenderCatalog();
+  };
+  if (FC26_CARDS && FC26_CARDS.length) afterLoad();
+  else {
+    if (statusEl) statusEl.textContent = 'Chargement de data/fc26-cards-catalog.json…';
+    ensureCatalogLoaded()
+      .then(afterLoad)
+      .catch((e) => {
+        if (statusEl) {
+          statusEl.textContent =
+            'Catalogue indisponible : ' +
+            (e && e.message) +
+            ' — exécutez « node scripts/build-fc26-cards-catalog.mjs » dans le dépôt, puis rechargez.';
+        }
+        if (countEl) countEl.textContent = '0';
+        renderSquadSlots();
+        squadRenderCatalog();
+      });
+  }
+}
 
 function escapeHtml(s){
   if(s==null) return '';
@@ -429,6 +1092,8 @@ function loadData(){
   CONFIG = D.CONFIG;
   PLAYERS = D.PLAYERS;
   FORMATIONS = D.FORMATIONS;
+  FORMATION_DETAILS = D.FORMATION_DETAILS || {};
+  FC26_TACTICS_CANON = D.FC26_TACTICS_CANON || null;
   TECHNIQUES = D.TECHNIQUES;
   SBC_DATA = D.SBC_DATA;
   PATCHES = D.PATCHES;
@@ -438,6 +1103,8 @@ function loadData(){
   CHEM_OFFICIAL = D.CHEM_OFFICIAL || { headline:'', bullets:[], sourceUrl:'' };
   CHEM_PICKS = D.CHEM_PICKS || [];
   SETTINGS = D.SETTINGS || {};
+  SETTINGS_META_GUIDE = D.SETTINGS_META_GUIDE || null;
+  META_SETUP_EXPRESS = D.META_SETUP_EXPRESS || null;
   return true;
 }
 
@@ -446,7 +1113,7 @@ function getBadge(src){
   const label={ official:'Officiel', analytical:'Analytique', community:'Communauté', unconfirmed:'Non confirmé' };
   return `<span class="badge ${map[src]||'badge-unconfirmed'}">${label[src]||src}</span>`;
 }
-function getTierBadge(t){ const m={ S:'badge-meta-s',A:'badge-meta-a',B:'badge-meta-b',C:'badge-meta-c' }; return `<span class="badge ${m[t]||'badge-meta-c'}">${t}-Tier</span>`; }
+function getTierBadge(t){ const m={ S:'badge-meta-s',A:'badge-meta-a',B:'badge-meta-b',C:'badge-meta-c' }; return `<span class="badge ${m[t]||'badge-meta-c'}">Palier ${escapeHtml(t)}</span>`; }
 function getBar(v,max=100){ const pct=Math.round(v/max*100); const cls=pct>=85?'s':pct>=70?'a':pct>=50?'b':'c'; return `<div class="score-wrap" aria-label="Score ${v}"><div class="score-bar"><div class="score-fill ${cls}" style="width:${pct}%"></div></div><div class="score-label">${v}</div></div>`; }
 
 function playerMatchesFilters(p){
@@ -528,25 +1195,273 @@ function closeDrawer(){
   }
 }
 
-function renderFormations(arr){
-  document.getElementById('formations-container').innerHTML=arr.map(f=>`
-    <section class="formation-card"><div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-start">
-      <div><div class="formation-name">${escapeHtml(f.name)}</div><div class="formation-style">${escapeHtml(f.style)}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${getTierBadge(f.tier)}<span class="badge badge-stable">${escapeHtml(f.stability)}</span>${getBadge('community')}</div></div>
-      <div style="min-width:200px;flex:1">${getBar(f.score)}<div class="td-muted" style="margin-top:4px">Popularité (analytique) : ${escapeHtml(String(f.popularity))}/100</div></div>
-    </div>
-    <div class="grid-2" style="margin-top:12px;gap:8px">
-      <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:11px;font-family:var(--mono);color:var(--text-secondary)">
-        Agressivité <strong style="color:var(--green)">${escapeHtml(String(f.aggression??'—'))}</strong>/10 · Contrôle <strong style="color:var(--blue)">${escapeHtml(String(f.control??'—'))}</strong>/10<br>
-        Largeur <strong>${escapeHtml(String(f.width??'—'))}</strong> · Prof. <strong>${escapeHtml(String(f.depth??'—'))}</strong>
+function pitchMiniDotColor(poste){
+  const p = String(poste || '').toUpperCase();
+  if (p === 'GK') return '#4da6ff';
+  if (/ST|LW|RW|LF|RF|CAM|CF/.test(p)) return '#ff6b6b';
+  if (/M|CDM/.test(p)) return '#ffd700';
+  return '#8b9cb3';
+}
+
+/** Mini terrain SVG (positions = même ordre que FORMATION_DETAILS / SQUAD_PITCH_LAYOUTS). */
+function renderFormationPitchMini(formationName, slots){
+  const W = 220;
+  const H = 320;
+  const L = SQUAD_PITCH_LAYOUTS[formationName] || SQUAD_PITCH_LAYOUTS['4-2-3-1'];
+  const list = Array.isArray(slots) ? slots : [];
+  const circles = list
+    .map((s, i) => {
+      const c = L[i] || { l: 50, t: 50 };
+      const cx = (c.l / 100) * W;
+      const cy = (c.t / 100) * H;
+      const col = pitchMiniDotColor(s.poste);
+      const title = escapeHtml([s.poste, s.libelle].filter(Boolean).join(' — '));
+      return `<circle cx="${cx}" cy="${cy}" r="8.5" fill="${col}" stroke="rgba(255,255,255,.35)" stroke-width="1"><title>${title}</title></circle>`;
+    })
+    .join('');
+  const fn = escapeHtml(formationName || '');
+  return `<svg class="mini-pitch" viewBox="0 0 ${W} ${H}" role="img" aria-label="Schéma ${fn}">
+    <defs><linearGradient id="fc26pitchg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d3d22"/><stop offset="50%" stop-color="#0a5c32"/><stop offset="100%" stop-color="#0d3d22"/></linearGradient></defs>
+    <rect width="${W}" height="${H}" fill="url(#fc26pitchg)"/>
+    <rect x="10" y="10" width="${W - 20}" height="${H - 20}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+    <line x1="10" y1="${H / 2}" x2="${W - 10}" y2="${H / 2}" stroke="rgba(255,255,255,.18)"/>
+    <circle cx="${W / 2}" cy="${H / 2}" r="26" fill="none" stroke="rgba(255,255,255,.16)"/>
+    ${circles}
+  </svg>`;
+}
+
+function consignesToChips(consignes){
+  if (!consignes || typeof consignes !== 'string') return '<span class="td-muted">—</span>';
+  const parts = consignes.split(/\s*·\s*/).map((s) => s.trim()).filter(Boolean);
+  if (!parts.length) return `<span class="td-muted">${escapeHtml(consignes)}</span>`;
+  return parts.map((p, i) => `<span class="inst-chip${i === 0 ? ' accent' : ''}">${escapeHtml(p)}</span>`).join('');
+}
+
+function readingLines(s){
+  if (!s || typeof s !== 'string') return [];
+  return s.split(/\s*·\s*/).map((x) => x.trim()).filter(Boolean);
+}
+
+function renderFormationSlotRows(slots){
+  if(!Array.isArray(slots)||!slots.length) return '<p class="td-muted">Aucune ligne poste.</p>';
+  return `<div class="table-wrap"><table class="slot-table" role="grid" aria-label="Rôles par poste"><thead><tr>
+    <th scope="col">Poste</th><th scope="col">Rôle+ &amp; objectif</th><th scope="col">Consignes (aperçu DATA)</th>
+  </tr></thead><tbody>${slots.map(s=>`<tr>
+    <td class="td-name">${escapeHtml(s.poste)}<div class="td-muted" style="font-size:11px;margin-top:2px">${escapeHtml(s.libelle||'')}</div></td>
+    <td><span class="badge badge-role">${escapeHtml(s.rolePlus||'—')}</span><p style="margin-top:6px;font-size:12px;color:var(--text-secondary);font-style:italic;border-left:2px solid var(--green-dim);padding-left:8px">${escapeHtml(s.objectifRole||'—')}</p></td>
+    <td><div class="inst-wrap">${consignesToChips(s.consignes)}</div></td>
+  </tr>`).join('')}</tbody></table></div>`;
+}
+
+function getTopMetaFormation(){
+  if(!Array.isArray(FORMATIONS)||FORMATIONS.length===0) return null;
+  const sorted=[...FORMATIONS].sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
+  const formation=sorted[0];
+  const detail=FORMATION_DETAILS&&FORMATION_DETAILS[formation.name]?FORMATION_DETAILS[formation.name]:null;
+  return { formation, detail };
+}
+
+function renderSetupExpress(){
+  const root=document.getElementById('setup-express-root');
+  if(!root) return;
+  const E=META_SETUP_EXPRESS;
+  const top=getTopMetaFormation();
+  if(!E){
+    root.innerHTML='<p class="td-muted">Bloc META_SETUP_EXPRESS absent du fichier de données.</p>';
+    return;
+  }
+  if(!top){
+    root.innerHTML='<p class="td-muted">Impossible de déterminer la formation (liste vide).</p>';
+    return;
+  }
+  const f=top.formation;
+  const d=top.detail;
+  const gabarits=d&&Array.isArray(d.gabaritsSelecteur)?d.gabaritsSelecteur.join(' · '):'—';
+  const appr=d?d.approcheDefensive:'—';
+  const styleC=d?d.styleConstruction:'—';
+  const balanced=SETTINGS&&SETTINGS.balanced;
+  const tactRows=(balanced&&balanced.groups&&balanced.groups[0]&&balanced.groups[0].items)?balanced.groups[0].items:[];
+  const tactTable=tactRows.length?`<div class="table-wrap" style="margin-top:12px"><table class="slot-table"><thead><tr><th>Paramètre</th><th>Valeur conseillée</th><th>Note</th></tr></thead><tbody>
+    ${tactRows.map(i=>`<tr><td class="td-name">${escapeHtml(i.label)}</td><td class="td-val" style="font-size:12px">${escapeHtml(i.val)}</td><td class="td-muted">${escapeHtml(i.note)}</td></tr>`).join('')}
+  </tbody></table></div>`:'';
+  const etapes=(E.etapes||[]).map((st,i)=>`<li style="margin-bottom:14px"><strong style="color:var(--text-primary)">${i+1}. ${escapeHtml(st.titre)}</strong><p class="td-muted" style="margin-top:4px;font-size:13px;line-height:1.55">${escapeHtml(st.texte)}</p></li>`).join('');
+  const topPlayers=[...PLAYERS].sort((a,b)=>(Number(b.metaScore)||0)-(Number(a.metaScore)||0)).slice(0,5);
+  const playersList=topPlayers.map(p=>`<li style="margin-bottom:6px">${escapeHtml(p.name)} <span class="td-muted">(${escapeHtml(p.bestPos)})</span> — <span class="td-val" style="font-size:12px">${escapeHtml(String(p.metaScore??'—'))}</span> <span class="td-muted">DATA</span></li>`).join('');
+  const fname=JSON.stringify(f.name);
+  root.innerHTML=`
+    <div class="info-box danger" style="margin-bottom:16px"><strong>Rappel :</strong> ${escapeHtml(E.disclaimer)}</div>
+    <p style="font-size:15px;color:var(--text-secondary);max-width:720px;line-height:1.6;margin-bottom:20px">${escapeHtml(E.accroche)}</p>
+    <div class="grid-2" style="gap:14px;margin-bottom:22px">
+      <div class="card" style="border-color:rgba(0,255,136,.35)">
+        <div class="card-header" style="margin-bottom:10px"><div class="card-title" style="color:var(--green)">Formation n°1 (score DATA)</div>${getBadge('community')}</div>
+        <div class="formation-name" style="font-size:22px;margin-bottom:6px">${escapeHtml(f.name)}</div>
+        <p class="td-muted" style="font-size:12px;margin-bottom:8px">${escapeHtml(f.style)} · ${getTierBadge(f.tier)} · score ${escapeHtml(String(f.score))}</p>
+        ${getBar(f.score)}
+        <p style="margin-top:12px;font-size:13px;color:var(--text-secondary)"><strong>Gabarit(s) au sélecteur :</strong> <span class="td-val" style="font-size:13px">${escapeHtml(gabarits)}</span></p>
+        ${d&&d.noteGabarits?`<p class="td-muted" style="font-size:12px;margin-top:6px">${escapeHtml(d.noteGabarits)}</p>`:''}
+        <button type="button" class="filter-btn" style="margin-top:14px;font-weight:600" onclick='openFormationDrawer(${fname})'>Ouvrir le détail 11 postes (rôles+)</button>
       </div>
-      <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:11px;color:var(--text-muted)">Tags : ${escapeHtml((f.tags||[]).join(', '))}</div>
+      <div class="card" style="border-color:rgba(168,85,247,.35)">
+        <div class="card-header" style="margin-bottom:10px"><div class="card-title" style="color:var(--purple)">À régler dans FUT (même ordre que les menus)</div>${getBadge('analytical')}</div>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">Copie ces deux presets tactiques tels quels :</p>
+        <div style="display:grid;gap:10px">
+          <div style="padding:12px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)"><span class="td-muted" style="font-size:11px">Approche défensive</span><p style="font-size:18px;font-weight:700;color:var(--blue);margin-top:4px">${escapeHtml(appr)}</p></div>
+          <div style="padding:12px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)"><span class="td-muted" style="font-size:11px">Style de construction</span><p style="font-size:18px;font-weight:700;color:var(--green);margin-top:4px">${escapeHtml(styleC)}</p></div>
+        </div>
+        <p class="td-muted" style="font-size:11px;margin-top:12px">Si ton jeu est en français, les libellés peuvent légèrement différer — garde la même idée (4 niveaux défense / 3 styles construction).</p>
+      </div>
     </div>
-    <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)"><span class="td-muted">Profils idéaux</span> ${escapeHtml(f.idealRoles||'—')}</p>
-    <p style="margin-top:8px;font-size:13px;color:var(--text-secondary)"><strong>+</strong> ${escapeHtml(f.strengths)}</p>
-    <p style="font-size:13px;color:var(--text-secondary)"><strong>−</strong> ${escapeHtml(f.weaknesses)}</p>
-    <p style="font-size:12px;color:var(--text-muted)"><strong>Contre</strong> : ${escapeHtml(f.counters)} · <strong>Contexte</strong> : ${escapeHtml(f.context)}</p>
-    </section>`).join('');
+    <div class="card section-block">
+      <div class="card-header"><div class="card-title">Dans quel ordre je clique ?</div>${getBadge('analytical')}</div>
+      <ol style="list-style:none;padding:0;margin:12px 0 0 0">${etapes}</ol>
+    </div>
+    <div class="grid-2" style="margin-top:16px;gap:14px">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Curseurs (profil équilibré DATA)</div>${getBadge('analytical')}</div>
+        <p class="td-muted" style="font-size:12px;margin-bottom:8px">Optionnel : aligne les curseurs tactiques sur le profil « Équilibré » exporté ici.</p>
+        ${tactTable||'<p class="td-muted">Profil SETTINGS.balanced introuvable.</p>'}
+        <button type="button" class="filter-btn" style="margin-top:12px" onclick="showPage('settings')">Page Réglages (autres profils)</button>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Joueurs les plus hauts score DATA</div>${getBadge('community')}</div>
+        <p class="td-muted" style="font-size:12px;margin-bottom:10px">Exemple de noyau « cher » — à adapter à ton budget ; chimie : page dédiée.</p>
+        <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.5">${playersList}</ul>
+        <p class="td-muted" style="font-size:12px;margin-top:12px">${escapeHtml(E.rappelChimieUneLigne)}</p>
+        <button type="button" class="filter-btn" style="margin-top:12px" onclick="showPage('chemistry')">Chimie &amp; styles</button>
+      </div>
+    </div>`;
+}
+
+function openFormationDrawer(formationName){
+  const f=FORMATIONS.find(x=>x.name===formationName);
+  if(!f) return;
+  const d=FORMATION_DETAILS[formationName];
+  lastFocusBeforeDrawer=document.activeElement;
+  const strengthsList = readingLines(f.strengths).map((x) => `<li>${escapeHtml(x)}</li>`).join('') || `<li>${escapeHtml(f.strengths || '—')}</li>`;
+  const weakList = readingLines(f.weaknesses).map((x) => `<li>${escapeHtml(x)}</li>`).join('') || `<li>${escapeHtml(f.weaknesses || '—')}</li>`;
+  const counterCtx = [f.counters ? `<li><strong>Contre :</strong> ${escapeHtml(f.counters)}</li>` : '', f.context ? `<li><strong>Contexte :</strong> ${escapeHtml(f.context)}</li>` : ''].join('');
+  let bodyInner = '';
+  if (d) {
+    const tplList = Array.isArray(d.gabaritsSelecteur) && d.gabaritsSelecteur.length
+      ? d.gabaritsSelecteur.map((t) => `<code style="font-size:12px">${escapeHtml(t)}</code>`).join(' · ')
+      : '';
+    const tplBlock = tplList
+      ? `<div class="card" style="padding:12px;margin-bottom:12px"><div class="card-header" style="margin-bottom:8px"><span class="card-title" style="font-size:11px">Gabarits sélecteur</span>${getBadge('community')}</div>
+        <p style="font-size:13px;font-weight:600;line-height:1.5">${tplList}</p>
+        ${d.noteGabarits ? `<p class="td-muted" style="font-size:12px;margin-top:8px">${escapeHtml(d.noteGabarits)}</p>` : ''}</div>`
+      : '';
+    const styleConstr = d.styleConstruction || '—';
+    const approchDef = d.approcheDefensive || '—';
+    const eaQuotes =
+      FC26_TACTICS_CANON && Array.isArray(FC26_TACTICS_CANON.citationsEa)
+        ? FC26_TACTICS_CANON.citationsEa
+            .map(
+              (q) =>
+                `<p style="margin-bottom:8px;font-size:11px;color:var(--text-secondary)">${escapeHtml(q.texteFr)} <a href="${safeExternalHref(q.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">EA</a></p>`,
+            )
+            .join('')
+        : '';
+    const eaBlock = eaQuotes
+      ? `<details style="margin-top:12px"><summary style="cursor:pointer;font-size:12px;color:var(--text-muted)">Faits EA (tactique — pitch notes)</summary><div style="margin-top:8px">${eaQuotes}</div></details>`
+      : '';
+    bodyInner = `
+    ${tplBlock}
+    <div class="grid-2" style="gap:10px;margin-bottom:12px">
+      <div class="card" style="padding:12px"><div class="card-header" style="margin-bottom:6px"><span class="card-title" style="font-size:11px">Style de construction</span>${getBadge('analytical')}</div>
+        <p style="font-size:15px;font-weight:700;color:var(--green)">${escapeHtml(styleConstr)}</p>
+        <p class="td-muted" style="font-size:11px;margin-top:4px">Menu FUT — trois styles usuels (FR).</p></div>
+      <div class="card" style="padding:12px"><div class="card-header" style="margin-bottom:6px"><span class="card-title" style="font-size:11px">Approche défensive</span>${getBadge('analytical')}</div>
+        <p style="font-size:15px;font-weight:700;color:var(--blue)">${escapeHtml(approchDef)}</p>
+        <p class="td-muted" style="font-size:11px;margin-top:4px">Quatre niveaux usuels (FR).</p></div>
+    </div>
+    <div class="info-box warn" style="margin-bottom:12px">${getBadge('community')} <strong>Rôle+ / objectif / consignes</strong> : synthèse DATA en français — à recouper avec FUT &gt; Tactiques (libellés exacts selon patch).</div>
+    ${FC26_TACTICS_CANON && FC26_TACTICS_CANON.noteAnalytique ? `<p class="td-muted" style="font-size:11px;margin-bottom:10px">${escapeHtml(FC26_TACTICS_CANON.noteAnalytique)}</p>` : ''}
+    ${eaBlock}
+    <h3 class="section-title" style="font-size:14px;margin:16px 0 10px">Onze postes</h3>
+    ${renderFormationSlotRows(d.slots)}`;
+  } else {
+    bodyInner = `<p class="td-muted">Fiche absente dans <code>FORMATION_DETAILS</code> pour cette formation.</p>`;
+  }
+  const statTiles = `
+    <div class="fd-pro-stat"><div class="v">${escapeHtml(String(f.score ?? '—'))}</div><div class="l">Score DATA</div></div>
+    <div class="fd-pro-stat"><div class="v" style="color:var(--blue)">${escapeHtml(d ? d.styleConstruction || '—' : '—')}</div><div class="l">Construction</div></div>
+    <div class="fd-pro-stat"><div class="v" style="color:#80c4ff">${escapeHtml(d ? d.approcheDefensive || '—' : '—')}</div><div class="l">Défense (preset)</div></div>
+    <div class="fd-pro-stat"><div class="v" style="font-size:14px;color:var(--text-primary)">${escapeHtml(String(f.width ?? '—'))}<span class="td-muted"> / </span>${escapeHtml(String(f.depth ?? '—'))}</div><div class="l">Largeur · prof.</div></div>`;
+  const pitchBlock = d && Array.isArray(d.slots) ? renderFormationPitchMini(f.name, d.slots) : `<p class="td-muted" style="text-align:center;font-size:12px">Schéma disponible quand la fiche 11 postes est dans DATA.</p>`;
+  document.getElementById('drawer-content').innerHTML = `
+    <div class="fd-pro">
+      <div class="fd-pro-header">
+        <h2 id="drawer-title" class="fd-pro-title">${escapeHtml(f.name)}</h2>
+        <div class="fd-pro-sub">${escapeHtml(f.style)} · ${getTierBadge(f.tier)} <span class="badge badge-stable">${escapeHtml(f.stability)}</span> ${getBadge('community')}</div>
+        ${getBar(f.score)}
+        <div class="fd-pro-stats">${statTiles}</div>
+      </div>
+      <div class="fd-pro-body">
+        <div class="fd-pro-pitch">
+          <span class="td-muted" style="font-size:9px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">Schéma positions</span>
+          ${pitchBlock}
+          <p class="td-muted" style="font-size:10px;text-align:center;line-height:1.45">Bleu = GK · or = milieux · rouge = ligne offensive.</p>
+        </div>
+        <div class="fd-pro-detail">${bodyInner}</div>
+      </div>
+      <div class="philo-grid" style="padding:14px 18px 18px;background:var(--bg-2);border-top:1px solid var(--border)">
+        <div class="philo-card"><h4>Atouts (DATA)</h4><ul>${strengthsList}</ul></div>
+        <div class="philo-card neg"><h4>Limites</h4><ul>${weakList}</ul></div>
+      </div>
+      ${counterCtx ? `<div style="padding:0 18px 18px;background:var(--bg-2)"><div class="philo-card" style="border-left-color:var(--orange)"><h4>Lecture jeu</h4><ul>${counterCtx}</ul></div></div>` : ''}
+    </div>`;
+  document.getElementById('drawer-overlay').classList.add('active');
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer').setAttribute('aria-hidden','false');
+  document.getElementById('drawer-close').focus();
+}
+
+function onFormationsContainerClick(e){
+  const card=e.target.closest('.formation-row-card[data-formation]');
+  if(!card) return;
+  const raw=card.getAttribute('data-formation');
+  if(!raw) return;
+  document.querySelectorAll('.formation-row-card.is-active').forEach((el)=>el.classList.remove('is-active'));
+  card.classList.add('is-active');
+  try{ openFormationDrawer(decodeURIComponent(raw)); }catch(_){ openFormationDrawer(raw); }
+}
+function onFormationsContainerKeydown(e){
+  if(e.key!=='Enter'&&e.key!==' ') return;
+  const card=e.target.closest('.formation-row-card[data-formation]');
+  if(!card) return;
+  e.preventDefault();
+  const raw=card.getAttribute('data-formation');
+  if(raw) try{ openFormationDrawer(decodeURIComponent(raw)); }catch(_){ openFormationDrawer(raw); }
+}
+
+function renderFormations(arr){
+  const n = arr.length;
+  const aside = `<aside class="formations-pro-aside card" style="padding:16px">
+    <div class="card-header" style="margin-bottom:10px;padding:0;border:none"><div class="card-title">Pilotage</div><span class="badge badge-analytical">Pro</span></div>
+    <p style="font-size:12px;color:var(--text-secondary);line-height:1.55;margin-bottom:12px">Chaque ligne ouvre la <strong>fiche tactique</strong> : schéma des 11 postes, presets menu FR (construction / défense) et rôles+ issus du DATA.</p>
+    <button type="button" class="filter-btn" style="width:100%;margin-bottom:10px;font-weight:600" onclick="showPage('setup-express')">Rivaux express</button>
+    <button type="button" class="filter-btn" style="width:100%" onclick="showPage('squad')">Prototype équipe</button>
+    <p class="td-muted" style="font-size:11px;margin-top:14px">${n} formation${n > 1 ? 's' : ''} — popularité &amp; score = heuristique démo.</p>
+  </aside>`;
+  const rows = arr
+    .map(
+      (f) => `
+    <section class="formation-row-card" tabindex="0" role="button" aria-label="Fiche formation ${escapeHtml(f.name)}" data-formation="${encodeURIComponent(f.name)}">
+      <div class="formation-row-main">
+        <div class="formation-row-name">${escapeHtml(f.name)}</div>
+        <div class="formation-row-meta">${escapeHtml(f.style)} · pop. ${escapeHtml(String(f.popularity))}/100 · aggr ${escapeHtml(String(f.aggression ?? '—'))}/ctrl ${escapeHtml(String(f.control ?? '—'))}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">${getTierBadge(f.tier)}<span class="badge badge-stable">${escapeHtml(f.stability)}</span>${getBadge('community')}</div>
+        <p class="td-muted" style="font-size:11px;margin-top:8px;line-height:1.45"><strong>Tags</strong> ${escapeHtml((f.tags || []).join(' · ') || '—')}</p>
+      </div>
+      <div style="min-width:120px;text-align:right">
+        <div class="formation-row-score">${escapeHtml(String(f.score))}</div>
+        ${getBar(f.score)}
+        <p class="formation-hint" style="margin-top:8px">Fiche · Entrée</p>
+      </div>
+    </section>`,
+    )
+    .join('');
+  document.getElementById('formations-container').innerHTML = `<div class="formations-pro-grid"><div class="formations-pro-list" role="list">${rows}</div>${aside}</div>`;
 }
 
 function catTechBadge(cat){
@@ -710,6 +1625,64 @@ function renderBehaviors(){
   </tr>`).join('')}</tbody></table></div>`;
 }
 
+function safeExternalHref(u){
+  const s=String(u||'');
+  return /^https?:\/\//i.test(s)?s.replace(/"/g,'%22'):'#';
+}
+
+function renderSettingsMetaGuide(){
+  const el=document.getElementById('settings-meta-guide');
+  if(!el) return;
+  const G=SETTINGS_META_GUIDE;
+  if(!G){ el.innerHTML='<p class="td-muted">Guide réglages / sources : données absentes.</p>'; return; }
+  const op=(G.officialPresets?.bullets||[]).map(b=>`<li>${escapeHtml(b.text)} — <a href="${safeExternalHref(b.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-size:11px">${escapeHtml(b.src||'EA')}</a></li>`).join('');
+  const co=(G.controllerOfficial?.bullets||[]).map(b=>`<li>${escapeHtml(b.text)} — <a href="${safeExternalHref(b.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-size:11px">${escapeHtml(b.src||'EA')}</a></li>`).join('');
+  const sys=(G.officialGameplaySystems?.items||[]).map(it=>`<li style="margin-bottom:8px">${escapeHtml(it.text)} <span class="badge badge-official" style="margin-left:4px">${escapeHtml(it.tag||'')}</span> <a href="${safeExternalHref(it.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-size:11px;margin-left:6px">Source</a></li>`).join('');
+  const rows=(G.controllerAnalytical?.rows||[]).map(r=>`<tr><td class="td-name">${escapeHtml(r.param)}</td><td class="td-val" style="font-size:12px">${escapeHtml(r.pick)}</td><td class="td-muted">${escapeHtml(r.why)}</td></tr>`).join('');
+  const steps=(G.optimizePlay?.steps||[]).map(t=>`<li>${escapeHtml(t)}</li>`).join('');
+  const links=(G.sourceLinks||[]).map(l=>`<li><a href="${safeExternalHref(l.url)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">${escapeHtml(l.title)}</a></li>`).join('');
+  const um=G.utMenusNote||{};
+  el.innerHTML=`
+    <h2 class="section-title">Paramètres « meta » : officiel EA vs lecture analytique</h2>
+    <div class="info-box danger" style="margin-bottom:16px"><strong>Important :</strong> ${escapeHtml(G.disclaimer)}</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><div class="card-title">${escapeHtml(G.officialPresets?.title||'Préréglages')}</div>${getBadge('official')}</div>
+        <p class="td-muted" style="font-size:12px;margin-bottom:10px">${escapeHtml(G.officialPresets?.lead||'')}</p>
+        <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.65">${op}</ul>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">${escapeHtml(G.controllerOfficial?.title||'Manette')}</div>${getBadge('official')}</div>
+        <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.65">${co}</ul>
+      </div>
+    </div>
+    <div class="card section-block" style="margin-top:16px">
+      <div class="card-header"><div class="card-title">${escapeHtml(G.officialGameplaySystems?.title||'Systèmes de jeu')}</div>${getBadge('official')}</div>
+      <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.6;margin-top:8px">${sys}</ul>
+    </div>
+    <div class="grid-2" style="margin-top:16px">
+      <div class="card">
+        <div class="card-header"><div class="card-title">${escapeHtml(G.controllerAnalytical?.title||'Manette')}</div>${getBadge('analytical')}</div>
+        <p class="td-muted" style="font-size:12px;margin-bottom:10px">${escapeHtml(G.controllerAnalytical?.intro||'')}</p>
+        <div class="table-wrap"><table class="slot-table"><thead><tr><th>Paramètre</th><th>Piste fréquente</th><th>Pourquoi (lecture)</th></tr></thead><tbody>${rows}</tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">${escapeHtml(um.title||'UT')}</div>${getBadge('official')}</div>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px"><span class="badge badge-official" style="margin-right:6px">EA (Pitch Notes)</span>${escapeHtml(um.official||'')}</p>
+        ${um.clientPresets?`<p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px"><span class="badge badge-community" style="margin-right:6px">Client FC26</span>${escapeHtml(um.clientPresets)}</p>`:''}
+        <p style="font-size:12px;color:var(--text-muted)"><span class="badge badge-analytical" style="margin-right:6px">Ce centre</span>${escapeHtml(um.analytical||'')}</p>
+      </div>
+    </div>
+    <div class="card section-block" style="margin-top:16px">
+      <div class="card-header"><div class="card-title">${escapeHtml(G.optimizePlay?.title||'Méthode')}</div><span class="badge badge-analytical">Démarche</span></div>
+      <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px;line-height:1.7;margin-top:8px">${steps}</ul>
+    </div>
+    <div class="card section-block" style="margin-top:16px">
+      <div class="card-header"><div class="card-title">Sources EA (liens)</div>${getBadge('official')}</div>
+      <ul style="font-size:13px;padding-left:18px;line-height:1.8;margin-top:8px">${links}</ul>
+    </div>`;
+}
+
 function renderSettings(profile){
   const s=SETTINGS[profile]; const c=document.getElementById('settings-container');
   if(!s){ c.innerHTML='<p class="td-muted">Profil de réglages indisponible.</p>'; return; }
@@ -727,12 +1700,14 @@ function showPage(id){
   if(page) page.classList.add('active');
   const nav=document.querySelector(`.nav-item[data-page="${id}"]`);
   if(nav) nav.classList.add('active');
+  if(id==='setup-express') renderSetupExpress();
   if(id==='dashboard') initDashboard();
   if(id==='meta') renderMetaTable();
   if(id==='players'){ populateCompareSelects(); applyPlayerFilters(); }
   if(id==='formations'){ document.querySelectorAll('#page-formations .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderFormations(FORMATIONS); }
+  if(id==='squad') initSquadPage();
   if(id==='techniques'){ document.querySelectorAll('#page-techniques .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderTechniques(TECHNIQUES); }
-  if(id==='settings'){ document.querySelectorAll('#page-settings .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderSettings('balanced'); }
+  if(id==='settings'){ document.querySelectorAll('#page-settings .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderSettingsMetaGuide(); renderSettings('balanced'); }
   if(id==='sbc') renderSBC(SBC_DATA);
   if(id==='patches') renderPatches();
   if(id==='behaviors') renderBehaviors();
@@ -808,7 +1783,7 @@ function renderCompare(){
   const pa=PLAYERS.find(x=>x.id===ida); const pb=PLAYERS.find(x=>x.id===idb);
   const out=document.getElementById('compare-out');
   if(!pa||!pb||ida===idb){ out.innerHTML='<p class="td-muted">Choisissez deux joueurs distincts.</p>'; return; }
-  const keys=[['Meta score','metaScore'],['Tier','tier'],['Accélération','acc'],['Patch sens.','patchSens'],['Rôle','metaRole'],['Meilleur poste','bestPos'],['Alternatifs','altPos'],['Chimie sans +3','chemNone'],['Chimie +3','chemChem']];
+  const keys=[['Score méta','metaScore'],['Palier','tier'],['Accélération','acc'],['Sensibilité patch','patchSens'],['Rôle','metaRole'],['Meilleur poste','bestPos'],['Postes alternatifs','altPos'],['Chimie sans +3','chemNone'],['Chimie +3','chemChem']];
   const cell=v=>escapeHtml(Array.isArray(v)?v.join(', '):String(v??'—'));
   out.innerHTML=`<table><thead><tr><th>Champ</th><th>${escapeHtml(pa.name)}</th><th>${escapeHtml(pb.name)}</th></tr></thead><tbody>
     ${keys.map(([l,k])=>`<tr><td class="td-name">${escapeHtml(l)}</td><td>${cell(pa[k])}</td><td>${cell(pb[k])}</td></tr>`).join('')}
@@ -819,6 +1794,15 @@ document.addEventListener('keydown',e=>{
   const drawer=document.getElementById('drawer');
   const open=drawer&&drawer.classList.contains('open');
   if(e.key==='Escape'&&open){ e.preventDefault(); closeDrawer(); return; }
+  if(e.key==='Escape'){
+    const squadPage=document.getElementById('page-squad');
+    if(squadPage&&squadPage.classList.contains('active')&&squadPickSlot){
+      e.preventDefault();
+      squadPickSlot=null;
+      renderSquadSlots();
+      return;
+    }
+  }
   if(!open||e.key!=='Tab') return;
   const focusables=drawer.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
   const list=[...focusables].filter(el=>el.getClientRects().length>0);
@@ -831,9 +1815,16 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('DOMContentLoaded',()=>{
   initTheme();
   if(!loadData()) return;
+  renderSetupExpress();
   initDashboard();
   renderMetaTable();
   renderPlayers(PLAYERS);
+  renderSettingsMetaGuide();
+  const fcont=document.getElementById('formations-container');
+  if(fcont){
+    fcont.addEventListener('click',onFormationsContainerClick);
+    fcont.addEventListener('keydown',onFormationsContainerKeydown);
+  }
 });
 </script>
 </body>

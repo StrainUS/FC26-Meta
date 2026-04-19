@@ -1,12 +1,12 @@
 /**
  * FC26_META_DATA — couche données (éditer après chaque patch)
  * Mettre à jour : CONFIG.bundleVersion, CONFIG.lastOfficialPatchId, CONFIG.dataRevision
- * Puis : PLAYERS / FORMATIONS / TECHNIQUES / PATCHES / SBC_DATA / BEHAVIORS
+ * Puis : META_SETUP_EXPRESS / PLAYERS / FORMATIONS / FC26_TACTICS_CANON / FORMATION_DETAILS / TECHNIQUES / PATCHES / SBC_DATA / BEHAVIORS / SETTINGS_META_GUIDE
  * Les champs "tier", "metaScore", "cost" = lecture communautaire/analytique (pas EA).
  */
 window.FC26_META_DATA = {
   CONFIG: {
-    bundleVersion: '2026.04.19.2',
+    bundleVersion: '2026.04.19.14',
     dataRevision: 'post-v1.5.3',
     lastOfficialPatchId: 'v1.5.3',
     lastOfficialPatchUrl: 'https://forums.ea.com/blog/ea-sports-fc-game-info-hub-en/ea-sports-fc%E2%84%A2-26--title-update-v1-5-3/13312649',
@@ -23,6 +23,28 @@ window.FC26_META_DATA = {
       { k: 'Lecture UT', v: 'Courbe progression plus lente vs FC25 (launch)', src: 'official' },
       { k: 'Formations (non EA)', v: '4231 / 4213 / 4411 restent cadres compétitifs fréquents', src: 'community' }
     ]
+  },
+  /**
+   * Parcours « une seule réponse » : où aller in-game + quoi régler (lecture DATA, pas EA).
+   * La formation affichée est toujours celle au score maximal dans FORMATIONS au moment du rendu.
+   */
+  META_SETUP_EXPRESS: {
+    titre: 'Rivaux — ce que je règle pour coller au DATA le plus méta',
+    accroche:
+      'Tu ouvres FUT, tu appliques la formation n°1 du classement interne, les deux presets tactiques ci-dessous, puis tu copies les rôles+ si tu veux aller au bout — sans parcourir le reste du site.',
+    disclaimer:
+      'Ce n’est pas une « classe officielle » EA : c’est la synthèse automatique du fichier de données (méta communautaire / analytique). Les menus exacts peuvent varier selon ta version et ta langue.',
+    etapes: [
+      { titre: 'Entrer en Ultimate Team', texte: 'Lance le mode FUT et va sur l’écran de ton club (accueil club).' },
+      { titre: 'Ouvrir les tactiques d’équipe', texte: 'Depuis l’équipe active, ouvre la tactique / le plan de jeu (souvent « tactiques d’équipe », « personnaliser » ou icône formation selon l’interface).' },
+      { titre: 'Choisir la formation affichée ci-dessous', texte: 'Dans le sélecteur de dispositions, prends exactement celle indiquée dans l’encadré vert, puis le gabarit listé (ex. large / étroit).' },
+      { titre: 'Régler approche défensive + construction', texte: 'Mets les deux valeurs de l’encadré violet sur les mêmes options dans le jeu (menu tactique principal).' },
+      { titre: 'Optionnel : curseurs profondeur / largeur', texte: 'Pour caler comme le profil « Équilibré » de la page Réglages de cet outil, copie profondeur de ligne et largeurs indiquées dans le tableau plus bas.' },
+      { titre: 'Postes (rôles+ / consignes)', texte: 'Utilise le bouton « Ouvrir le détail 11 postes » : il charge la fiche complète pour la même formation.' },
+      { titre: 'Console (hors FUT)', texte: 'Dans les paramètres FC26, pars du préréglage orienté compétition en ligne (EA), puis affine la manette si besoin (page Réglages → guide).' },
+      { titre: 'Lancer Division Rivaux', texte: 'Menu compétition FUT → Division Rivaux → choisis ton rang / session et lance une partie.' },
+    ],
+    rappelChimieUneLigne: 'Chimie : vise 26 sur 33 mini-points puis +3 sur les joueurs clés (styles Hunter / Shadow / etc. selon poste — page Chimie & styles).',
   },
   PLAYERS: [
     { id:'mbappe', name:'Kylian Mbappé', league:'LALIGA', club:'Real Madrid', nation:'France', pos:'ST', bestPos:'ST', altPos:['LW','CF'], metaRole:'Finisseur transition', tier:'S', acc:'Explosive', playstyles:['Finesse+','Rapid+','Flair'], chemNone:'Hawk / Finisher', chemChem:'Hunter si burst max', tacticalFit:'4-2-3-1 / 4-4-1-1', cost:'Maj FUTBIN', metaScore:97, patchSens:'moyen', confidence:'community', source:'community', strengths:'Line-breaking, finition angle', limits:'Aérien vs grands défenseurs' },
@@ -71,6 +93,287 @@ window.FC26_META_DATA = {
     { name:'4-5-1', style:'Bloc milieu', tier:'B', popularity:55, stability:'Stable', tags:['possession'], aggression:5, control:7, width:55, depth:50, strengths:'Saturation milieu', weaknesses:'ST isolé', counters:'352', context:'Négation jeu adverse', score:75, idealRoles:'LM/RM défensifs', source:'community' },
     { name:'3-4-2-1', style:'WB + deux 10', tier:'B', popularity:50, stability:'Sensible', tags:['counter','press'], aggression:7, control:6, width:62, depth:52, strengths:'Surcharge finale', weaknesses:'3 CB discipline', counters:'433', context:'Risk reward', score:77, idealRoles:'WBs endurance', source:'community' }
   ],
+  FC26_TACTICS_CANON: {
+    rôle: 'Référence tactique FC26 en français : résumés fidèles des notes EA (Gameplay Deep Dive) + listes de presets alignées sur le client français.',
+    citationsEa: [
+      {
+        texteFr:
+          'Résumé tactique en « toile d’araignée » : six axes pour voir forces et faiblesses — attaque, défense, construction, largeur, profondeur (longueur), endurance.',
+        url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive',
+      },
+      {
+        texteFr: 'La hauteur de ligne est enregistrée dans le code tactique partagé.',
+        url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive',
+      },
+      {
+        texteFr:
+          'Hauteur de la ligne défensive : la ligne ne remonte plus automatiquement autant lors des tentatives de jeu du hors-jeu.',
+        url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive',
+      },
+    ],
+    optionsApprocheDefensive: ['Bas', 'Équilibré', 'Haut', 'Extrême'],
+    optionsStyleConstruction: ['Passe courte', 'Équilibré', 'Contre-attaque'],
+    rappelClientFr:
+      'Dans le jeu en français, l’approche défensive propose en général quatre niveaux (souvent du type bas, équilibré, haut, extrême) et la construction trois styles (passe courte, équilibré, contre-attaque). Vérifier les libellés exacts dans FUT > Tactiques.',
+    noteAnalytique:
+      'Sur chaque fiche formation, la paire (approche défensive / style de construction) est un exemple de lecture compétitive — ce n’est pas une configuration officielle EA par formation.',
+  },
+  /**
+   * Fiches tactiques UT : gabarits = sélecteur français FC26 ; approcheDefensive / styleConstruction = FC26_TACTICS_CANON.
+   * rolePlus / objectifRole = libellés FR pour l’outil (vocabulaire tactique courant + proche des menus FUT en français).
+   * Les intitulés exacts peuvent varier selon patch / version : recoupe toujours FUT > Tactiques d’équipe sur ta machine.
+   * consignes = aide-mémoire tactique — pas une garantie mot pour mot des menus EA.
+   */
+  FORMATION_DETAILS: {
+    '4-2-3-1': {
+      gabaritsSelecteur: ['4-2-3-1 large', '4-2-3-1 étroit'],
+      noteGabarits:
+        'Le 4-2-3-1 existe en deux gabarits distincts : version étirée (large) ou resserrée (étroit). Choisir le bon avant d’appliquer les rôles ci-dessous.',
+      approcheDefensive: 'Équilibré',
+      styleConstruction: 'Passe courte',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien libéro', objectifRole: 'Construire', consignes: 'Activer comme solution de passe · sorties modérées' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense · équilibre offensif' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense · couvrir le centre' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense · presser sur les porteurs' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense · équilibre offensif' },
+        { poste: 'CDM', libelle: 'MCD gauche', rolePlus: 'Milieu défensif', objectifRole: 'Défendre', consignes: 'Rester devant la défense · couvrir le centre' },
+        { poste: 'CDM', libelle: 'MCD droit', rolePlus: 'Meneur de jeu reculé', objectifRole: 'Défendre', consignes: 'Rester devant la défense · passes courtes' },
+        { poste: 'LM', libelle: 'MG', rolePlus: 'Attaquant intérieur', objectifRole: 'Équilibré', consignes: 'Rentrer dans l’axe · s’appuyer sur les côtés' },
+        { poste: 'CAM', libelle: 'MOC', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface · libre dans la demi-lune' },
+        { poste: 'RM', libelle: 'MD', rolePlus: 'Attaquant intérieur', objectifRole: 'Équilibré', consignes: 'Rentrer dans l’axe · s’appuyer sur les côtés' },
+        { poste: 'ST', libelle: 'BU', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond · rester central' },
+      ],
+    },
+    '4-2-1-3': {
+      gabaritsSelecteur: ['4-2-1-3'],
+      noteGabarits: 'Un seul gabarit standard 4-2-1-3 dans le sélecteur ; vérifier le libellé exact in-game.',
+      approcheDefensive: 'Haut',
+      styleConstruction: 'Contre-attaque',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien libéro', objectifRole: 'Construire', consignes: 'Solution de passe haute · risque contrôle' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral offensif', objectifRole: 'Équilibré', consignes: 'Revenir en défense · largeur à la montée' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense · ligne' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense · presser' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral offensif', objectifRole: 'Équilibré', consignes: 'Revenir en défense · largeur à la montée' },
+        { poste: 'CDM', libelle: 'MCD G', rolePlus: 'Milieu défensif', objectifRole: 'Défendre', consignes: 'Rester devant la défense · couvrir le centre' },
+        { poste: 'CDM', libelle: 'MCD D', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · équilibre montée' },
+        { poste: 'CM', libelle: 'MC axial', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface · création' },
+        { poste: 'LW', libelle: 'AG', rolePlus: 'Ailier', objectifRole: 'Attaquer', consignes: 'S’appuyer sur les côtés · s’en profond' },
+        { poste: 'ST', libelle: 'BU', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond · rester central' },
+        { poste: 'RW', libelle: 'AD', rolePlus: 'Ailier', objectifRole: 'Attaquer', consignes: 'S’appuyer sur les côtés · s’en profond' },
+      ],
+    },
+    '4-4-1-1': {
+      gabaritsSelecteur: ['4-4-1-1'],
+      noteGabarits: 'Gabarit unique 4-4-1-1 ; confirmer le libellé in-game.',
+      approcheDefensive: 'Équilibré',
+      styleConstruction: 'Passe courte',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien', objectifRole: 'Équilibré', consignes: 'Revenir en défense · passes courtes' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral', objectifRole: 'Défendre', consignes: 'Revenir en défense · largeur prudente' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense · ligne' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense · duels' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral', objectifRole: 'Défendre', consignes: 'Revenir en défense · largeur prudente' },
+        { poste: 'LM', libelle: 'MG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · largeur' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · soutien axial' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · soutien axial' },
+        { poste: 'RM', libelle: 'MD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · largeur' },
+        { poste: 'CAM', libelle: 'MOC / SS', rolePlus: 'Neuf et demi', objectifRole: 'Attaquer', consignes: 'Rester au bord de la surface · appels dans la surface' },
+        { poste: 'ST', libelle: 'BU', rolePlus: 'Pivot', objectifRole: 'Équilibré', consignes: 'Rester central · dos au but' },
+      ],
+    },
+    '4-4-2 (flat)': {
+      gabaritsSelecteur: ['4-4-2 plat'],
+      noteGabarits: 'Le sélecteur distingue le 4-4-2 plat des autres variantes 4-4-2 ; confirmer le libellé exact dans ton jeu.',
+      approcheDefensive: 'Équilibré',
+      styleConstruction: 'Équilibré',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien', objectifRole: 'Défendre', consignes: 'Rester sur sa ligne · jeu court' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense · presser' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense' },
+        { poste: 'LM', libelle: 'MG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · largeur' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · axial' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · axial' },
+        { poste: 'RM', libelle: 'MD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · largeur' },
+        { poste: 'ST', libelle: 'BU 1', rolePlus: 'Pivot', objectifRole: 'Équilibré', consignes: 'Rester central · dos au but' },
+        { poste: 'ST', libelle: 'BU 2', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond · appels dos ligne' },
+      ],
+    },
+    '4-3-2-1': {
+      gabaritsSelecteur: ['4-3-2-1'],
+      noteGabarits: 'Gabarit 4-3-2-1 « arbre de Noël » ; vérifier in-game.',
+      approcheDefensive: 'Équilibré',
+      styleConstruction: 'Passe courte',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien libéro', objectifRole: 'Équilibré', consignes: 'Passes courtes · sortie modérée' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense · montée mesurée' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense · montée mesurée' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Mezzala', objectifRole: 'Équilibré', consignes: 'Rester en défense · élargir' },
+        { poste: 'CM', libelle: 'MC axial', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface · axial' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Mezzala', objectifRole: 'Équilibré', consignes: 'Rester en défense · élargir' },
+        { poste: 'LF', libelle: 'AG intérieur', rolePlus: 'Attaquant intérieur', objectifRole: 'Équilibré', consignes: 'Rentrer dans l’axe · s’en profond' },
+        { poste: 'RF', libelle: 'AD intérieur', rolePlus: 'Attaquant intérieur', objectifRole: 'Équilibré', consignes: 'Rentrer dans l’axe · s’en profond' },
+        { poste: 'ST', libelle: 'BU', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond · rester central' },
+      ],
+    },
+    '4-3-3 (4)': {
+      gabaritsSelecteur: ['4-3-3 (4)'],
+      noteGabarits: 'Le « (4) » désigne la variante possession / milieux resserrés dans le sélecteur FC26.',
+      approcheDefensive: 'Équilibré',
+      styleConstruction: 'Passe courte',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien libéro', objectifRole: 'Équilibré', consignes: 'Passes courtes · option de relance' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense · largeur' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur relanceur', objectifRole: 'Défendre', consignes: 'Rester en défense · relance mesurée' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense · largeur' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · demi-lune' },
+        { poste: 'CM', libelle: 'MC axial', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface · création' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · demi-lune' },
+        { poste: 'LW', libelle: 'AG', rolePlus: 'Ailier', objectifRole: 'Équilibré', consignes: 'S’appuyer sur les côtés · s’en profond' },
+        { poste: 'ST', libelle: 'BU', rolePlus: 'Pivot', objectifRole: 'Équilibré', consignes: 'Rester central · liaison' },
+        { poste: 'RW', libelle: 'AD', rolePlus: 'Ailier', objectifRole: 'Équilibré', consignes: 'S’appuyer sur les côtés · s’en profond' },
+      ],
+    },
+    '4-1-2-1-2 (étroit)': {
+      gabaritsSelecteur: ['4-1-2-1-2 étroit'],
+      noteGabarits: 'Variante resserrée du 4-1-2-1-2 ; aligner avec l’entrée correspondante du sélecteur de formations.',
+      approcheDefensive: 'Bas',
+      styleConstruction: 'Passe courte',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien', objectifRole: 'Défendre', consignes: 'Rester sur sa ligne · jeu court' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral offensif', objectifRole: 'Équilibré', consignes: 'Revenir en défense · montée' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral offensif', objectifRole: 'Équilibré', consignes: 'Revenir en défense · montée' },
+        { poste: 'CDM', libelle: 'MCD ancré', rolePlus: 'Milieu défensif', objectifRole: 'Défendre', consignes: 'Rester devant la défense · couvrir le centre' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · rentrer dans l’axe' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · rentrer dans l’axe' },
+        { poste: 'CAM', libelle: 'MOC', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface' },
+        { poste: 'ST', libelle: 'BU G', rolePlus: 'Attaquant avancé', objectifRole: 'Attaquer', consignes: 'Rester central · largeur courte' },
+        { poste: 'ST', libelle: 'BU D', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond · rester central' },
+      ],
+    },
+    '3-5-2': {
+      gabaritsSelecteur: ['3-5-2'],
+      noteGabarits: 'Gabarit 3-5-2 standard.',
+      approcheDefensive: 'Équilibré',
+      styleConstruction: 'Équilibré',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien libéro', objectifRole: 'Équilibré', consignes: 'Passes courtes · relance' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central excentré', objectifRole: 'Équilibré', consignes: 'Couvrir couloir gauche · ligne à 3' },
+        { poste: 'CB', libelle: 'DC axial', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense · axe' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur central excentré', objectifRole: 'Défendre', consignes: 'Couvrir couloir droit · ligne à 3' },
+        { poste: 'LWB', libelle: 'Carrilero G', rolePlus: 'Piston', objectifRole: 'Équilibré', consignes: 'Revenir en défense · largeur' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · milieu à 5' },
+        { poste: 'CM', libelle: 'MC axial', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface · pivot' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · milieu à 5' },
+        { poste: 'RWB', libelle: 'Carrilero D', rolePlus: 'Piston', objectifRole: 'Équilibré', consignes: 'Revenir en défense · largeur' },
+        { poste: 'ST', libelle: 'BU 1', rolePlus: 'Pivot', objectifRole: 'Équilibré', consignes: 'Rester central' },
+        { poste: 'ST', libelle: 'BU 2', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond' },
+      ],
+    },
+    '5-3-2': {
+      gabaritsSelecteur: ['5-3-2'],
+      noteGabarits: 'Gabarit 5-3-2.',
+      approcheDefensive: 'Bas',
+      styleConstruction: 'Contre-attaque',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien', objectifRole: 'Défendre', consignes: 'Rester sur sa ligne · jeu long si besoin' },
+        { poste: 'LWB', libelle: 'Carrilero G', rolePlus: 'Défenseur latéral', objectifRole: 'Défendre', consignes: 'Rester en défense · largeur basse' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central excentré', objectifRole: 'Défendre', consignes: 'Couvrir montée piston gauche' },
+        { poste: 'CB', libelle: 'DC axial', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense · ligne à 5' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur central excentré', objectifRole: 'Attaquer', consignes: 'Presser côté droit · couvrir piston' },
+        { poste: 'RWB', libelle: 'Carrilero D', rolePlus: 'Défenseur latéral', objectifRole: 'Défendre', consignes: 'Rester en défense · largeur basse' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Milieu défensif', objectifRole: 'Défendre', consignes: 'Rester en défense · saturation' },
+        { poste: 'CM', libelle: 'MC axial', rolePlus: 'Meneur de jeu reculé', objectifRole: 'Défendre', consignes: 'Rester au bord de la surface · relance' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Milieu défensif', objectifRole: 'Défendre', consignes: 'Rester en défense · saturation' },
+        { poste: 'ST', libelle: 'BU 1', rolePlus: 'Pivot', objectifRole: 'Équilibré', consignes: 'Rester central · dos au but' },
+        { poste: 'ST', libelle: 'BU 2', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond' },
+      ],
+    },
+    '4-2-2-2': {
+      gabaritsSelecteur: ['4-2-2-2'],
+      noteGabarits: 'Gabarit 4-2-2-2.',
+      approcheDefensive: 'Haut',
+      styleConstruction: 'Contre-attaque',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien libéro', objectifRole: 'Construire', consignes: 'Sortie pour relancer sous pressing' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense · ligne haute' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral', objectifRole: 'Équilibré', consignes: 'Revenir en défense' },
+        { poste: 'CDM', libelle: 'MCD G', rolePlus: 'Milieu défensif', objectifRole: 'Défendre', consignes: 'Rester devant la défense' },
+        { poste: 'CDM', libelle: 'MCD D', rolePlus: 'Meneur de jeu reculé', objectifRole: 'Défendre', consignes: 'Rester devant la défense · relance' },
+        { poste: 'CAM', libelle: 'MOC G', rolePlus: 'Neuf et demi', objectifRole: 'Attaquer', consignes: 'Rester au bord de la surface · appels' },
+        { poste: 'CAM', libelle: 'MOC D', rolePlus: 'Neuf et demi', objectifRole: 'Attaquer', consignes: 'Rester au bord de la surface · appels' },
+        { poste: 'ST', libelle: 'BU 1', rolePlus: 'Attaquant avancé', objectifRole: 'Attaquer', consignes: 'Rester central · pressing' },
+        { poste: 'ST', libelle: 'BU 2', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond' },
+      ],
+    },
+    '4-3-1-2': {
+      gabaritsSelecteur: ['4-3-1-2'],
+      noteGabarits: 'Gabarit 4-3-1-2.',
+      approcheDefensive: 'Équilibré',
+      styleConstruction: 'Passe courte',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien libéro', objectifRole: 'Équilibré', consignes: 'Passes courtes · relance' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral offensif', objectifRole: 'Équilibré', consignes: 'Revenir en défense · montée' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral offensif', objectifRole: 'Équilibré', consignes: 'Revenir en défense · montée' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Mezzala', objectifRole: 'Équilibré', consignes: 'Rester en défense · largeur' },
+        { poste: 'CM', libelle: 'MC axial', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface · axial' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Mezzala', objectifRole: 'Équilibré', consignes: 'Rester en défense · largeur' },
+        { poste: 'CAM', libelle: 'MOC', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface · lien double BU' },
+        { poste: 'ST', libelle: 'BU G', rolePlus: 'Faux 9', objectifRole: 'Construire', consignes: 'Rentrer dans l’axe · combinaisons' },
+        { poste: 'ST', libelle: 'BU D', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'S’en profond · rester central' },
+      ],
+    },
+    '4-5-1': {
+      gabaritsSelecteur: ['4-5-1 plat'],
+      noteGabarits: 'Variante « milieu plat » du 4-5-1 ; vérifier l’intitulé exact dans le sélecteur.',
+      approcheDefensive: 'Équilibré',
+      styleConstruction: 'Passe courte',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien', objectifRole: 'Équilibré', consignes: 'Passes courtes' },
+        { poste: 'LB', libelle: 'DG', rolePlus: 'Défenseur latéral', objectifRole: 'Défendre', consignes: 'Revenir en défense' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur stoppeur', objectifRole: 'Équilibré', consignes: 'Rester en défense' },
+        { poste: 'RB', libelle: 'DD', rolePlus: 'Défenseur latéral', objectifRole: 'Défendre', consignes: 'Revenir en défense' },
+        { poste: 'LM', libelle: 'MG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · largeur' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Milieu défensif', objectifRole: 'Équilibré', consignes: 'Rester en défense · couper lignes' },
+        { poste: 'CM', libelle: 'MC axial', rolePlus: 'Meneur de jeu', objectifRole: 'Équilibré', consignes: 'Rester au bord de la surface · relance' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Milieu défensif', objectifRole: 'Équilibré', consignes: 'Rester en défense · couper lignes' },
+        { poste: 'RM', libelle: 'MD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · largeur' },
+        { poste: 'ST', libelle: 'BU', rolePlus: 'Pivot', objectifRole: 'Équilibré', consignes: 'Rester central · cible longue' },
+      ],
+    },
+    '3-4-2-1': {
+      gabaritsSelecteur: ['3-4-2-1'],
+      noteGabarits: 'Gabarit 3-4-2-1.',
+      approcheDefensive: 'Haut',
+      styleConstruction: 'Contre-attaque',
+      slots: [
+        { poste: 'GK', libelle: 'Gardien', rolePlus: 'Gardien libéro', objectifRole: 'Construire', consignes: 'Relance haute · risque maîtrisé' },
+        { poste: 'CB', libelle: 'DCG', rolePlus: 'Défenseur central excentré', objectifRole: 'Équilibré', consignes: 'Couvrir couloir gauche · ligne à 3' },
+        { poste: 'CB', libelle: 'DC axial', rolePlus: 'Défenseur central', objectifRole: 'Défendre', consignes: 'Rester en défense · axe' },
+        { poste: 'CB', libelle: 'DCD', rolePlus: 'Défenseur central excentré', objectifRole: 'Attaquer', consignes: 'Presser côté droit · couvrir piston' },
+        { poste: 'LWB', libelle: 'Carrilero G', rolePlus: 'Piston', objectifRole: 'Attaquer', consignes: 'Revenir en défense · largeur haute' },
+        { poste: 'CM', libelle: 'MCG', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · milieu à 4' },
+        { poste: 'CM', libelle: 'MCD', rolePlus: 'Milieu box-to-box', objectifRole: 'Équilibré', consignes: 'Rester en défense · milieu à 4' },
+        { poste: 'RWB', libelle: 'Carrilero D', rolePlus: 'Piston', objectifRole: 'Attaquer', consignes: 'Revenir en défense · largeur haute' },
+        { poste: 'LF', libelle: 'AG / 10', rolePlus: 'Attaquant intérieur', objectifRole: 'Équilibré', consignes: 'Rentrer dans l’axe · s’en profond' },
+        { poste: 'RF', libelle: 'AD / 10', rolePlus: 'Attaquant intérieur', objectifRole: 'Équilibré', consignes: 'Rentrer dans l’axe · s’en profond' },
+        { poste: 'ST', libelle: 'BU', rolePlus: 'Renard des surfaces', objectifRole: 'Attaquer', consignes: 'Rester central · s’en profond' },
+      ],
+    },
+  },
   TECHNIQUES: [
     { name:'Through ball profondeur', category:'passe', diff:'Facile', eff:92, tier:'S', input:'△', timing:'Après L1 run, fenêtre dos ligne', context:'Ligne haute', error:'Trop tôt = HJ', risk:'Faible', reward:'Très élevé', when:'Transition', why:'Espace dos', against:'Depth bas', chain:'L1→△→R2', zone:'Demi-lune', profile:'High pass stats', patch:'Buff sol v1.5.0', source:'official', simple:'L1 puis △ au bon timing', advanced:'Feinte corps avant △', counterRead:'Défenseur suit course = passer 3e homme' },
     { name:'Passe au sol enchaînée', category:'passe', diff:'Facile', eff:90, tier:'S', input:'×', timing:'1-2 touches', context:'Post v1.5.0', error:'Forcer loft double tap', risk:'Faible', reward:'Progression', when:'Construction', why:'EA buff sol', against:'Pressing', chain:'Triangle L1', zone:'Axe', profile:'Technical CM', patch:'v1.5.0', source:'official', simple:'× × × orientation', advanced:'Semi-manuel direction', counterRead:'Adversaire slide = opposite side' },
@@ -142,8 +445,8 @@ window.FC26_META_DATA = {
     { el:'RL GK', force:'A', stab:'Stable', nerf:'Faible', src:'official' }
   ],
   CHEM_OFFICIAL: {
-    headline:'EA Launch : styles 3/6/9, trade-offs pace, stats secondaires (Composure, Reactions, Stamina…).',
-    bullets:['Modèle +3/+6/+9 au lieu de +4/+8/+12','Styles pace avec trade-offs','Diversité builds encouragée'],
+    headline:'Lancement EA : styles 3 / 6 / 9, compromis sur la vitesse, stats secondaires mises en avant (sang-froid, réactions, endurance…).',
+    bullets:['Modèle +3 / +6 / +9 au lieu de +4 / +8 / +12','Styles vitesse avec compromis','Diversité des montages encouragée'],
     sourceUrl:'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-launch-update'
   },
   CHEM_PICKS: [
@@ -157,44 +460,112 @@ window.FC26_META_DATA = {
     { role:'GK', noChem:'Glove', withChem:'Basic / Cat', conf:'community' }
   ],
   SETTINGS: {
-    balanced:{ label:'Équilibré', desc:'Référence polyvalente Rivals/Champs.', groups:[
-      { title:'Tactique (ingame)', items:[
-        { label:'Style défensif', val:'Press après perte', note:'Moins coûteux que constant' },
-        { label:'Profondeur', val:'50–55', note:'Compromis ligne' },
-        { label:'Largeur déf.', val:'45–50', note:'Compact' },
-        { label:'Build-up', val:'Équilibré', note:'Sécurité' },
-        { label:'Opportunités', val:'Direct', note:'Mouvements IA' },
-        { label:'Largeur att.', val:'50', note:'Équilibre' },
-        { label:'Joueurs dans la surface', val:'3', note:'HJ' }
+    balanced:{ label:'Équilibré', desc:'Référence polyvalente Division Rivaux / FUT Champions.', groups:[
+      { title:'Tactique UT (FC26)', items:[
+        { label:'Approche défensive', val:'Équilibré', note:'Quatre niveaux usuels : bas · équilibré · haut · extrême' },
+        { label:'Style de construction', val:'Passe courte', note:'Trois styles : passe courte · équilibré · contre-attaque' },
+        { label:'Profondeur ligne', val:'50–55', note:'Curseur tactique ; EA documente aussi l’ajustement de hauteur de ligne défensive (notes gameplay FC26)' },
+        { label:'Largeur déf.', val:'45–50', note:'Lecture analytique' },
+        { label:'Largeur att.', val:'50', note:'Lecture analytique' },
+        { label:'Joueurs dans la surface', val:'3', note:'Lecture analytique' }
       ]},
       { title:'Manette', items:[
-        { label:'Changement joueur', val:'Manuel', note:'Ou assisted court' },
+        { label:'Changement joueur', val:'Manuel', note:'Ou semi-assisté court' },
         { label:'Passes', val:'Semi / assisté selon niveau', note:'Contrôle direction' },
         { label:'Tirs', val:'Assisté / semi', note:'Régularité' },
         { label:'Caméra', val:'Co-op / Télé', note:'Vision' }
       ]}
     ]},
-    aggressive:{ label:'Agressif', desc:'Pressing haut + transitions.', groups:[{ title:'Tactique', items:[
-      { label:'Profondeur', val:'60–68', note:'Ligne haute' },
-      { label:'Press', val:'After loss + overloads', note:'Stamina' },
-      { label:'Largeur att.', val:'58–65', note:'Étirement' }
+    aggressive:{ label:'Agressif', desc:'Pressing haut + transitions.', groups:[{ title:'Tactique UT (FC26)', items:[
+      { label:'Approche défensive', val:'Haut ou extrême', note:'Pressing exigeant ; surveiller l’endurance' },
+      { label:'Profondeur ligne', val:'60–68', note:'Ligne haute (analytique)' },
+      { label:'Style de construction', val:'Contre-attaque ou équilibré', note:'Selon transition ou relance posée' },
+      { label:'Largeur att.', val:'58–65', note:'Étirement (analytique)' }
     ]}]},
-    technical:{ label:'Technique', desc:'Possession + demi-espaces.', groups:[{ title:'Tactique', items:[
-      { label:'Build-up', val:'Lent → équilibré', note:'Attirer press' },
-      { label:'Profondeur', val:'45–52', note:'Sécurité dos' },
-      { label:'Passes', val:'Privilégier sol', note:'Aligné v1.5.0' }
+    technical:{ label:'Technique', desc:'Possession + demi-espaces.', groups:[{ title:'Tactique UT (FC26)', items:[
+      { label:'Style de construction', val:'Passe courte', note:'Construction patiente' },
+      { label:'Approche défensive', val:'Équilibré ou bas', note:'Selon adversaire' },
+      { label:'Profondeur ligne', val:'45–52', note:'Sécurité dos (analytique)' },
+      { label:'Passes', val:'Privilégier sol', note:'Aligné v1.5.0 (patch EA)' }
     ]}]},
     control:{ label:'Contrôle', desc:'Réduction variance.', groups:[{ title:'Tactique', items:[
-      { label:'Profondeur', val:'44–50', note:'Moins d’1v1 dos' },
-      { label:'Densité', val:'CMs bas', note:'Couverture' }
+      { label:'Profondeur', val:'44–50', note:'Moins de duels dos au but' },
+      { label:'Densité', val:'Milieux centraux bas', note:'Couverture' }
     ]}]},
-    pressing:{ label:'Pressing', desc:'D-pad situationnel.', groups:[{ title:'Tactique', items:[
-      { label:'Style', val:'After possession loss', note:'Éviter constant' },
-      { label:'Stamina', val:'Milieux 80+', note:'Rotation bench' }
+    pressing:{ label:'Pressing', desc:'Ajustements tactiques au coup par coup.', groups:[{ title:'Tactique UT (FC26)', items:[
+      { label:'Approche défensive', val:'Haut / extrême', note:'Quatre niveaux ; éviter l’extrême en continu si endurance limite' },
+      { label:'Stamina', val:'Milieux 80+', note:'Rotation banc (analytique)' }
     ]}]},
     defensive:{ label:'Défensif', desc:'Bloc + contres.', groups:[{ title:'Tactique', items:[
       { label:'Profondeur', val:'38–45', note:'Bloc bas' },
       { label:'Joueurs surface', val:'2', note:'Transitions' }
     ]}]}
+  },
+  /**
+   * Guide « meta » réglages : séparer strictement officiel EA vs lecture analytique.
+   * EA ne fournit pas de preset numérique unique « parfait » pour tous les joueurs.
+   */
+  SETTINGS_META_GUIDE: {
+    disclaimer: 'Electronic Arts documente des systèmes (préréglages console, patchs gameplay, schémas de touches) mais ne publie pas une liste officielle de curseurs « parfaits » pour Rivals. Toute valeur chiffrée (profondeur 52, etc.) sur cette app reste analytique / communautaire.',
+    officialPresets: {
+      title: 'Préréglages console EA (en ligne / hors ligne)',
+      lead: 'EA propose un profil plutôt compétitif en ligne et un profil plus réaliste hors ligne — détaillé dans les notes gameplay FC26.',
+      bullets: [
+        { text: 'Compétition : privilégie le matchmaking en ligne, la réactivité et la lisibilité en duel.', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive', src: 'Notes gameplay EA' },
+        { text: 'Réalisme : expérience plus proche du football réel en modes hors ligne ou selon certaines options.', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive', src: 'Notes gameplay EA' }
+      ]
+    },
+    officialGameplaySystems: {
+      title: 'Systèmes gameplay confirmés EA (impact sur ton ressenti)',
+      items: [
+        { text: 'Conduite de balle dynamique, touches de dribble rééquilibrées ; sprint explosif ; trois profils d’accélération (calculs distincts hommes / femmes).', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive', tag: 'Notes gameplay' },
+        { text: 'Positionnement du gardien NG : apprentissage pour le placement ; désactivé pendant la résolution d’un arrêt.', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive', tag: 'Notes gameplay' },
+        { text: 'Passes au sol : plus rapides et plus précises lorsque les stats de passe sont élevées (mise à jour titre 1.5.0).', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-title-update-1-5-0', tag: 'v1.5.0' },
+        { text: 'Passes en profondeur : trajectoire selon le contexte, sans style « passe décisive » si passes courtes / longues et courbe sont déjà hautes.', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-title-update-1-5-0', tag: 'v1.5.0' },
+        { text: 'Passe lobée en profondeur (double appui) : précision réduite ; tir en puissance / lob ajustés ; légère accélération des gestes feinte de tir / talonnade / feinte sortante.', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-title-update-1-5-0', tag: 'v1.5.0' },
+        { text: 'Lancement FUT : styles de chimie 3 / 6 / 9, compromis sur la vitesse, stats secondaires mises en avant.', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-launch-update', tag: 'Lancement' }
+      ]
+    },
+    controllerOfficial: {
+      title: 'Manette — ce que EA détaille officiellement',
+      bullets: [
+        { text: 'Schémas et logique des touches (dont contrôle orienté, centres) dans les notes EA — pas de tableau unique « sensibilité parfaite ».', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive', src: 'EA' }
+      ]
+    },
+    controllerAnalytical: {
+      title: 'Manette — paramètres souvent utilisés en compétition (non officiels)',
+      intro: 'Objectif : plus de contrôle défensif et de cohérence avec les passes au sol mises en avant par les patchs. À valider selon ta latence et ton niveau.',
+      rows: [
+        { param: 'Changement de joueur', pick: 'Manuel ou semi', why: 'Meilleure couverture des appels adverses ; courbe d’apprentissage plus haute.' },
+        { param: 'Passes', pick: 'Semi ou assisté court', why: 'Compromis direction / vitesse ; cohérent avec la précision passes sol (v1.5.0) si tu maîtrises le stick.' },
+        { param: 'Tirs', pick: 'Assisté ou semi', why: 'Réduit la variance sur finitions tendues ; timed selon confort.' },
+        { param: 'Jockey / auto-containment', pick: 'Désactiver sur-appui auto si tu veux un contrôle pur (exigeant)', why: 'Lecture défensive manuelle = communauté haut niveau — vérifier l’intitulé exact du menu FC26.' },
+        { param: 'Sticks / sensibilité', pick: 'Aucun « réglage EA meta »', why: 'Matériel et préférence personnelle ; calibrer sur l’entraînement libre.' }
+      ]
+    },
+    utMenusNote: {
+      title: 'Tactiques d’équipe Ultimate Team (FC26)',
+      official:
+        'EA décrit un résumé tactique (type graphique radar) sur six axes : attaque, défense, construction, largeur, profondeur, endurance ; la hauteur de ligne est stockée dans le code tactique partagé.',
+      clientPresets:
+        'En français, l’approche défensive propose en pratique quatre niveaux (souvent : bas, équilibré, haut, extrême) et la construction trois styles (passe courte, équilibré, contre-attaque). Vérifier les libellés exacts dans FUT > Tactiques.',
+      analytical:
+        'Les paires (approche défensive / style de construction) sur les fiches Formations sont des exemples de lecture compétitive, pas une configuration officielle EA par formation. Les gabarits large / étroit ou plat sont des entrées distinctes du sélecteur (libellés français dans les données).'
+    },
+    optimizePlay: {
+      title: 'Optimiser ton jeu (méthode)',
+      steps: [
+        'Lire la dernière mise à jour titre EA (notes ou forums) et la section Comportements (pastilles Officiel) de ce centre.',
+        'Partir du préréglage console « compétition en ligne », puis ajuster manette et tactiques FUT progressivement.',
+        'Après la v1.5.0 : la lecture de jeu compte davantage sur les stats de base passe et tir — privilégier passes semi et lecture plutôt qu’empiler les styles Plus.',
+        'Éviter le pressing maximal en continu : l’endurance s’effondre (retour d’expérience communautaire) ; ce n’est pas une consigne chiffrée EA.'
+      ]
+    },
+    sourceLinks: [
+      { title: 'Notes gameplay approfondies FC26', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-gameplay-deep-dive' },
+      { title: 'Mise à jour titre 1.5.0', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-title-update-1-5-0' },
+      { title: 'Mise à jour lancement FUT', url: 'https://www.ea.com/games/ea-sports-fc/fc-26/news/pitch-notes-fc26-launch-update' },
+      { title: 'Title Update 1.5.3 (forums EA)', url: 'https://forums.ea.com/blog/ea-sports-fc-game-info-hub-en/ea-sports-fc%E2%84%A2-26--title-update-v1-5-3/13312649' }
+    ]
   }
 };
