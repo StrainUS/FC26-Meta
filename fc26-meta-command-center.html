@@ -200,7 +200,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
     <div class="meta-snapshot-title">Lecture méta — instantané (<span class="badge badge-analytical">config DATA</span>)</div>
     <p id="dash-headline" class="td-muted" style="font-size:13px;margin-bottom:12px"></p>
     <div class="grid-2" id="dash-pillars" style="gap:10px"></div>
-    <div class="info-box" style="margin-top:14px;margin-bottom:0"><strong class="badge badge-official" style="margin-right:6px">Officiel</strong> v1.5.0 / v1.5.3 : voir page <a href="#" onclick="showPage('patches');return false" style="color:var(--blue)">Patch notes</a> (textes alignés EA).</div>
+    <div class="info-box" style="margin-top:14px;margin-bottom:0" id="dash-official-patch-cta"></div>
   </div>
   <div class="dash-kpis" id="dash-kpis">
     <div class="dash-kpi"><div class="dash-kpi-val" id="kpi-patch">—</div><div class="dash-kpi-label">Patch ref</div><div class="td-muted" style="margin-top:4px">CONFIG</div></div>
@@ -395,16 +395,33 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg-3)}
 </main>
 
 <div id="drawer-overlay" onclick="closeDrawer()" role="presentation"></div>
-<div id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+<div id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true">
   <button type="button" id="drawer-close" onclick="closeDrawer()" aria-label="Fermer">✕</button>
   <div id="drawer-content"></div>
 </div>
 
-<script src="fc26-meta-data.js"></script>
+<script src="fc26-meta-data.js?v=2026.04.19.2"></script>
 <script>
 let CONFIG, PLAYERS, FORMATIONS, TECHNIQUES, SBC_DATA, PATCHES, BEHAVIORS, META_TABLE, META_SNAPSHOT, CHEM_OFFICIAL, CHEM_PICKS, SETTINGS;
 let playerFilters = { q:'', pos:'', league:'', tier:'', acc:'', patchSens:'' };
 let sbcSort = { col: null, dir: 1 };
+const THEME_KEY = 'fc26-theme';
+let lastFocusBeforeDrawer = null;
+
+function escapeHtml(s){
+  if(s==null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeJsString(s){
+  return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r|\n/g,' ');
+}
+function initTheme(){
+  try{
+    const saved = localStorage.getItem(THEME_KEY);
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+  }catch(_){ document.documentElement.dataset.theme = 'dark'; }
+}
 
 function loadData(){
   const D = window.FC26_META_DATA;
@@ -460,67 +477,75 @@ function renderPlayers(arr){
   const g=document.getElementById('players-grid');
   if(!arr.length){ g.innerHTML='<p class="td-muted" style="padding:20px">Aucun résultat.</p>'; return; }
   g.innerHTML=arr.map(p=>`
-    <article class="player-card" tabindex="0" role="button" aria-label="Détail ${p.name}" onclick="openPlayerDrawer('${p.id}')" onkeydown="if(event.key==='Enter')openPlayerDrawer('${p.id}')">
-      <div class="player-card-header"><div><div class="player-card-name">${p.name}</div><div class="player-card-meta">${p.club} · ${p.league}</div></div>
-      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><div class="player-card-pos">${p.bestPos}</div>${getTierBadge(p.tier)}</div></div>
+    <article class="player-card" tabindex="0" role="button" aria-label="Détail ${escapeHtml(p.name)}" onclick="openPlayerDrawer('${escapeJsString(p.id)}')" onkeydown="if(event.key==='Enter')openPlayerDrawer('${escapeJsString(p.id)}')">
+      <div class="player-card-header"><div><div class="player-card-name">${escapeHtml(p.name)}</div><div class="player-card-meta">${escapeHtml(p.club)} · ${escapeHtml(p.league)}</div></div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><div class="player-card-pos">${escapeHtml(p.bestPos)}</div>${getTierBadge(p.tier)}</div></div>
       ${getBar(p.metaScore)}
-      <div class="player-card-meta">${p.metaRole||''}</div>
-      <div class="player-card-meta">Accél : ${p.acc} · Patch : <span class="badge ${(p.patchSens||'')==='élevé'?'badge-patch':'badge-stable'}">${p.patchSens||'—'}</span></div>
-      <div class="player-card-meta">Alt : ${(p.altPos||[]).join(', ')||'—'}</div>
-      <div class="player-card-playstyles">${(p.playstyles||[]).map(ps=>`<span class="ps-chip ${ps.endsWith('+')?'plus':''}">${ps}</span>`).join('')}</div>
-      <div class="player-card-meta">${p.strengths||''}</div>
+      <div class="player-card-meta">${escapeHtml(p.metaRole||'')}</div>
+      <div class="player-card-meta">Accél : ${escapeHtml(p.acc)} · Patch : <span class="badge ${(p.patchSens||'')==='élevé'?'badge-patch':'badge-stable'}">${escapeHtml(p.patchSens||'—')}</span></div>
+      <div class="player-card-meta">Alt : ${escapeHtml((p.altPos||[]).join(', ')||'—')}</div>
+      <div class="player-card-playstyles">${(p.playstyles||[]).map(ps=>`<span class="ps-chip ${String(ps).endsWith('+')?'plus':''}">${escapeHtml(ps)}</span>`).join('')}</div>
+      <div class="player-card-meta">${escapeHtml(p.strengths||'')}</div>
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        <span style="font-family:var(--mono);font-size:11px;color:var(--gold)">${p.cost||'—'}</span>${srcBadgePlayer(p)}
+        <span style="font-family:var(--mono);font-size:11px;color:var(--gold)">${escapeHtml(p.cost||'—')}</span>${srcBadgePlayer(p)}
       </div>
     </article>`).join('');
 }
 
 function openPlayerDrawer(id){
   const p=PLAYERS.find(x=>x.id===id); if(!p) return;
-  const alts=(p.altPos||[]).map(a=>`<span class="badge badge-analytical">${a}</span>`).join(' ')||'<span class="td-muted">—</span>';
+  lastFocusBeforeDrawer = document.activeElement;
+  const alts=(p.altPos||[]).map(a=>`<span class="badge badge-analytical">${escapeHtml(a)}</span>`).join(' ')||'<span class="td-muted">—</span>';
   document.getElementById('drawer-content').innerHTML=`
-    <h2 id="drawer-title" style="font-family:var(--display);font-size:22px">${p.name}</h2>
-    <p class="td-muted">${p.club} · ${p.nation} · ${p.league}</p>
+    <h2 id="drawer-title" style="font-family:var(--display);font-size:22px">${escapeHtml(p.name)}</h2>
+    <p class="td-muted">${escapeHtml(p.club)} · ${escapeHtml(p.nation)} · ${escapeHtml(p.league)}</p>
     <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap">${getTierBadge(p.tier)}${srcBadgePlayer(p)}
-    <span class="badge ${(p.patchSens||'')==='élevé'?'badge-patch':'badge-stable'}">Patch ${p.patchSens||'n/a'}</span></div>
+    <span class="badge ${(p.patchSens||'')==='élevé'?'badge-patch':'badge-stable'}">Patch ${escapeHtml(p.patchSens||'n/a')}</span></div>
     <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Rôle méta</div>
-    <p style="font-size:13px;color:var(--text-secondary)">${p.metaRole||'—'}</p></div>
+    <p style="font-size:13px;color:var(--text-secondary)">${escapeHtml(p.metaRole||'—')}</p></div>
     <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Meilleur poste / alternatifs</div>
-    <p><span class="badge badge-role">${p.bestPos}</span> ${alts}</p></div>
+    <p><span class="badge badge-role">${escapeHtml(p.bestPos)}</span> ${alts}</p></div>
     <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Styles chimie (indicatif)</div>
-    <p style="font-size:13px;color:var(--text-secondary)"><strong>Sans +3 :</strong> ${p.chemNone||'—'}<br><strong>Avec +3 :</strong> ${p.chemChem||'—'}</p>
+    <p style="font-size:13px;color:var(--text-secondary)"><strong>Sans +3 :</strong> ${escapeHtml(p.chemNone||'—')}<br><strong>Avec +3 :</strong> ${escapeHtml(p.chemChem||'—')}</p>
     <p class="td-muted" style="font-size:11px">Modèle 3/6/9 et trade-offs pace : voir page Chimie (officiel EA, Launch Update).</p></div>
-    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Tactique</div><p style="font-size:13px;color:var(--text-secondary)">${p.tacticalFit||'—'}</p></div>
+    <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Tactique</div><p style="font-size:13px;color:var(--text-secondary)">${escapeHtml(p.tacticalFit||'—')}</p></div>
     <div class="section-block"><div class="td-muted" style="font-size:10px;text-transform:uppercase">Atouts / limites</div>
-    <p style="font-size:13px;color:var(--text-secondary)"><strong>+</strong> ${p.strengths||'—'}<br><strong>−</strong> ${p.limits||'—'}</p></div>`;
+    <p style="font-size:13px;color:var(--text-secondary)"><strong>+</strong> ${escapeHtml(p.strengths||'—')}<br><strong>−</strong> ${escapeHtml(p.limits||'—')}</p></div>`;
   document.getElementById('drawer-overlay').classList.add('active');
   document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer').setAttribute('aria-hidden','false');
   document.getElementById('drawer-close').focus();
 }
 
 function closeDrawer(){
   document.getElementById('drawer-overlay').classList.remove('active');
   document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer').setAttribute('aria-hidden','true');
+  const prev = lastFocusBeforeDrawer;
+  lastFocusBeforeDrawer = null;
+  if(prev && typeof prev.focus==='function'){
+    try{ prev.focus({preventScroll:true}); }catch(_){}
+  }
 }
 
 function renderFormations(arr){
   document.getElementById('formations-container').innerHTML=arr.map(f=>`
     <section class="formation-card"><div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-start">
-      <div><div class="formation-name">${f.name}</div><div class="formation-style">${f.style}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${getTierBadge(f.tier)}<span class="badge badge-stable">${f.stability}</span>${getBadge('community')}</div></div>
-      <div style="min-width:200px;flex:1">${getBar(f.score)}<div class="td-muted" style="margin-top:4px">Popularité (analytique) : ${f.popularity}/100</div></div>
+      <div><div class="formation-name">${escapeHtml(f.name)}</div><div class="formation-style">${escapeHtml(f.style)}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${getTierBadge(f.tier)}<span class="badge badge-stable">${escapeHtml(f.stability)}</span>${getBadge('community')}</div></div>
+      <div style="min-width:200px;flex:1">${getBar(f.score)}<div class="td-muted" style="margin-top:4px">Popularité (analytique) : ${escapeHtml(String(f.popularity))}/100</div></div>
     </div>
     <div class="grid-2" style="margin-top:12px;gap:8px">
       <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:11px;font-family:var(--mono);color:var(--text-secondary)">
-        Agressivité <strong style="color:var(--green)">${f.aggression??'—'}</strong>/10 · Contrôle <strong style="color:var(--blue)">${f.control??'—'}</strong>/10<br>
-        Largeur <strong>${f.width??'—'}</strong> · Prof. <strong>${f.depth??'—'}</strong>
+        Agressivité <strong style="color:var(--green)">${escapeHtml(String(f.aggression??'—'))}</strong>/10 · Contrôle <strong style="color:var(--blue)">${escapeHtml(String(f.control??'—'))}</strong>/10<br>
+        Largeur <strong>${escapeHtml(String(f.width??'—'))}</strong> · Prof. <strong>${escapeHtml(String(f.depth??'—'))}</strong>
       </div>
-      <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:11px;color:var(--text-muted)">Tags : ${(f.tags||[]).join(', ')}</div>
+      <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:11px;color:var(--text-muted)">Tags : ${escapeHtml((f.tags||[]).join(', '))}</div>
     </div>
-    <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)"><span class="td-muted">Profils idéaux</span> ${f.idealRoles||'—'}</p>
-    <p style="margin-top:8px;font-size:13px;color:var(--text-secondary)"><strong>+</strong> ${f.strengths}</p>
-    <p style="font-size:13px;color:var(--text-secondary)"><strong>−</strong> ${f.weaknesses}</p>
-    <p style="font-size:12px;color:var(--text-muted)"><strong>Contre</strong> : ${f.counters} · <strong>Contexte</strong> : ${f.context}</p>
+    <p style="margin-top:12px;font-size:12px;color:var(--text-secondary)"><span class="td-muted">Profils idéaux</span> ${escapeHtml(f.idealRoles||'—')}</p>
+    <p style="margin-top:8px;font-size:13px;color:var(--text-secondary)"><strong>+</strong> ${escapeHtml(f.strengths)}</p>
+    <p style="font-size:13px;color:var(--text-secondary)"><strong>−</strong> ${escapeHtml(f.weaknesses)}</p>
+    <p style="font-size:12px;color:var(--text-muted)"><strong>Contre</strong> : ${escapeHtml(f.counters)} · <strong>Contexte</strong> : ${escapeHtml(f.context)}</p>
     </section>`).join('');
 }
 
@@ -533,26 +558,26 @@ function renderTechniques(arr){
   document.getElementById('techniques-container').innerHTML=`<div class="grid-auto">${arr.map(t=>`
     <article class="technique-card card">
       <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:8px">
-        <h3 style="font-family:var(--display);font-size:16px;margin:0">${t.name}</h3>${getTierBadge(t.tier)}</div>
-      <div class="input-chip" aria-label="Input">${t.input}</div>
+        <h3 style="font-family:var(--display);font-size:16px;margin:0">${escapeHtml(t.name)}</h3>${getTierBadge(t.tier)}</div>
+      <div class="input-chip" aria-label="Input">${escapeHtml(t.input)}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
-        <span class="badge ${catTechBadge(t.category)}">${t.category.toUpperCase()}</span>
+        <span class="badge ${catTechBadge(t.category)}">${escapeHtml(String(t.category||'').toUpperCase())}</span>
         ${getBadge(t.source==='official'?'official':'community')}
-        <span class="badge badge-analytical">${t.diff||''}</span>
+        <span class="badge badge-analytical">${escapeHtml(t.diff||'')}</span>
       </div>
       ${getBar(t.eff)}
       <p style="margin-top:10px;font-size:12px;color:var(--text-secondary)">
-        <span class="td-muted">Quand</span> ${t.when||'—'} · <span class="td-muted">Pourquoi</span> ${t.why||'—'}<br>
-        <span class="td-muted">Contre</span> ${t.against||'—'} · <span class="td-muted">Zone</span> ${t.zone||'—'}<br>
-        <span class="td-muted">Timing</span> ${t.timing}<br><span class="td-muted">Contexte</span> ${t.context}<br>
-        <span class="td-muted">Erreur</span> <span style="color:var(--red)">${t.error}</span><br>
-        <span class="td-muted">Chaîne</span> ${t.chain}<br><span class="td-muted">Patch</span> ${t.patch||'—'}<br>
-        <span class="td-muted">Profil</span> ${t.profile||'—'}
+        <span class="td-muted">Quand</span> ${escapeHtml(t.when||'—')} · <span class="td-muted">Pourquoi</span> ${escapeHtml(t.why||'—')}<br>
+        <span class="td-muted">Contre</span> ${escapeHtml(t.against||'—')} · <span class="td-muted">Zone</span> ${escapeHtml(t.zone||'—')}<br>
+        <span class="td-muted">Timing</span> ${escapeHtml(t.timing)}<br><span class="td-muted">Contexte</span> ${escapeHtml(t.context)}<br>
+        <span class="td-muted">Erreur</span> <span style="color:var(--red)">${escapeHtml(t.error)}</span><br>
+        <span class="td-muted">Chaîne</span> ${escapeHtml(t.chain)}<br><span class="td-muted">Patch</span> ${escapeHtml(t.patch||'—')}<br>
+        <span class="td-muted">Profil</span> ${escapeHtml(t.profile||'—')}
       </p>
-      ${t.simple?`<p style="font-size:11px;color:var(--text-muted)"><strong>Variante simple :</strong> ${t.simple}</p>`:''}
-      ${t.advanced?`<p style="font-size:11px;color:var(--text-muted)"><strong>Variante avancée :</strong> ${t.advanced}</p>`:''}
-      ${t.counterRead?`<p style="font-size:11px;color:var(--orange)"><strong>Contre-lecture :</strong> ${t.counterRead}</p>`:''}
-      <p style="font-size:11px;margin-top:6px"><span class="td-muted">Risque</span> ${t.risk} · <span class="td-muted">Reward</span> ${t.reward}</p>
+      ${t.simple?`<p style="font-size:11px;color:var(--text-muted)"><strong>Variante simple :</strong> ${escapeHtml(t.simple)}</p>`:''}
+      ${t.advanced?`<p style="font-size:11px;color:var(--text-muted)"><strong>Variante avancée :</strong> ${escapeHtml(t.advanced)}</p>`:''}
+      ${t.counterRead?`<p style="font-size:11px;color:var(--orange)"><strong>Contre-lecture :</strong> ${escapeHtml(t.counterRead)}</p>`:''}
+      <p style="font-size:11px;margin-top:6px"><span class="td-muted">Risque</span> ${escapeHtml(t.risk)} · <span class="td-muted">Reward</span> ${escapeHtml(t.reward)}</p>
     </article>`).join('')}</div>`;
 }
 
@@ -565,7 +590,7 @@ function computeSbcScore(s){
 function renderSBC(arr){
   const rows=arr.map(s=>{
     const sc=computeSbcScore(s);
-    return `<tr data-cost="${s.cost}" data-reward="${s.reward}" data-score="${sc}"><td class="td-name">${s.name}</td><td>${s.cat}</td><td class="td-val">${(s.cost/1000).toFixed(0)}K</td><td class="td-val">${(s.reward/1000).toFixed(0)}K</td><td class="td-val">${sc.toFixed(2)}</td><td>${s.reco}</td></tr>`;
+    return `<tr data-cost="${s.cost}" data-reward="${s.reward}" data-score="${sc}"><td class="td-name">${escapeHtml(s.name)}</td><td>${escapeHtml(s.cat)}</td><td class="td-val">${(s.cost/1000).toFixed(0)}K</td><td class="td-val">${(s.reward/1000).toFixed(0)}K</td><td class="td-val">${sc.toFixed(2)}</td><td>${escapeHtml(s.reco)}</td></tr>`;
   }).join('');
   document.getElementById('sbc-container').innerHTML=`<div class="table-wrap"><table id="sbc-table"><thead><tr>
     <th scope="col" data-col="0">SBC</th><th scope="col" data-col="1">Cat</th>
@@ -599,19 +624,21 @@ function sortSbcTable(col){
 function renderMetaTable(){
   const el=document.getElementById('meta-table-wrap'); if(!el||!META_TABLE.length) return;
   el.innerHTML=`<table><thead><tr><th>Élément</th><th>Force</th><th>Stabilité</th><th>Risque nerf</th><th>Source</th></tr></thead><tbody>
-    ${META_TABLE.map(r=>`<tr><td class="td-name">${r.el}</td><td>${getTierBadge(r.force)}</td><td>${r.stab}</td><td>${r.nerf}</td><td>${getBadge(r.src==='official'?'official':'community')}</td></tr>`).join('')}
+    ${META_TABLE.map(r=>`<tr><td class="td-name">${escapeHtml(r.el)}</td><td>${getTierBadge(r.force)}</td><td>${escapeHtml(r.stab)}</td><td>${escapeHtml(r.nerf)}</td><td>${getBadge(r.src==='official'?'official':'community')}</td></tr>`).join('')}
   </tbody></table>`;
 }
 
 function renderChemistryPage(){
   const oc=document.getElementById('chem-official-card');
+  const rawUrl = String(CHEM_OFFICIAL.sourceUrl||'');
+  const safeHref = /^https?:\/\//i.test(rawUrl) ? rawUrl.replace(/"/g,'%22') : '#';
   if(oc) oc.innerHTML=`<div class="card-header"><div class="card-title">EA — Chimie / styles (Launch)</div>${getBadge('official')}</div>
-    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">${CHEM_OFFICIAL.headline}</p>
-    <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px">${(CHEM_OFFICIAL.bullets||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
-    <p style="margin-top:10px"><a href="${CHEM_OFFICIAL.sourceUrl}" target="_blank" rel="noopener" style="color:var(--blue)">Source : Launch Update EA</a></p>`;
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:10px">${escapeHtml(CHEM_OFFICIAL.headline||'')}</p>
+    <ul style="font-size:13px;color:var(--text-secondary);padding-left:18px">${(CHEM_OFFICIAL.bullets||[]).map(b=>`<li>${escapeHtml(b)}</li>`).join('')}</ul>
+    <p style="margin-top:10px"><a href="${safeHref}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">Source : Launch Update EA</a></p>`;
   const pw=document.getElementById('chem-picks-wrap');
   if(pw) pw.innerHTML=`<table><thead><tr><th>Rôle</th><th>Sans +3 (indicatif)</th><th>Avec +3</th><th>Confiance</th></tr></thead><tbody>
-    ${(CHEM_PICKS||[]).map(r=>`<tr><td class="td-name">${r.role}</td><td>${r.noChem}</td><td>${r.withChem}</td><td>${getBadge(r.conf==='community'?'community':'analytical')}</td></tr>`).join('')}
+    ${(CHEM_PICKS||[]).map(r=>`<tr><td class="td-name">${escapeHtml(r.role)}</td><td>${escapeHtml(r.noChem)}</td><td>${escapeHtml(r.withChem)}</td><td>${getBadge(r.conf==='community'?'community':'analytical')}</td></tr>`).join('')}
   </tbody></table>`;
 }
 
@@ -622,11 +649,20 @@ function initDashboard(){
   if(live) live.textContent=CONFIG.lastOfficialPatchId;
   const h=document.getElementById('dash-headline');
   if(h) h.textContent=META_SNAPSHOT.headline||'';
+  const cta=document.getElementById('dash-official-patch-cta');
+  if(cta){
+    const ref = CONFIG.lastOfficialPatchId || '—';
+    const recent = (PATCHES||[]).filter(p=>!String(p.version||'').includes('TEMPLATE')&&(p.sourceType==='official'||!p.sourceType)).slice(0,4).map(p=>p.version).filter(Boolean);
+    const extra = recent.length ? ` · suivis : ${recent.join(', ')}` : '';
+    cta.innerHTML = `<strong class="badge badge-official" style="margin-right:6px">Officiel</strong> Patch ref <strong>${escapeHtml(ref)}</strong>${escapeHtml(extra)} : voir page <a href="#" id="dash-patch-link" style="color:var(--blue)">Patch notes</a> (textes alignés EA).`;
+    const link=document.getElementById('dash-patch-link');
+    if(link) link.addEventListener('click',e=>{ e.preventDefault(); showPage('patches'); });
+  }
   const pl=document.getElementById('dash-pillars');
   if(pl) pl.innerHTML=(META_SNAPSHOT.pillars||[]).map(p=>`
     <div style="padding:10px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border)">
-      <div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">${p.k} ${getBadge(p.src||'community')}</div>
-      <div style="font-size:12px;color:var(--text-secondary)">${p.v}</div>
+      <div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">${escapeHtml(p.k)} ${getBadge(p.src||'community')}</div>
+      <div style="font-size:12px;color:var(--text-secondary)">${escapeHtml(p.v)}</div>
     </div>`).join('');
   const kp=document.getElementById('kpi-patch'); if(kp) kp.textContent=CONFIG.lastOfficialPatchId;
   const kpp=document.getElementById('kpi-players'); if(kpp) kpp.textContent=String(PLAYERS.length);
@@ -645,36 +681,42 @@ function exportDataJson(){
 
 function renderPatches(){
   const list=PATCHES.filter(p=>!String(p.version||'').includes('TEMPLATE'));
-  document.getElementById('patches-container').innerHTML=list.map(p=>`
+  document.getElementById('patches-container').innerHTML=list.map(p=>{
+    const rawU = String(p.sourceUrl||'');
+    const hrefPatch = /^https?:\/\//i.test(rawU) ? rawU.replace(/"/g,'%22') : '#';
+    const ch = Array.isArray(p.changes) ? p.changes : [];
+    return `
     <article class="patch-card">
       <header style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-        <div><div class="patch-version">${p.version}</div><div class="patch-date">${p.date} · ${p.channel}</div></div>
+        <div><div class="patch-version">${escapeHtml(p.version)}</div><div class="patch-date">${escapeHtml(p.date)} · ${escapeHtml(p.channel)}</div></div>
         <div style="display:flex;gap:6px;align-items:center">${getBadge(p.sourceType)}
-        <a class="badge badge-official" href="${p.sourceUrl}" target="_blank" rel="noopener">Source EA</a></div>
+        <a class="badge badge-official" href="${hrefPatch}" target="_blank" rel="noopener noreferrer">Source EA</a></div>
       </header>
-      <p class="info-box" style="margin-bottom:10px"><strong>Résumé :</strong> ${p.summary}</p>
-      <ul class="patch-changes">${p.changes.map(c=>`<li><span class="impact-dot ${c.type}" aria-hidden="true"></span>${c.text}</li>`).join('')}</ul>
+      <p class="info-box" style="margin-bottom:10px"><strong>Résumé :</strong> ${escapeHtml(p.summary)}</p>
+      <ul class="patch-changes">${ch.map(c=>{ const dot=['buff','nerf','neutral'].includes(c.type)?c.type:'neutral'; return `<li><span class="impact-dot ${dot}" aria-hidden="true"></span>${escapeHtml(c.text)}</li>`; }).join('')}</ul>
       <div class="grid-2" style="margin-top:12px;gap:8px">
-        <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:12px"><div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">Impact méta (lecture)</div>${p.metaImpact}</div>
-        <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:12px"><div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">Bascule</div>${p.bascule}</div>
+        <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:12px"><div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">Impact méta (lecture)</div>${escapeHtml(p.metaImpact)}</div>
+        <div style="padding:8px;background:var(--bg-3);border-radius:6px;font-size:12px"><div class="td-muted" style="font-size:10px;text-transform:uppercase;margin-bottom:4px">Bascule</div>${escapeHtml(p.bascule)}</div>
       </div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
 }
 
 function renderBehaviors(){
   document.getElementById('behaviors-container').innerHTML=`<div class="table-wrap"><table><thead><tr>
     <th>Comportement</th><th>Zone</th><th>Fréquence</th><th>Statut</th><th>Risque</th><th>Source</th><th>Note</th>
   </tr></thead><tbody>${BEHAVIORS.map(b=>`<tr>
-    <td class="td-name">${b.name}</td><td class="td-muted">${b.zone}</td><td>${b.freq}</td><td>${b.status}</td><td>${b.risk}</td><td>${getBadge(b.source==='official'?'official':'community')}</td><td class="td-muted" style="max-width:220px">${b.note}</td>
+    <td class="td-name">${escapeHtml(b.name)}</td><td class="td-muted">${escapeHtml(b.zone)}</td><td>${escapeHtml(b.freq)}</td><td>${escapeHtml(b.status)}</td><td>${escapeHtml(b.risk)}</td><td>${getBadge(b.source==='official'?'official':'community')}</td><td class="td-muted" style="max-width:220px">${escapeHtml(b.note)}</td>
   </tr>`).join('')}</tbody></table></div>`;
 }
 
 function renderSettings(profile){
   const s=SETTINGS[profile]; const c=document.getElementById('settings-container');
-  c.innerHTML=`<div class="info-box"><strong>${s.label}</strong> — ${s.desc} ${getBadge('analytical')}</div>
-    ${s.groups.map(g=>`<section class="section-block"><h3 class="section-title" style="font-size:15px">${g.title}</h3>
+  if(!s){ c.innerHTML='<p class="td-muted">Profil de réglages indisponible.</p>'; return; }
+  c.innerHTML=`<div class="info-box"><strong>${escapeHtml(s.label)}</strong> — ${escapeHtml(s.desc)} ${getBadge('analytical')}</div>
+    ${(s.groups||[]).map(g=>`<section class="section-block"><h3 class="section-title" style="font-size:15px">${escapeHtml(g.title)}</h3>
       <div class="table-wrap"><table><thead><tr><th>Paramètre</th><th>Valeur</th><th>Note</th></tr></thead><tbody>
-      ${g.items.map(i=>`<tr><td class="td-name">${i.label}</td><td class="td-val" style="font-size:12px">${i.val}</td><td class="td-muted">${i.note}</td></tr>`).join('')}
+      ${(g.items||[]).map(i=>`<tr><td class="td-name">${escapeHtml(i.label)}</td><td class="td-val" style="font-size:12px">${escapeHtml(i.val)}</td><td class="td-muted">${escapeHtml(i.note)}</td></tr>`).join('')}
       </tbody></table></div></section>`).join('')}`;
 }
 
@@ -700,7 +742,11 @@ function showPage(id){
 }
 function navKey(e,id){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showPage(id);} }
 function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
-function toggleTheme(){ const h=document.documentElement; h.dataset.theme=h.dataset.theme==='dark'?'light':'dark'; }
+function toggleTheme(){
+  const h=document.documentElement;
+  h.dataset.theme=h.dataset.theme==='dark'?'light':'dark';
+  try{ localStorage.setItem(THEME_KEY, h.dataset.theme); }catch(_){}
+}
 
 function setPlayerFilter(k,v){ playerFilters[k]=v; applyPlayerFilters(); }
 function applyPlayerFilters(){ renderPlayers(PLAYERS.filter(playerMatchesFilters)); }
@@ -749,11 +795,11 @@ function globalSearch(q){
   }
   if(fHits.length){ showPage('formations'); document.querySelectorAll('#page-formations .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderFormations(fHits); return; }
   if(techHits.length){ showPage('techniques'); document.querySelectorAll('#page-techniques .filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0)); renderTechniques(techHits); return; }
-  alert('Aucun résultat (joueurs/formations/techniques) pour : '+q);
+  alert('Aucun résultat (joueurs/formations/techniques) pour : ' + String(q).slice(0, 160));
 }
 
 function populateCompareSelects(){
-  const opts='<option value="">—</option>'+PLAYERS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  const opts='<option value="">—</option>'+PLAYERS.map(p=>`<option value="${escapeJsString(p.id)}">${escapeHtml(p.name)}</option>`).join('');
   const a=document.getElementById('cmp-a'); const b=document.getElementById('cmp-b');
   if(a&&b){ a.innerHTML=opts; b.innerHTML=opts; }
 }
@@ -763,16 +809,27 @@ function renderCompare(){
   const out=document.getElementById('compare-out');
   if(!pa||!pb||ida===idb){ out.innerHTML='<p class="td-muted">Choisissez deux joueurs distincts.</p>'; return; }
   const keys=[['Meta score','metaScore'],['Tier','tier'],['Accélération','acc'],['Patch sens.','patchSens'],['Rôle','metaRole'],['Meilleur poste','bestPos'],['Alternatifs','altPos'],['Chimie sans +3','chemNone'],['Chimie +3','chemChem']];
-  out.innerHTML=`<table><thead><tr><th>Champ</th><th>${pa.name}</th><th>${pb.name}</th></tr></thead><tbody>
-    ${keys.map(([l,k])=>`<tr><td class="td-name">${l}</td><td>${Array.isArray(pa[k])?pa[k].join(', '):pa[k]}</td><td>${Array.isArray(pb[k])?pb[k].join(', '):pb[k]}</td></tr>`).join('')}
+  const cell=v=>escapeHtml(Array.isArray(v)?v.join(', '):String(v??'—'));
+  out.innerHTML=`<table><thead><tr><th>Champ</th><th>${escapeHtml(pa.name)}</th><th>${escapeHtml(pb.name)}</th></tr></thead><tbody>
+    ${keys.map(([l,k])=>`<tr><td class="td-name">${escapeHtml(l)}</td><td>${cell(pa[k])}</td><td>${cell(pb[k])}</td></tr>`).join('')}
   </tbody></table>`;
 }
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeDrawer();
+  const drawer=document.getElementById('drawer');
+  const open=drawer&&drawer.classList.contains('open');
+  if(e.key==='Escape'&&open){ e.preventDefault(); closeDrawer(); return; }
+  if(!open||e.key!=='Tab') return;
+  const focusables=drawer.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
+  const list=[...focusables].filter(el=>el.getClientRects().length>0);
+  if(list.length===0) return;
+  const first=list[0], last=list[list.length-1];
+  if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
 });
 
 document.addEventListener('DOMContentLoaded',()=>{
+  initTheme();
   if(!loadData()) return;
   initDashboard();
   renderMetaTable();

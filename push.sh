@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Exécuter dans le Terminal macOS (pas uniquement via l’agent Cursor si git échoue).
+# Déploiement : synchronise le cache-busting du bundle, vérifie les données, commit, push.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -8,16 +8,45 @@ if [[ ! -f fc26-meta-command-center.html || ! -f fc26-meta-data.js ]]; then
   exit 1
 fi
 
+if [[ ! -f scripts/verify-fc26.mjs ]]; then
+  echo "scripts/verify-fc26.mjs manquant" >&2
+  exit 1
+fi
+
+BUNDLE_VER="$(grep -oE "bundleVersion:[[:space:]]*'[^']+'" fc26-meta-data.js | head -1 | sed -E "s/bundleVersion:[[:space:]]*'([^']+)'.*/\1/" || true)"
+if [[ -z "${BUNDLE_VER}" ]]; then
+  echo "Impossible de lire bundleVersion dans fc26-meta-data.js" >&2
+  exit 1
+fi
+
+echo "→ Sync cache-bust fc26-meta-data.js → ?v=${BUNDLE_VER}"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  sed -i '' "s|src=\"fc26-meta-data.js[^\"]*\"|src=\"fc26-meta-data.js?v=${BUNDLE_VER}\"|" fc26-meta-command-center.html
+else
+  sed -i "s|src=\"fc26-meta-data.js[^\"]*\"|src=\"fc26-meta-data.js?v=${BUNDLE_VER}\"|" fc26-meta-command-center.html
+fi
+
+echo "→ Vérifications Node (données + HTML)"
+node scripts/verify-fc26.mjs
+
 if [[ ! -d .git ]]; then
   git init
 fi
 
-git add .gitignore fc26-meta-command-center.html fc26-meta-data.js push.sh 2>/dev/null || git add .gitignore fc26-meta-command-center.html fc26-meta-data.js
+git add .gitignore index.html fc26-meta-command-center.html fc26-meta-data.js push.sh scripts/verify-fc26.mjs 2>/dev/null \
+  || git add .gitignore index.html fc26-meta-command-center.html fc26-meta-data.js scripts/verify-fc26.mjs
 
 if git diff --staged --quiet; then
   echo "Rien de nouveau à committer."
 else
-  git commit -m "FC26 Meta Command Center: static UI + data bundle (post-patch editable)"
+  git commit -m "$(cat <<'EOF'
+perf: optimiser rendu, thème persistant et cache-busting
+
+Échappement HTML/JS sur les vues dynamiques, piège au focus du drawer,
+CTA patch aligné sur CONFIG/PATCHES, garde-fous réglages et patch notes.
+push.sh synchronise ?v= avec bundleVersion puis exécute scripts/verify-fc26.mjs.
+EOF
+)"
 fi
 
 git branch -M main 2>/dev/null || true
